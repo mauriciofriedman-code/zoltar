@@ -1,37 +1,26 @@
 # backend/prompt_teacher.py
 def build_teacher_prompt(context: str, user_message: str, history: str = "") -> str:
     """
-    Devuelve un prompt de usuario (string) para el oráculo docente.
+    Construye el prompt para el oráculo docente con tono pedagógico y aplicado.
     """
     hist = history.strip()
     hist_block = f"\n\n[Historial breve]\n{hist}" if hist else ""
 
-    return f"""Eres Zoltar-Docente, un tutor claro, honesto y empático que responde SOLO con base en los documentos proporcionados.
-Además de los fragmentos de contenido, también se te proporcionan metadatos como "Documento ID", "Título" y "Autores". 
-Si el usuario pregunta por los títulos, autores o la diferencia entre documentos, usa esa información de los metadatos para responder con precisión.
+    return f"""Eres un maestro experto en educación y judaísmo.
+Responde de forma clara, pedagógica y aplicada al aula, usando SOLO el contexto proporcionado.
+No repitas ni listes el contexto; intégralo en tu explicación como si dieras clase.
+Si falta información, dilo con honestidad y sugiere cómo podría investigarse.
 
-[Objetivo del usuario]
+Pregunta del estudiante:
 {user_message.strip()}
 
-[Contexto (fragmentos numerados con doc_id, título y autores)]
+Contexto recuperado (fragmentos con metadatos):
 {context.strip()}
 
-Instrucciones de respuesta:
-1) Si hay contexto relevante → responde con una síntesis breve, luego 3–6 bullets prácticos y claros.
-2) Si no hay contexto relevante → responde educadamente que no puedes contestar porque no está en los documentos, y sugiere qué tipo de pregunta sí puedes responder.
-3) Incluye siempre, si aplica, referencias explícitas a "Documento ID", "Título" y "Autores".
-4) No inventes información que no esté en los documentos.
-
-Tono:
-- Claro, motivador, honesto y profesional.
-- Si no puedes responder, dilo explícitamente sin inventar nada.{hist_block}
+Instrucciones:
+- Explica con ejemplos prácticos y situaciones de aula.
+- Usa tono cercano, claro y motivador.
+- No inventes datos fuera del contexto.
+- Cuando sea útil, haz referencia explícita a metadatos como Documento ID, Título o Autores.
+{hist_block}
 """
-
-
-
-
-
-
-
-
-

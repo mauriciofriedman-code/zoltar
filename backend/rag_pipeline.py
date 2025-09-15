@@ -28,7 +28,7 @@ def _contexts_to_text(
 ) -> str:
     """
     Convierte documentos recuperados en texto compacto y ordenado.
-    Incluye doc_id, título y autores para diferenciar claramente los artículos.
+    Incluye doc_id, título, autores, página y fuente para dar contexto real.
     """
     parts, total = [], 0
 
@@ -38,6 +38,7 @@ def _contexts_to_text(
         title = md.get("title", "Documento sin título")
         authors = md.get("authors", "Autores desconocidos")
         page = md.get("page", "N/A")
+        source = md.get("source", "Fuente desconocida")
 
         block_txt = getattr(c, "page_content", "") or ""
         if len(block_txt) > max_chars_per_block:
@@ -47,7 +48,8 @@ def _contexts_to_text(
             f"Documento ID: {doc_id}\n"
             f"Título: {title}\n"
             f"Autores: {authors}\n"
-            f"Página: {page}"
+            f"Página: {page}\n"
+            f"Fuente: {source}"
         )
 
         if enumerate_blocks:
@@ -72,54 +74,59 @@ def _contexts_to_text(
 FALLBACK_NO_CONTEXT = (
     "Soy tu tutor con RAG. No encontré fragmentos relevantes en los documentos para responder tu consulta.\n\n"
     "Sugerencias para mejorar la búsqueda:\n"
-    "- ¿Cuál es la conclusión principal del artículo X?\n"
-    "- ¿Qué autores se mencionan en el documento Y?\n"
-    "- ¿Qué metodología se describe en el estudio Z?\n\n"
-    "Importante: este modo responde con base en los documentos cargados."
+    "- Sé más específico con autores, títulos o temas.\n"
+    "- Indica el tipo de documento (artículo, reporte, guía).\n"
+    "- Divide tu pregunta en partes más concretas.\n\n"
+    "Importante: este modo responde únicamente con base en los documentos cargados."
 )
 
 
-def answer_with_rag(question: str, system_prompt: str, k: int = 5, allow_fallback: bool = True) -> str:
+def answer_with_rag(question: str, system_prompt: str = "", k: int = 5, allow_fallback: bool = True) -> str:
     llm = get_chat_llm()
 
-    # 1) Intentar retrieval con manejo de errores (índice ausente o fallo de Chroma)
     try:
         retriever = get_retriever(k=k)
         contexts = retriever.invoke(question) or []
     except Exception:
         if not allow_fallback:
-            return (
-                "No se pudo recuperar información desde el índice (posiblemente aún no existe). "
-                "Este modo no utiliza fallback."
-            )
+            return "No se pudo recuperar información desde el índice."
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"{FALLBACK_NO_CONTEXT}\n\nPregunta: {question}"},
         ]
         return safe_response(llm, messages)
 
-    # 2) Caso sin contexto
     if not contexts:
         if not allow_fallback:
-            return (
-                "No encontré información suficiente en los documentos para responder. "
-                "Este modo no utiliza fallback."
-            )
+            return "No encontré información suficiente en los documentos."
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"{FALLBACK_NO_CONTEXT}\n\nPregunta: {question}"},
         ]
         return safe_response(llm, messages)
 
-    # 3) Caso con contexto
     context_text = _contexts_to_text(contexts, enumerate_blocks=True)
+
+    # 🔑 Prompt pedagógico optimizado
+    system_prompt = system_prompt or (
+        "Eres un maestro experto en educación y judaísmo. "
+        "Tu tarea es responder de manera clara, pedagógica y aplicada al aula, "
+        "usando exclusivamente el contexto de los documentos. "
+        "No digas 'los documentos dicen', responde directamente como si enseñaras a un estudiante. "
+        "Incluye ejemplos educativos o prácticos cuando sea posible. "
+        "Si falta información, acláralo y sugiere cómo podría investigarse más."
+    )
+
     messages = [
         {"role": "system", "content": system_prompt},
-        {
-            "role": "user",
-            "content": f"Contexto (con doc_id, títulos y autores):\n{context_text}\n\nPregunta: {question}",
-        },
+        {"role": "user", "content": f"Pregunta: {question}\n\nContexto disponible:\n{context_text}"},
     ]
+
+    # Debug opcional
+    print("=== CONTEXTO RECUPERADO ===")
+    print(context_text)
+    print("===========================")
+
     return safe_response(llm, messages)
 
 
@@ -129,19 +136,15 @@ def chatbot_baseline(question: str) -> str:
 
 def chatbot_teacher(question: str, history: str = "", k: int = 6) -> str:
     llm = get_chat_llm()
-
-    # 1) Intentar retrieval con manejo de errores (índice ausente o fallo de Chroma)
     try:
         retriever = get_retriever(k=k)
         contexts = retriever.invoke(question) or []
     except Exception:
         return FALLBACK_NO_CONTEXT
 
-    # 2) Caso sin contexto
     if not contexts:
         return FALLBACK_NO_CONTEXT
 
-    # 3) Caso con contexto
     context_text = _contexts_to_text(contexts, enumerate_blocks=True)
     teacher_prompt = build_teacher_prompt(
         context=context_text,
@@ -159,6 +162,7 @@ def chatbot_simple(question: str, system_prompt: str) -> str:
         {"role": "user", "content": question},
     ]
     return safe_response(llm, messages)
+
 
 
 

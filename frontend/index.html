@@ -54,14 +54,54 @@
       padding:10px; border-radius:8px; text-align:left;
     }
 
-    .spark {
-      position:absolute; width:6px; height:6px; background:var(--gold);
-      border-radius:50%; opacity:0; pointer-events:none;
-      animation: fly 1s ease-out forwards;
+    .coin-slot {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+      position: relative;
     }
-    @keyframes fly {
-      0% { opacity:1; transform:translate(0,0) scale(1); }
-      100% { opacity:0; transform:translate(var(--dx), var(--dy)) scale(0.3); }
+
+    .coin {
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .coin:hover {
+      transform: scale(1.1) rotate(-5deg);
+    }
+
+    .slot {
+      width: 25px;
+      height: 60px;
+      background: linear-gradient(180deg, #333, #111);
+      border: 2px solid #555;
+      border-radius: 4px;
+      position: relative;
+      box-shadow: inset 0 0 6px #000;
+    }
+    .slot::after {
+      content: "";
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 30px;
+      background: #000;
+      border-radius: 2px;
+    }
+
+    /* Moneda animada hacia la derecha */
+    .moving-coin {
+      position: fixed;
+      width: 60px;
+      height: 60px;
+      pointer-events: none;
+      transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+      z-index: 9999;
     }
 
     footer {
@@ -94,7 +134,13 @@
 
       <div class="panel">
         <input id="question" type="text" placeholder="Haz tu consulta..." disabled />
-        <button id="coinBtn">Insertar moneda</button>
+
+        <!-- Slot arcade con moneda -->
+        <div class="coin-slot">
+          <img id="coinBtn" src="img/coin.png" alt="Moneda Zoltar" class="coin" />
+          <div class="slot" id="slot"></div>
+        </div>
+
         <button id="askBtn" disabled>Consultar</button>
         <div class="output" id="output">Aquí aparecerá la respuesta...</div>
       </div>
@@ -117,6 +163,7 @@
     const question = document.getElementById("question");
     const output = document.getElementById("output");
     const modeRadios = document.querySelectorAll("input[name='mode']");
+    const slot = document.getElementById("slot");
 
     const coinSound = new Audio("sounds/coin.mp3");
     const thinkingSound = new Audio("sounds/thinking.mp3");
@@ -148,24 +195,38 @@
       thinkingSound.pause();
     }
 
-    function spawnSparks() {
-      for(let i=0;i<15;i++){
-        const spark=document.createElement("div");
-        spark.className="spark";
-        spark.style.left="50%"; spark.style.top="50%";
-        spark.style.setProperty("--dx",(Math.random()*200-100)+"px");
-        spark.style.setProperty("--dy",(Math.random()*200-100)+"px");
-        machineDiv.appendChild(spark);
-        setTimeout(()=>spark.remove(),1000);
-      }
-    }
-
     let hasCoin=false;
     coinBtn.addEventListener("click",()=>{
-      hasCoin=true; question.disabled=false; askBtn.disabled=false;
-      output.textContent="Inserta tu pregunta..."; question.focus();
+      // Crear moneda que se mueve hacia el slot
+      const coinClone=document.createElement("img");
+      coinClone.src="img/coin.png";
+      coinClone.className="moving-coin";
+
+      const rectCoin=coinBtn.getBoundingClientRect();
+      const rectSlot=slot.getBoundingClientRect();
+
+      coinClone.style.left=rectCoin.left+"px";
+      coinClone.style.top=rectCoin.top+"px";
+
+      document.body.appendChild(coinClone);
+
+      // Forzar reflow para que transition funcione
+      void coinClone.offsetWidth;
+
+      const dx = rectSlot.left - rectCoin.left;
+      const dy = rectSlot.top - rectCoin.top;
+
+      coinClone.style.transform=`translate(${dx}px, ${dy}px) scale(0.6) rotate(360deg)`;
+      coinClone.style.opacity="0";
+
+      setTimeout(()=>coinClone.remove(),800);
+
+      hasCoin=true; 
+      question.disabled=false; 
+      askBtn.disabled=false;
+      output.textContent="Inserta tu pregunta...";
+      question.focus();
       coinSound.currentTime=0; coinSound.play().catch(()=>{});
-      spawnSparks();
     });
 
     askBtn.addEventListener("click",async()=>{
@@ -180,8 +241,8 @@
 
       try{
         const body = mode==="rag"
-          ? { text: q }                          // teacher: solo text (+history opcional)
-          : { text: q, mode: "engineered" };     // generate: text + mode
+          ? { text: q }
+          : { text: q, mode: "engineered" };
 
         const res=await fetch(BACKEND_URL+endpoint,{
           method:"POST", headers:{"Content-Type":"application/json"},

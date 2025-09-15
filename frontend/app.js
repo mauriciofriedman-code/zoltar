@@ -41,11 +41,15 @@ formA.addEventListener("submit", async (e) => {
   const mode = document.querySelector("input[name='modeA']:checked").value;
 
   try {
+    startAnimation();   // 👈 inicia animación y sonido "thinking"
+
     const res = await fetch(`${baseUrl}/api/generate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question: msg, mode }),
     });
+
+    stopAnimation(res.ok);   // 👈 detiene animación
 
     if (!res.ok) {
       let errMsg = `⚠️ Error backend (${res.status})`;
@@ -69,6 +73,7 @@ formA.addEventListener("submit", async (e) => {
       console.error("Respuesta inesperada:", data);
     }
   } catch (err) {
+    stopAnimation(false);
     appendMessage(logA, "❌ No se pudo conectar con backend", "ai");
     console.error(err);
   }
@@ -89,11 +94,15 @@ formB.addEventListener("submit", async (e) => {
   const level = document.getElementById("levelB").value.trim();
 
   try {
+    startAnimation();   // 👈 inicia animación y sonido "thinking"
+
     const res = await fetch(`${baseUrl}/api/teacher`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question: msg, topic, level }),
     });
+
+    stopAnimation(res.ok);   // 👈 detiene animación
 
     if (!res.ok) {
       let errMsg = `⚠️ Error backend (${res.status})`;
@@ -117,6 +126,7 @@ formB.addEventListener("submit", async (e) => {
       console.error("Respuesta inesperada:", data);
     }
   } catch (err) {
+    stopAnimation(false);
     appendMessage(logB, "❌ No se pudo conectar con backend", "ai");
     console.error(err);
   }
@@ -142,6 +152,46 @@ async function checkBackend() {
   }
 }
 checkBackend();
+
+// =============================
+// Animación + Sonidos de Zoltar
+// =============================
+let animInterval;
+const zoltarImg = document.querySelector("#zoltarImg");
+
+const soundCoin = document.querySelector("#soundCoin");
+const soundReveal = document.querySelector("#soundReveal");
+const soundThinking = document.querySelector("#soundThinking");
+
+function startAnimation() {
+  let frame = 1;
+  stopAnimation();
+  soundThinking.currentTime = 0;
+  soundThinking.play();
+
+  animInterval = setInterval(() => {
+    zoltarImg.src = `/img/Zoltar_${frame}.png`;
+    frame = frame < 5 ? frame + 1 : 1;
+  }, 200);
+}
+
+function stopAnimation(success = true) {
+  if (animInterval) clearInterval(animInterval);
+  zoltarImg.src = "/img/Zoltar_1.png";
+  soundThinking.pause();
+  soundThinking.currentTime = 0;
+
+  if (success) {
+    soundReveal.currentTime = 0;
+    soundReveal.play();
+  }
+}
+
+function insertCoin() {
+  soundCoin.currentTime = 0;
+  soundCoin.play();
+}
+
 
 
 
