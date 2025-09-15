@@ -2,7 +2,7 @@
 fastapi==0.115.0
 uvicorn[standard]==0.30.6
 
-# LangChain y ecosistema (solo versiones con wheels)
+# LangChain y ecosistema
 langchain==0.3.0
 langchain-core==0.3.0
 langchain-community==0.3.0
@@ -11,8 +11,8 @@ langchain-openai==0.2.0
 openai==1.42.0
 
 # Embeddings y vector DB
-chromadb==0.4.24   # ✅ versión con wheels precompilados, estable
-tiktoken==0.6.0    # ✅ más estable, con wheel (evita compilar con cargo)
+chromadb==0.5.5
+tiktoken==0.7.0
 
 # PDF y documentos
 pypdf==4.2.0
@@ -22,6 +22,7 @@ aiofiles==23.2.1
 python-dotenv==1.0.1
 tqdm==4.66.5
 requests==2.32.3
+
 
 
 
