@@ -1,7 +1,12 @@
 # backend/llm_loader.py
 import os
 from dotenv import load_dotenv
-from backend.config import EMBEDDINGS_PROVIDER, CHAT_MODEL, CHAT_TEMPERATURE, EMBEDDINGS_MODEL
+from backend.config import (
+    EMBEDDINGS_PROVIDER,
+    CHAT_MODEL,
+    CHAT_TEMPERATURE,
+    EMBEDDINGS_MODEL,
+)
 
 # Carga variables de entorno desde .env si existe
 load_dotenv()
@@ -22,7 +27,7 @@ def get_chat_llm():
     return ChatOpenAI(
         model=CHAT_MODEL,
         temperature=CHAT_TEMPERATURE,
-        openai_api_key=api_key
+        api_key=api_key,   # ✅ en openai>=1.42.0 el parámetro correcto es api_key
     )
 
 
@@ -34,21 +39,23 @@ def get_embeddings(provider: str = None):
     provider = provider or EMBEDDINGS_PROVIDER
 
     if provider == "hf":
-        # Paquete moderno sin deprecations
         from langchain_huggingface import HuggingFaceEmbeddings
+
         return HuggingFaceEmbeddings(
             model_name="sentence-transformers/all-MiniLM-L6-v2",
-            encode_kwargs={"normalize_embeddings": True}
+            encode_kwargs={"normalize_embeddings": True},
         )
 
     elif provider == "openai":
         from langchain_openai import OpenAIEmbeddings
+
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise ValueError("⚠️ Falta definir la variable de entorno OPENAI_API_KEY")
+
         return OpenAIEmbeddings(
             model=EMBEDDINGS_MODEL,
-            openai_api_key=api_key
+            api_key=api_key,   # ✅ corregido igual que arriba
         )
 
     else:
@@ -70,9 +77,6 @@ def generate(prompt: str) -> str:
         return str(response)
     except Exception as e:
         return f"⚠️ Error al generar respuesta: {e}"
-
-
-
 
 
 
