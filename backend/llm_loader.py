@@ -1,4 +1,3 @@
-# backend/llm_loader.py
 import os
 from dotenv import load_dotenv
 from backend.config import (
@@ -11,6 +10,11 @@ from backend.config import (
 # Carga variables de entorno desde .env si existe
 load_dotenv()
 
+# 🚑 Fix para Pydantic v2 con LangChain
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+ChatOpenAI.model_rebuild()
+OpenAIEmbeddings.model_rebuild()
+
 
 def get_chat_llm():
     """
@@ -18,8 +22,6 @@ def get_chat_llm():
     Configurable desde config.py.
     Requiere la variable de entorno OPENAI_API_KEY.
     """
-    from langchain_openai import ChatOpenAI
-
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise ValueError("⚠️ Falta definir la variable de entorno OPENAI_API_KEY")
@@ -47,8 +49,6 @@ def get_embeddings(provider: str = None):
         )
 
     elif provider == "openai":
-        from langchain_openai import OpenAIEmbeddings
-
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise ValueError("⚠️ Falta definir la variable de entorno OPENAI_API_KEY")
