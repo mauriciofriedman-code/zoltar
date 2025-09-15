@@ -12,7 +12,7 @@ openai==1.42.0
 
 # Embeddings y vector DB
 chromadb==0.5.5
-tiktoken==0.6.0   # 👈 versión estable con wheel precompilado
+tiktoken==0.6.0   # versión estable con wheel precompilado
 
 # PDF y documentos
 pypdf==4.2.0
@@ -23,12 +23,13 @@ python-dotenv==1.0.1
 tqdm==4.66.5
 requests==2.32.3
 
-# Compatibilidad NumPy (fix para Python 3.13+ y Render en 3.11/3.12)
-numpy==1.26.4 ; python_version < "3.13"
-numpy==2.1.1 ; python_version >= "3.13"
+# Numpy compatible con LangChain
+numpy==1.26.4
 
 # LangSmith (necesario para langchain 0.3.0)
 langsmith<0.2.0,>=0.1.17
+
+
 
 
 
