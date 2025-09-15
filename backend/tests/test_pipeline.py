@@ -38,27 +38,24 @@ else:
 # --- Verificar módulo retrieve ---
 print("\n=== 🔍 Verificación del módulo retrieve ===")
 try:
-    module = importlib.import_module("backend.routes.retrieve")
-    print("✅ backend.routes.retrieve se importó correctamente.")
+    module = importlib.import_module("backend.retrieve")   # ✅ corregido
+    print("✅ backend.retrieve se importó correctamente.")
 
     if hasattr(module, "get_retriever"):
         print("✅ Función get_retriever encontrada en retrieve.py")
     else:
         print("❌ No se encontró la función get_retriever en retrieve.py")
 
-    if hasattr(module, "ingest_docs"):
-        print("✅ Función ingest_docs encontrada en retrieve.py")
+    if hasattr(module, "get_vectordb"):
+        print("✅ Función get_vectordb encontrada en retrieve.py")
     else:
-        print("⚠️ No se encontró la función ingest_docs en retrieve.py")
+        print("⚠️ No se encontró la función get_vectordb en retrieve.py")
 
 except ModuleNotFoundError:
-    print("❌ No existe el módulo backend.routes.retrieve")
+    print("❌ No existe el módulo backend.retrieve")
 
-# --- Listar todos los módulos de backend.routes ---
-print("\n=== 📂 Archivos en backend/routes/ ===")
-routes_path = Path(config.BASE_DIR) / "routes"
-if routes_path.exists():
-    for module_info in pkgutil.iter_modules([str(routes_path)]):
-        print(" -", module_info.name)
-else:
-    print("⚠️ No existe la carpeta backend/routes")
+# --- Listar todos los módulos en backend ---
+print("\n=== 📂 Archivos en backend/ ===")
+backend_path = Path(config.BASE_DIR)
+for module_info in pkgutil.iter_modules([str(backend_path)]):
+    print(" -", module_info.name)

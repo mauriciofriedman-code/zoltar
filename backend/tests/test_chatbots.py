@@ -1,5 +1,5 @@
 # backend/test_chatbots.py
-from rag_pipeline import chatbot_baseline, chatbot_teacher
+from backend.rag_pipeline import chatbot_baseline, chatbot_teacher
 
 def main():
     question = "¿Cuál es el aporte principal de estos artículos académicos?"
@@ -12,3 +12,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
