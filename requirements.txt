@@ -11,8 +11,8 @@ langchain-openai==0.2.0
 openai==1.42.0
 
 # Embeddings y vector DB
-chromadb==0.5.5
-tiktoken==0.6.0   # versión estable con wheel precompilado
+chromadb==0.5.5 --only-binary=:all:   # 👈 evita compilar en local
+tiktoken==0.7.0                      # 👈 compatible con langchain-openai 0.2.0
 
 # PDF y documentos
 pypdf==4.2.0
@@ -23,11 +23,10 @@ python-dotenv==1.0.1
 tqdm==4.66.5
 requests==2.32.3
 
-# Numpy compatible con LangChain
+# Numpy (compatible con langchain 0.3)
 numpy==1.26.4
 
-# LangSmith (necesario para langchain 0.3.0)
-langsmith<0.2.0,>=0.1.17
+
 
 
 
