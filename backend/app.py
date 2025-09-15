@@ -1,4 +1,3 @@
-# backend/app.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -16,10 +15,9 @@ app = FastAPI(title="ZOLTAR • Dos Chatbots", version="1.0.0")
 # ========================================
 # Configuración CORS
 # ========================================
-# Cuando tengas el dominio final en Render, cámbialo en allow_origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # en producción podrías poner tu dominio
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,7 +37,7 @@ def health():
 # ========================================
 # Servir frontend estático
 # ========================================
-# Monta la carpeta 'frontend' en la raíz '/'
 frontend_dir = Path(__file__).resolve().parents[1] / "frontend"
 app.mount("/", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")
+
 

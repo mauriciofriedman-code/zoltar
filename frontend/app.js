@@ -3,7 +3,10 @@
 // =============================
 
 // URL del backend FastAPI
-const baseUrl = "http://127.0.0.1:8000";
+// Detecta si corre en local o en Render
+const baseUrl = window.location.hostname.includes("localhost")
+  ? "http://127.0.0.1:8000"
+  : window.location.origin;
 
 // Logs de los dos paneles
 const logA = document.getElementById("logA");
@@ -139,8 +142,6 @@ async function checkBackend() {
   }
 }
 checkBackend();
-
-
 
 
 
