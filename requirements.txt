@@ -11,8 +11,8 @@ langchain-openai==0.2.0
 openai==1.42.0
 
 # Embeddings y vector DB
-chromadb==0.5.5 --only-binary=:all:   # 👈 evita compilar en local
-tiktoken==0.7.0                      # 👈 compatible con langchain-openai 0.2.0
+chromadb==0.5.5
+tiktoken==0.8.0   # 👈 compatible en Linux y con langchain-openai 0.2.0
 
 # PDF y documentos
 pypdf==4.2.0
@@ -23,8 +23,12 @@ python-dotenv==1.0.1
 tqdm==4.66.5
 requests==2.32.3
 
-# Numpy (compatible con langchain 0.3)
+# Numpy
 numpy==1.26.4
+
+
+
+
 
 
 
