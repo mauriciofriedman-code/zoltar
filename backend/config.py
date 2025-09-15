@@ -1,6 +1,11 @@
-# backend/config.py
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# ============================
+# Carga variables de entorno
+# ============================
+load_dotenv()
 
 # ========================================
 # Paths base
@@ -41,8 +46,9 @@ CHAT_TEMPERATURE = float(os.getenv("CHAT_TEMPERATURE", "0.2"))
 # ========================================
 
 # Durante pruebas: "*"
-# En producción: pon la URL real del frontend (ej: https://zoltar.onrender.com)
+# En producción: pon la URL real del frontend
 FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "*")
+
 
 
 

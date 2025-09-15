@@ -9,37 +9,42 @@ from langchain_community.vectorstores import Chroma
 def _has_chroma_index(dirpath: Path) -> bool:
     """
     Comprueba si el directorio de CHROMA_DIR contiene un índice válido.
-    En la práctica, buscamos al menos un archivo .sqlite3 (p. ej. chroma.sqlite3).
+
+    En Chroma <0.4.x se buscaba chroma.sqlite3.
+    En Chroma 0.4+ el índice se guarda en subcarpetas (ej: "index", "index_uuid").
     """
     if not dirpath.exists():
         return False
-    # Busca un archivo sqlite3 dentro del directorio (nivel superior)
-    for p in dirpath.iterdir():
-        if p.is_file() and p.suffix == ".sqlite3":
-            return True
-    # Si no se encontró .sqlite3 arriba, revisa recursivamente por si la versión persiste en subcarpetas.
-    for p in dirpath.rglob("*.sqlite3"):
+
+    # Compatibilidad con Chroma <0.4.x
+    if any(p.is_file() and p.suffix == ".sqlite3" for p in dirpath.iterdir()):
         return True
+
+    # Compatibilidad con Chroma 0.4+ (mira subcarpetas con metadata)
+    if any(p.is_dir() and (p / "chroma.sqlite3").exists() for p in dirpath.iterdir()):
+        return True
+    if any(p.is_dir() and (p / "MANIFEST").exists() for p in dirpath.iterdir()):
+        return True
+
     return False
 
 
 def get_vectordb() -> Chroma:
     """
     Devuelve la instancia de Chroma persistente usando las embeddings actuales.
-    Lanza excepción clara si el índice no existe (p. ej., primera vez sin PDFs).
+    Lanza excepción clara si el índice no existe.
     """
     chroma_dir = Path(CHROMA_DIR)
     if not _has_chroma_index(chroma_dir):
         raise RuntimeError(
-            f"No se encontró un índice Chroma en {chroma_dir}. "
-            "Sube tus PDFs a backend/data/docs y/o permite que ensure_index() "
-            "construya el índice al iniciar."
+            f"❌ No se encontró un índice Chroma en {chroma_dir}. "
+            "Ejecuta `python -m backend.ingest --rebuild` primero."
         )
 
     embeddings = get_embeddings()
     return Chroma(
         persist_directory=str(chroma_dir),
-        embedding_function=embeddings
+        embedding_function=embeddings,
     )
 
 
@@ -53,18 +58,11 @@ def get_retriever(
     """
     Construye un retriever de Chroma.
 
-    Parámetros:
-    - k: número de documentos a devolver.
-    - use_mmr: si True, usa Maximal Marginal Relevance ("mmr") para diversidad.
-    - fetch_k: candidatos iniciales (solo relevante para MMR).
-    - lambda_mult: balance relevancia/diversidad en MMR (0..1).
-    - score_threshold: umbral de similitud (0..1). Se aplica cuando use_mmr=False,
-      usando el search_type 'similarity_score_threshold'.
-
-    Nota:
-    - En 'mmr' el 'score_threshold' NO se aplica. Si necesitas umbral + diversidad,
-      puedes iniciar con MMR y filtrar manualmente resultados, pero aquí optamos
-      por usar 'similarity_score_threshold' cuando use_mmr=False.
+    - k: número de documentos a devolver
+    - use_mmr: si True, usa Maximal Marginal Relevance ("mmr") para diversidad
+    - fetch_k: candidatos iniciales (solo relevante para MMR)
+    - lambda_mult: balance relevancia/diversidad en MMR
+    - score_threshold: umbral de similitud (solo cuando use_mmr=False)
     """
     vectordb = get_vectordb()
 
@@ -76,9 +74,8 @@ def get_retriever(
             "lambda_mult": lambda_mult,
         }
     else:
-        # Aplica umbral de similitud
         search_type = "similarity_score_threshold"
-        search_kwargs = {
+        search_kwargs: Dict[str, Any] = {
             "k": k,
             "score_threshold": score_threshold,
         }
