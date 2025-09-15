@@ -4,13 +4,20 @@ services:
     env: python
     plan: free
     buildCommand: |
+      # Instalar Rust (necesario para compilar tiktoken y dependencias modernas)
+      curl https://sh.rustup.rs -sSf | sh -s -- -y
+      source $HOME/.cargo/env
+
+      # Instalar dependencias Python
       pip install --upgrade pip
       pip install -r requirements.txt
+
+      # Construir embeddings al primer deploy
       python -m backend.ingest
-    startCommand: uvicorn backend.app:app --host 0.0.0.0 --port 8000
+    startCommand: uvicorn backend.app:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: OPENAI_API_KEY
-        sync: false   # ⚠️ Lo configuras en el panel de Render, no en GitHub
+        sync: false   # ⚠️ Se configura en Render Dashboard, no en GitHub
       - key: EMBEDDINGS_PROVIDER
         value: openai
       - key: EMBEDDINGS_MODEL
@@ -19,3 +26,7 @@ services:
         value: gpt-4o-mini
       - key: CHAT_TEMPERATURE
         value: "0.2"
+      - key: DATA_DIR
+        value: /opt/render/project/src/backend/data
+
+
