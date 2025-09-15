@@ -1,0 +1,83 @@
+﻿# =============================
+# 🔒 Environment variables
+# =============================
+.env
+*.env
+.env.*
+
+# =============================
+# 🐍 Python virtual environments
+# =============================
+venv/
+.venv/
+env/
+ENV/
+
+# =============================
+# 🐍 Python cache & artifacts
+# =============================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# =============================
+# 📝 Logs & databases
+# =============================
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+
+# =============================
+# 📦 Build / dist
+# =============================
+build/
+dist/
+*.egg-info/
+
+# =============================
+# 📦 Chroma / local embeddings data
+# (no subir índices, se regeneran en el servidor)
+# =============================
+backend/data/chroma/
+backend/chroma_db/
+backend/chroma.sqlite3
+backend/data/*.bin
+backend/data/*.pkl
+
+# =============================
+# 💻 OS generated files
+# =============================
+.DS_Store
+Thumbs.db
+
+# =============================
+# 🛠️ IDEs & editor configs
+# =============================
+.vscode/
+.idea/
+
+# =============================
+# 🧪 Test coverage / reports
+# =============================
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+junit.xml
+
+# =============================
+# (Opcional) Node / web tooling
+# =============================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
