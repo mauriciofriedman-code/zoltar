@@ -24,20 +24,13 @@
     }
     .tagline { margin:4px 0 0; color:var(--muted); font-size:14px; }
 
-    /* 📐 Layout general */
     main { 
-      flex:1; 
-      display:flex; 
-      justify-content:center; 
-      align-items:flex-start; 
-      padding:20px; 
-      gap:20px;
-      flex-wrap:wrap;
+      flex:1; display:flex; justify-content:center; align-items:flex-start; 
+      padding:20px; gap:20px; flex-wrap:wrap;
     }
     .machine, .panel-card {
       background:var(--card); border:1px solid rgba(162,107,255,.35);
-      border-radius:18px; padding:20px; 
-      box-shadow:0 10px 30px rgba(0,0,0,.35);
+      border-radius:18px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,.35);
     }
     .machine { 
       flex:1 1 350px;
@@ -91,13 +84,10 @@
     }
     footer span { color:var(--gold); }
 
-    /* 📱 Smartphone: Zoltar arriba, panel abajo */
     @media screen and (max-width: 900px) {
       main { flex-direction:column; align-items:center; }
       .machine, .panel-card { width:100%; max-width:100%; }
     }
-
-    /* 💻 PC: Zoltar a la izquierda, panel a la derecha */
     @media screen and (min-width: 901px) {
       main { flex-direction:row; align-items:flex-start; }
     }
@@ -110,7 +100,7 @@
   </header>
 
   <main>
-    <section class="machine">
+    <section class="machine thinking">
       <img id="zoltarImg" src="img/Zoltar_1.png" alt="Zoltar" />
     </section>
 
@@ -134,15 +124,14 @@
     Animación de Zoltar creada por <span>Naomi Friedman</span>
   </footer>
 
-  <!-- 🎵 Sonidos -->
   <audio id="soundCoin" src="sounds/coin.mp3" preload="auto"></audio>
   <audio id="soundThinking" src="sounds/thinking.mp3" preload="auto" loop></audio>
   <audio id="soundReveal" src="sounds/reveal.mp3" preload="auto"></audio>
 
-  <!-- Carga la lógica -->
   <script src="app.js"></script>
 </body>
 </html>
+
 
 
 
