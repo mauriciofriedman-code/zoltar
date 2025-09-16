@@ -47,7 +47,7 @@ if (formA) {
       const res = await fetch(`${baseUrl}/api/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: msg, mode }), // unificado: usa `text`
+        body: JSON.stringify({ text: msg, mode }),
       });
 
       stopAnimation(res.ok);
@@ -94,7 +94,7 @@ if (formB) {
       const res = await fetch(`${baseUrl}/api/teacher`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: msg }), // unificado: usa `text`
+        body: JSON.stringify({ text: msg }),
       });
 
       stopAnimation(res.ok);
@@ -164,6 +164,15 @@ const frames = [
   "/img/Zoltar_3.png",
   "/img/Zoltar_2.png",
 ];
+
+// 🔥 Precargar imágenes para evitar problemas en Render
+const preloaded = [];
+frames.forEach(src => {
+  const img = new Image();
+  img.src = src;
+  preloaded.push(img);
+});
+
 let frameIndex = 0;
 
 function startAnimation() {
@@ -227,6 +236,7 @@ if (coinBtn && slot) {
     soundCoin.play().catch(() => {});
   });
 }
+
 
 
 
