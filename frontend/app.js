@@ -30,104 +30,98 @@ function appendMessage(log, text, who = "ai") {
 // =============================
 // Panel A: Baseline vs Engineered
 // =============================
-formA.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const msg = document.getElementById("msgA").value.trim();
-  if (!msg) return;
+if (formA) {
+  formA.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById("msgA").value.trim();
+    if (!msg) return;
 
-  appendMessage(logA, msg, "me");
-  document.getElementById("msgA").value = "";
+    appendMessage(logA, msg, "me");
+    document.getElementById("msgA").value = "";
 
-  const mode = document.querySelector("input[name='modeA']:checked").value;
+    const mode = document.querySelector("input[name='modeA']:checked").value;
 
-  try {
-    startAnimation();   // 👈 inicia animación y sonido "thinking"
+    try {
+      startAnimation();
 
-    const res = await fetch(`${baseUrl}/api/generate`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: msg, mode }), // 🔥 corregido: text en lugar de question
-    });
+      const res = await fetch(`${baseUrl}/api/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: msg, mode }), // unificado: usa `text`
+      });
 
-    stopAnimation(res.ok);   // 👈 detiene animación
+      stopAnimation(res.ok);
 
-    if (!res.ok) {
-      let errMsg = `⚠️ Error backend (${res.status})`;
-      try {
-        const errData = await res.json();
-        if (errData.detail) errMsg += `: ${errData.detail}`;
-      } catch {
-        const errText = await res.text();
-        if (errText) errMsg += `: ${errText}`;
+      if (!res.ok) {
+        let errMsg = `⚠️ Error backend (${res.status})`;
+        try {
+          const errData = await res.json();
+          if (errData.detail) errMsg += `: ${errData.detail}`;
+        } catch {
+          const errText = await res.text();
+          if (errText) errMsg += `: ${errText}`;
+        }
+        appendMessage(logA, errMsg, "ai");
+        console.error("Respuesta del servidor:", res);
+        return;
       }
-      appendMessage(logA, errMsg, "ai");
-      console.error("Respuesta del servidor:", res);
-      return;
-    }
 
-    const data = await res.json();
-    if (data.text) {
-      appendMessage(logA, data.text, "ai");
-    } else {
-      appendMessage(logA, "⚠️ Respuesta inesperada del backend", "ai");
-      console.error("Respuesta inesperada:", data);
+      const data = await res.json();
+      appendMessage(logA, data.text || "⚠️ Respuesta inesperada", "ai");
+    } catch (err) {
+      stopAnimation(false);
+      appendMessage(logA, "❌ No se pudo conectar con backend", "ai");
+      console.error(err);
     }
-  } catch (err) {
-    stopAnimation(false);
-    appendMessage(logA, "❌ No se pudo conectar con backend", "ai");
-    console.error(err);
-  }
-});
+  });
+}
 
 // =============================
 // Panel B: Teacher con RAG
 // =============================
-formB.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const msg = document.getElementById("msgB").value.trim();
-  if (!msg) return;
+if (formB) {
+  formB.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById("msgB").value.trim();
+    if (!msg) return;
 
-  appendMessage(logB, msg, "me");
-  document.getElementById("msgB").value = "";
+    appendMessage(logB, msg, "me");
+    document.getElementById("msgB").value = "";
 
-  try {
-    startAnimation();   // 👈 inicia animación y sonido "thinking"
+    try {
+      startAnimation();
 
-    const res = await fetch(`${baseUrl}/api/teacher`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: msg }), // 🔥 corregido: text en lugar de question
-    });
+      const res = await fetch(`${baseUrl}/api/teacher`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: msg }), // unificado: usa `text`
+      });
 
-    stopAnimation(res.ok);   // 👈 detiene animación
+      stopAnimation(res.ok);
 
-    if (!res.ok) {
-      let errMsg = `⚠️ Error backend (${res.status})`;
-      try {
-        const errData = await res.json();
-        if (errData.detail) errMsg += `: ${errData.detail}`;
-      } catch {
-        const errText = await res.text();
-        if (errText) errMsg += `: ${errText}`;
+      if (!res.ok) {
+        let errMsg = `⚠️ Error backend (${res.status})`;
+        try {
+          const errData = await res.json();
+          if (errData.detail) errMsg += `: ${errData.detail}`;
+        } catch {
+          const errText = await res.text();
+          if (errText) errMsg += `: ${errText}`;
+        }
+        appendMessage(logB, errMsg, "ai");
+        console.error("Respuesta del servidor:", res);
+        return;
       }
-      appendMessage(logB, errMsg, "ai");
-      console.error("Respuesta del servidor:", res);
-      return;
-    }
 
-    const data = await res.json();
-    if (data.text) {
-      appendMessage(logB, data.text, "ai");
-    } else {
-      appendMessage(logB, "⚠️ Respuesta inesperada del backend", "ai");
-      console.error("Respuesta inesperada:", data);
+      const data = await res.json();
+      appendMessage(logB, data.text || "⚠️ Respuesta inesperada", "ai");
+    } catch (err) {
+      stopAnimation(false);
+      appendMessage(logB, "❌ No se pudo conectar con backend", "ai");
+      console.error(err);
     }
-  } catch (err) {
-    stopAnimation(false);
-    appendMessage(logB, "❌ No se pudo conectar con backend", "ai");
-    console.error(err);
-  }
-});
+  });
+}
 
 // =============================
 // Chequeo de conexión inicial
@@ -161,14 +155,14 @@ const soundReveal = document.querySelector("#soundReveal");
 const soundThinking = document.querySelector("#soundThinking");
 
 const frames = [
-  "img/Zoltar_1.png",
-  "img/Zoltar_2.png",
-  "img/Zoltar_3.png",
-  "img/Zoltar_4.png",
-  "img/Zoltar_5.png",
-  "img/Zoltar_4.png",
-  "img/Zoltar_3.png",
-  "img/Zoltar_2.png",
+  "/img/Zoltar_1.png",
+  "/img/Zoltar_2.png",
+  "/img/Zoltar_3.png",
+  "/img/Zoltar_4.png",
+  "/img/Zoltar_5.png",
+  "/img/Zoltar_4.png",
+  "/img/Zoltar_3.png",
+  "/img/Zoltar_2.png",
 ];
 let frameIndex = 0;
 
@@ -176,7 +170,7 @@ function startAnimation() {
   stopAnimation();
   frameIndex = 0;
   soundThinking.currentTime = 0;
-  soundThinking.play();
+  soundThinking.play().catch(() => {});
 
   animInterval = setInterval(() => {
     zoltarImg.src = frames[frameIndex];
@@ -186,13 +180,13 @@ function startAnimation() {
 
 function stopAnimation(success = true) {
   if (animInterval) clearInterval(animInterval);
-  zoltarImg.src = "img/Zoltar_1.png";
+  zoltarImg.src = "/img/Zoltar_1.png";
   soundThinking.pause();
   soundThinking.currentTime = 0;
 
   if (success) {
     soundReveal.currentTime = 0;
-    soundReveal.play();
+    soundReveal.play().catch(() => {});
   }
 }
 
@@ -203,33 +197,37 @@ const coinBtn = document.getElementById("coinBtn");
 const slot = document.getElementById("slot");
 let hasCoin = false;
 
-coinBtn.addEventListener("click", () => {
-  const coinClone = document.createElement("img");
-  coinClone.src = "img/coin.png";
-  coinClone.className = "moving-coin";
+if (coinBtn && slot) {
+  coinBtn.addEventListener("click", () => {
+    const coinClone = document.createElement("img");
+    coinClone.src = "/img/coin.png";
+    coinClone.className = "moving-coin";
 
-  const rectCoin = coinBtn.getBoundingClientRect();
-  const rectSlot = slot.getBoundingClientRect();
+    const rectCoin = coinBtn.getBoundingClientRect();
+    const rectSlot = slot.getBoundingClientRect();
 
-  coinClone.style.left = rectCoin.left + "px";
-  coinClone.style.top = rectCoin.top + "px";
+    coinClone.style.left = rectCoin.left + "px";
+    coinClone.style.top = rectCoin.top + "px";
 
-  document.body.appendChild(coinClone);
-  void coinClone.offsetWidth;
+    document.body.appendChild(coinClone);
+    void coinClone.offsetWidth;
 
-  const dx = rectSlot.left - rectCoin.left;
-  const dy = rectSlot.top - rectCoin.top;
+    const dx = rectSlot.left - rectCoin.left;
+    const dy = rectSlot.top - rectCoin.top;
 
-  coinClone.style.transform = `translate(${dx}px, ${dy}px) scale(0.6) rotate(360deg)`;
-  coinClone.style.opacity = "0";
+    coinClone.style.transform = `translate(${dx}px, ${dy}px) scale(0.6) rotate(360deg)`;
+    coinClone.style.opacity = "0";
 
-  setTimeout(() => coinClone.remove(), 800);
+    setTimeout(() => coinClone.remove(), 800);
 
-  hasCoin = true;
-  document.getElementById("question").disabled = false;
-  document.getElementById("askBtn").disabled = false;
-  soundCoin.currentTime = 0;
-  soundCoin.play();
-});
+    hasCoin = true;
+    document.getElementById("question").disabled = false;
+    document.getElementById("askBtn").disabled = false;
+    soundCoin.currentTime = 0;
+    soundCoin.play().catch(() => {});
+  });
+}
+
+
 
 

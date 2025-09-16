@@ -23,12 +23,20 @@
       margin:0; font-family:"Playfair Display",serif; font-weight:900; color:var(--gold);
     }
     .tagline { margin:4px 0 0; color:var(--muted); font-size:14px; }
-    main { flex:1; display:flex; justify-content:center; align-items:flex-start; padding:20px; }
+    main { 
+      flex:1; 
+      display:flex; 
+      justify-content:center; 
+      align-items:flex-start; 
+      padding:20px; 
+      flex-direction:column; /* default PC/vertical */
+    }
     .card {
       background:var(--card); border:1px solid rgba(162,107,255,.35);
       border-radius:18px; padding:20px; max-width:500px; width:100%;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
       text-align:center; position:relative;
+      margin-bottom:20px;
     }
     .machine img {
       width:100%; border:5px solid var(--gold); border-radius:12px;
@@ -43,15 +51,23 @@
     }
 
     .toolbar { margin:12px 0; display:flex; justify-content:center; gap:20px; color:var(--muted); }
-    .panel { margin-top:16px; }
+
+    .panel { 
+      margin-top:16px;
+      display:flex;
+      flex-direction:column;
+      align-items:center; 
+    }
     input, button {
       padding:10px; border-radius:8px; border:none; margin:5px;
     }
     input { width:65%; background:#0c0813; color:var(--ink); border:1px solid #38204f; }
     button { cursor:pointer; background:var(--gold); font-weight:bold; color:#000; }
+    #askBtn { margin-top:10px; align-self:center; }
     .output {
       margin-top:15px; min-height:80px; background:#0a0611; color:white;
       padding:10px; border-radius:8px; text-align:left;
+      width:100%;
     }
 
     .coin-slot {
@@ -113,6 +129,19 @@
       background:#0a0611;
     }
     footer span { color:var(--gold); }
+
+    /* 📱 Smartphone horizontal */
+    @media screen and (max-width: 900px) and (orientation: landscape) {
+      main {
+        flex-direction: row; 
+        justify-content: space-around;
+        align-items: flex-start;
+      }
+      .card {
+        width: 45%; 
+        margin: 0 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -124,7 +153,7 @@
   <main>
     <section class="card">
       <div class="machine" id="machine">
-        <img id="zoltarImg" src="img/Zoltar_1.png" alt="Zoltar" />
+        <img id="zoltarImg" src="/img/Zoltar_1.png" alt="Zoltar" />
       </div>
 
       <div class="toolbar">
@@ -137,7 +166,7 @@
 
         <!-- Slot arcade con moneda -->
         <div class="coin-slot">
-          <img id="coinBtn" src="img/coin.png" alt="Moneda Zoltar" class="coin" />
+          <img id="coinBtn" src="/img/coin.png" alt="Moneda Zoltar" class="coin" />
           <div class="slot" id="slot"></div>
         </div>
 
@@ -152,9 +181,9 @@
   </footer>
 
   <!-- 🎵 Sonidos -->
-  <audio id="soundCoin" src="sounds/coin.mp3" preload="auto"></audio>
-  <audio id="soundThinking" src="sounds/thinking.mp3" preload="auto" loop></audio>
-  <audio id="soundReveal" src="sounds/reveal.mp3" preload="auto"></audio>
+  <audio id="soundCoin" src="/sounds/coin.mp3" preload="auto"></audio>
+  <audio id="soundThinking" src="/sounds/thinking.mp3" preload="auto" loop></audio>
+  <audio id="soundReveal" src="/sounds/reveal.mp3" preload="auto"></audio>
 
   <script>
     const BACKEND_URL = window.location.hostname.includes("localhost")
@@ -175,9 +204,9 @@
     const revealSound = document.getElementById("soundReveal");
 
     const frames = [
-      "img/Zoltar_1.png","img/Zoltar_2.png","img/Zoltar_3.png",
-      "img/Zoltar_4.png","img/Zoltar_5.png","img/Zoltar_4.png",
-      "img/Zoltar_3.png","img/Zoltar_2.png"
+      "/img/Zoltar_1.png","/img/Zoltar_2.png","/img/Zoltar_3.png",
+      "/img/Zoltar_4.png","/img/Zoltar_5.png","/img/Zoltar_4.png",
+      "/img/Zoltar_3.png","/img/Zoltar_2.png"
     ];
     let frameIndex = 0, animInterval=null;
 
@@ -202,7 +231,7 @@
     let hasCoin=false;
     coinBtn.addEventListener("click",()=>{
       const coinClone=document.createElement("img");
-      coinClone.src="img/coin.png";
+      coinClone.src="/img/coin.png";
       coinClone.className="moving-coin";
 
       const rectCoin=coinBtn.getBoundingClientRect();
@@ -242,8 +271,8 @@
 
       try{
         const body = mode==="rag"
-          ? { text: q }                  // 🔥 corregido
-          : { text: q, mode: "engineered" }; // 🔥 corregido
+          ? { text: q }
+          : { text: q, mode: "engineered" };
 
         const res=await fetch(BACKEND_URL+endpoint,{
           method:"POST", headers:{"Content-Type":"application/json"},
@@ -275,3 +304,6 @@
   </script>
 </body>
 </html>
+
+
+
