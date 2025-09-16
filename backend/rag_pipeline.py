@@ -110,31 +110,42 @@ def answer_with_rag(
         "Eres un experto en tecnología educativa.\n"
         "Responde preguntas sobre el uso de la inteligencia artificial y la generación artificial (GenIA) en educación.\n"
         "Usa solamente la información proporcionada en el contexto.\n"
-        "No inventes ni completes si no hay información suficiente en el contexto.\n"
+        "No inventes ni rellenes con conocimiento externo."
     )
 
     messages = [
         {"role": "system", "content": prompt},
-        {"role": "user", "content": f"Contexto:\n{context_text}\n\nPregunta:\n{question}"},
+        {"role": "user", "content": f"Contexto:\n{context_text}\n\nPregunta:\n{question}"}
     ]
 
     answer = safe_response(llm, messages)
 
-    return {
-        "text": answer.strip(),
-        "sources": sources
-    }
+    return {"text": answer.strip(), "sources": sources}
 
 
 def chatbot_simple(conversation: List[Dict], system_prompt: str = "") -> Dict:
     """
-    Genera una respuesta de chat simple sin RAG.
+    Chat directo sin retrieval, solo con historial + system_prompt.
     """
     llm = get_chat_llm()
-    messages = [{"role": "system", "content": system_prompt}] if system_prompt else []
-    messages += conversation
+    messages = []
+
+    if system_prompt:
+        messages.append({"role": "system", "content": system_prompt})
+
+    messages.extend(conversation)
     answer = safe_response(llm, messages)
-    return {"text": answer.strip()}
+
+    return {"text": answer.strip(), "sources": []}
+
+
+def chatbot_teacher(question: str, history: str = "") -> Dict:
+    """
+    Chat para docentes, usando prompt especial + history si aplica.
+    """
+    system_prompt = build_teacher_prompt(history.strip() if history else "")
+    return answer_with_rag(question=question, system_prompt=system_prompt)
+
 
 
 
