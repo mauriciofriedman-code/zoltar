@@ -145,13 +145,30 @@ askBtn.addEventListener("click", async () => {
 
     const data = await res.json();
     stopAnimation(res.ok);
+
     await typeText(data.text || "⚠️ Respuesta inesperada");
+
+    // 🎓 Mostrar fuentes si estamos en modo RAG
+    if (mode === "rag" && Array.isArray(data.sources) && data.sources.length > 0) {
+      const refs = document.createElement("div");
+      refs.className = "refs";
+      refs.innerHTML = `
+        <strong>📚 Fuentes consultadas:</strong>
+        <ul>
+          ${data.sources.map(s => `<li>${s}</li>`).join("")}
+        </ul>
+      `;
+      conversation.appendChild(refs);
+      conversation.scrollTop = conversation.scrollHeight;
+    }
+
   } catch (err) {
     stopAnimation(false);
     await typeText("❌ No se pudo conectar con backend");
     console.error(err);
   }
 });
+
 
 
 

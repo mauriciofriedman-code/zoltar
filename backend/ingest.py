@@ -1,14 +1,16 @@
 # backend/ingest.py
+
 import argparse
 import shutil
 from pathlib import Path
+from typing import Optional
+from pypdf import PdfReader
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFDirectoryLoader
 
 from backend.config import DOCS_DIR, CHROMA_DIR, EMBEDDINGS_MODEL
-from pypdf import PdfReader   # ✅ Librería moderna en lugar de PyPDF2
 
 
 def clear_chroma_dir():
@@ -19,6 +21,29 @@ def clear_chroma_dir():
                 f.unlink()
             elif f.is_dir():
                 shutil.rmtree(f)
+
+
+def extract_pdf_metadata(pdf_path: Path) -> dict:
+    """
+    Extrae metadatos útiles (title, author, etc.) del PDF si existen.
+    """
+    try:
+        reader = PdfReader(str(pdf_path))
+        info = reader.metadata or {}
+
+        title = info.get("/Title") or pdf_path.stem
+        authors = info.get("/Author") or "Autor desconocido"
+
+        return {
+            "title": title.strip(),
+            "authors": authors.strip(),
+        }
+    except Exception as e:
+        print(f"[!] Error extrayendo metadatos de {pdf_path.name}: {e}")
+        return {
+            "title": pdf_path.stem,
+            "authors": "Autor desconocido"
+        }
 
 
 def main(rebuild: bool = False):
@@ -33,19 +58,20 @@ def main(rebuild: bool = False):
 
     # Enriquecer metadata de cada documento
     for d in docs:
-        src = d.metadata.get("source", "desconocido")
-        page = d.metadata.get("page", "N/A")
+        raw_path = d.metadata.get("source", "")
+        path = Path(raw_path)
+        meta = extract_pdf_metadata(path)
 
-        d.metadata["doc_id"] = str(src)          # puede ser ruta o hash
-        d.metadata["title"] = Path(src).stem     # nombre de archivo como título
-        d.metadata["authors"] = "Autor desconocido"  # si no hay autores reales
-        d.metadata["page"] = page
-        d.metadata["source"] = str(src)
+        d.metadata["doc_id"] = path.name
+        d.metadata["title"] = meta["title"]
+        d.metadata["authors"] = meta["authors"]
+        d.metadata["page"] = d.metadata.get("page", "N/A")
+        d.metadata["source"] = path.name
 
-    # Trocear documentos en chunks manejables
+    # Trocear documentos en chunks
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500,   # suficientemente grande para contexto, pero manejable
-        chunk_overlap=80
+        chunk_size=500,
+        chunk_overlap=80,
     )
     splits = text_splitter.split_documents(docs)
     print(f"✂️ Total de chunks: {len(splits)}")
@@ -53,7 +79,7 @@ def main(rebuild: bool = False):
     # Crear embeddings
     embeddings = OpenAIEmbeddings(model=EMBEDDINGS_MODEL)
 
-    # Crear base de datos vectorial en Chroma (persistente)
+    # Crear base de datos vectorial
     Chroma.from_documents(
         documents=splits,
         embedding=embeddings,
@@ -72,6 +98,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     main(rebuild=args.rebuild)
+
 
 
 

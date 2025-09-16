@@ -51,6 +51,7 @@ app.mount("/sounds", StaticFiles(directory=static_dir / "sounds"), name="sounds"
 async def serve_index():
     index_path = frontend_dir / "index.html"
     if index_path.exists():
-        return index_path.read_text(encoding="utf-8")
+        return HTMLResponse(content=index_path.read_text(encoding="utf-8"), status_code=200)
     return HTMLResponse("<h1>Frontend no encontrado</h1>", status_code=404)
+
 

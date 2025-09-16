@@ -3,6 +3,7 @@ services:
     name: zoltar-edu
     env: python
     plan: free
+
     buildCommand: |
       # Instalar Rust (necesario para compilar dependencias modernas como tiktoken)
       curl https://sh.rustup.rs -sSf | sh -s -- -y
@@ -14,21 +15,26 @@ services:
 
       # Construir embeddings al primer deploy (si hay PDFs)
       python -m backend.ingest --rebuild
+
     startCommand: uvicorn backend.app:app --host 0.0.0.0 --port $PORT
+
     envVars:
       - key: OPENAI_API_KEY
         sync: false   # ⚠️ Se configura manualmente en Render Dashboard
+
       - key: EMBEDDINGS_PROVIDER
         value: openai
+
       - key: EMBEDDINGS_MODEL
         value: text-embedding-3-large
+
       - key: CHAT_MODEL
         value: gpt-4o-mini
+
       - key: CHAT_TEMPERATURE
         value: "0.2"
+
       - key: DATA_DIR
         value: /opt/render/project/src/backend/data
-
-
 
 
