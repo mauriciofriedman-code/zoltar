@@ -30,7 +30,6 @@ const frames = [
   "/static/img/Zoltar_2.png",
 ];
 
-// Preload images
 const preloaded = [];
 frames.forEach(src => {
   const img = new Image();
@@ -153,6 +152,7 @@ askBtn.addEventListener("click", async () => {
     console.error(err);
   }
 });
+
 
 
 

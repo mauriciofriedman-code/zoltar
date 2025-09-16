@@ -1,263 +1,133 @@
-:root {
-  --bg: #0f0f14;
-  --panel: #15151d;
-  --ink: #e8e8f0;
-  --muted: #a3a3b3;
-  --gold: #e5b85c;
-  --accent: #6fb1ff;
-  --danger: #ff6b6b;
-  --ok: #76e39f;
-  --bubble: #1c1c26;
-  --user: #23324a;
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ZOLTAR • Oráculo Educativo</title>
 
-* {
-  box-sizing: border-box;
-}
+  <!-- Fonts & Favicon -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/static/frontendfavicon.png" />
 
-html, body {
-  height: 100%;
-}
+  <!-- Main chat UI styles -->
+  <link rel="stylesheet" href="/static/style.css">
 
-body {
-  margin: 0;
-  font: 15px/1.5 system-ui, Segoe UI, Roboto, Arial, sans-serif;
-  color: var(--ink);
-  background: radial-gradient(1200px 600px at 10% -10%, #1a1a24, #0b0b10) fixed;
-}
+  <!-- Optional: style for Zoltar box -->
+  <style>
+    .zoltar-box {
+      flex: 1 1 350px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--panel);
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      max-width: 400px;
+    }
+    .zoltar-box img {
+      width: 100%;
+      border: 4px solid var(--gold);
+      border-radius: 12px;
+    }
+    .zoltar-box.thinking img {
+      animation: glowBorder 1.5s infinite alternate;
+    }
+    @keyframes glowBorder {
+      from { box-shadow: 0 0 10px var(--gold), inset 0 0 5px var(--gold); }
+      to { box-shadow: 0 0 25px var(--gold), inset 0 0 15px var(--gold); }
+    }
+    .coin-slot {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .coin {
+      width: 60px; height: 60px;
+      cursor: pointer;
+    }
+    .slot {
+      width: 25px; height: 60px;
+      background: linear-gradient(180deg, #333, #111);
+      border: 2px solid #555;
+      border-radius: 4px;
+      box-shadow: inset 0 0 6px #000;
+      position: relative;
+    }
+    .slot::after {
+      content: "";
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px; height: 30px;
+      background: #000;
+      border-radius: 2px;
+    }
+    .moving-coin {
+      position: fixed;
+      width: 60px;
+      height: 60px;
+      pointer-events: none;
+      transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+      z-index: 9999;
+    }
+  </style>
+</head>
 
-/* Header */
-header.marquee {
-  padding: 28px 18px 12px;
-  text-align: center;
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  background: linear-gradient(180deg, rgba(15,15,20,.95), rgba(15,15,20,.7) 70%, transparent);
-  border-bottom: 1px solid #24243a;
-  backdrop-filter: blur(6px);
-}
+<body>
+  <header class="marquee">
+    <div class="title">
+      <span class="crystal">🔮</span>
+      <h1>ZOLTAR</h1>
+    </div>
+    <p class="subtitle">Fortuna pedagógica en cada respuesta</p>
+  </header>
 
-.title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
+  <main class="panel row">
+    <!-- LEFT: Zoltar machine -->
+    <section class="zoltar-box" id="zoltarBox">
+      <img id="zoltarImg" src="/static/img/Zoltar_1.png" alt="Zoltar" />
+      <div class="coin-slot">
+        <img id="coinBtn" src="/static/img/coin.png" alt="Moneda" class="coin" />
+        <div class="slot" id="slot"></div>
+      </div>
+    </section>
 
-.title h1 {
-  margin: 0;
-  font-size: 28px;
-  color: var(--gold);
-  text-shadow: 0 0 10px rgba(229, 184, 92, 0.35);
-  letter-spacing: 0.5px;
-}
+    <!-- RIGHT: Chat interface -->
+    <section class="chat visible">
+      <div class="options">
+        <div class="switch">
+          <label><input type="radio" name="mode" value="simple" checked> Simple</label>
+          <label><input type="radio" name="mode" value="rag"> RAG</label>
+        </div>
+        <div class="hint">💡 Inserta la moneda para comenzar</div>
+      </div>
 
-.crystal {
-  font-size: 26px;
-  animation: float 3s ease-in-out infinite;
-}
+      <div class="conversation" id="conversation">
+        <div class="bubble" id="output">Aquí aparecerá la respuesta de Zoltar...</div>
+      </div>
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
+      <div class="composer">
+        <input id="question" type="text" placeholder="Haz tu consulta..." disabled />
+        <button id="askBtn" disabled>Preguntar</button>
+      </div>
+    </section>
+  </main>
 
-.subtitle {
-  margin: 6px 0 0;
-  color: var(--muted);
-}
+  <footer class="foot">
+    Animación y diseño por <span>Naomi Friedman</span>
+  </footer>
 
-/* Layout */
-.panel {
-  max-width: 1100px;
-  margin: 14px auto 0;
-  padding: 0 14px;
-}
+  <!-- Sounds -->
+  <audio id="soundCoin" src="/static/sounds/coin.mp3" preload="auto"></audio>
+  <audio id="soundThinking" src="/static/sounds/thinking.mp3" preload="auto" loop></audio>
+  <audio id="soundReveal" src="/static/sounds/reveal.mp3" preload="auto"></audio>
 
-.row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-}
+  <!-- App logic -->
+  <script src="/static/app.js"></script>
+</body>
+</html>
 
-.row label {
-  color: var(--muted);
-}
-
-.row input {
-  background: #0e0e14;
-  border: 1px solid #29293f;
-  color: var(--ink);
-  padding: 10px 12px;
-  border-radius: 12px;
-  min-width: 260px;
-  outline: none;
-}
-
-.ghost {
-  background: transparent;
-  color: var(--ink);
-  border: 1px solid #2c2c40;
-  padding: 10px 14px;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.ghost:hover {
-  border-color: #3a3a55;
-}
-
-/* Tabs */
-.tabs {
-  display: flex;
-  gap: 8px;
-  margin: 12px 0 0;
-}
-
-.tab {
-  background: var(--panel);
-  border: 1px solid #2a2a3d;
-  color: var(--ink);
-  padding: 10px 14px;
-  border-radius: 12px;
-  cursor: pointer;
-  box-shadow: var(--shadow);
-}
-
-.tab.active {
-  border-color: var(--gold);
-  color: var(--gold);
-}
-
-/* Chat Section */
-.chat {
-  max-width: 1100px;
-  margin: 14px auto;
-  padding: 0 14px;
-  display: none;
-}
-
-.chat.visible {
-  display: block;
-}
-
-.options {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.switch {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.hint {
-  color: var(--muted);
-}
-
-/* Chat Bubbles */
-.conversation {
-  background: var(--panel);
-  border: 1px solid #2a2a3d;
-  border-radius: 16px;
-  min-height: 320px;
-  padding: 14px;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-height: 60vh;
-  overflow: auto;
-}
-
-.bubble {
-  background: var(--bubble);
-  padding: 12px 14px;
-  border-radius: 14px;
-  width: fit-content;
-  max-width: 85%;
-  border: 1px solid #2a2a3d;
-  white-space: pre-wrap;
-}
-
-.user {
-  align-self: flex-end;
-  background: var(--user);
-  border-color: #2e3d59;
-}
-
-.meta {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 6px;
-}
-
-.err {
-  color: var(--danger);
-}
-
-.ok {
-  color: var(--ok);
-}
-
-/* Composer */
-.composer {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.composer input {
-  flex: 1;
-  background: #0e0e14;
-  color: var(--ink);
-  border: 1px solid #2a2a3d;
-  padding: 12px 14px;
-  border-radius: 12px;
-  outline: none;
-}
-
-.composer button {
-  background: linear-gradient(180deg, #2b62ff, #2b4eff);
-  color: white;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 12px;
-  cursor: pointer;
-  box-shadow: var(--shadow);
-}
-
-.composer button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Sources */
-.sources {
-  margin-top: 8px;
-  font-size: 13px;
-}
-
-.sources a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.sources a:hover {
-  text-decoration: underline;
-}
-
-/* Footer */
-footer.foot {
-  opacity: 0.7;
-  text-align: center;
-  padding: 18px 10px;
-}
 
