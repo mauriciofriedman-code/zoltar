@@ -40,7 +40,8 @@ def health():
 # ========================================
 # Servir Archivos Estáticos y Frontend
 # ========================================
-frontend_dir = Path(__file__).resolve().parents[1] / "frontend"
+# 🔧 Ajustado para nueva ubicación: backend/frontend
+frontend_dir = Path(__file__).resolve().parent / "frontend"
 static_dir = frontend_dir / "static"
 
 # Servir carpetas de recursos estáticos
