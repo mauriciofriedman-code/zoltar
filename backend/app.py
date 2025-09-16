@@ -36,19 +36,17 @@ def health():
 # Serve Static Frontend (HTML, JS, CSS, IMG, Sounds)
 # ========================================
 frontend_dir = Path(__file__).resolve().parents[1] / "frontend"
+static_dir = frontend_dir / "static"
 
-# Serve static files (JS, images, etc.)
-app.mount("/img", StaticFiles(directory=frontend_dir / "img"), name="img")
-app.mount("/sounds", StaticFiles(directory=frontend_dir / "sounds"), name="sounds")
-app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
+# Serve static files (images, sounds, js, css)
+app.mount("/img", StaticFiles(directory=static_dir / "img"), name="img")
+app.mount("/sounds", StaticFiles(directory=static_dir / "sounds"), name="sounds")
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 # Serve index.html at root
 @app.get("/", response_class=HTMLResponse)
 async def serve_index():
-    index_path = frontend_dir / "index.html"
+    index_path = static_dir / "index.html"
     if index_path.exists():
         return index_path.read_text(encoding="utf-8")
     return HTMLResponse("<h1>Frontend not found</h1>", status_code=404)
-
-
-
