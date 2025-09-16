@@ -3,136 +3,128 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ZOLTAR • Oráculo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg:#0a0611; --bg2:#120a1d; --card:#1a1028;
-      --ink:#f2e9ff; --muted:#b6a7d6; --gold:#ffd36e;
-      --neon:#8af7ff; --accent:#a26bff;
-    }
-    body {
-      margin:0; font-family:Inter, sans-serif; color:var(--ink);
-      background:linear-gradient(180deg, var(--bg), var(--bg2));
-      display:flex; flex-direction:column; min-height:100vh;
-    }
-    header {
-      padding:16px; text-align:center; background:#0a0611; border-bottom:1px solid rgba(255,211,110,.2);
-    }
-    header h1 {
-      margin:0; font-family:"Playfair Display",serif; font-weight:900; color:var(--gold);
-    }
-    .tagline { margin:4px 0 0; color:var(--muted); font-size:14px; }
+  <title>ZOLTAR • Oráculo Educativo</title>
 
-    main { 
-      flex:1; display:flex; justify-content:center; align-items:flex-start; 
-      padding:20px; gap:20px; flex-wrap:wrap;
+  <!-- Fonts & Favicon -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/static/frontendfavicon.png" />
+
+  <!-- Main chat UI styles -->
+  <link rel="stylesheet" href="/static/style.css">
+
+  <style>
+    .zoltar-box {
+      flex: 1 1 350px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--panel);
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      max-width: 400px;
     }
-    .machine, .panel-card {
-      background:var(--card); border:1px solid rgba(162,107,255,.35);
-      border-radius:18px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,.35);
+    .zoltar-box img {
+      width: 100%;
+      border: 4px solid var(--gold);
+      border-radius: 12px;
     }
-    .machine { 
-      flex:1 1 350px;
-      display:flex; flex-direction:column; align-items:center;
-      max-width:400px;
+    .zoltar-box.thinking img {
+      animation: glowBorder 1.5s infinite alternate;
     }
-    .machine img {
-      width:100%; border:5px solid var(--gold); border-radius:12px;
-      transition: box-shadow .3s;
-    }
-    .machine.thinking img { animation: glowBorder 1.5s infinite alternate; }
     @keyframes glowBorder {
       from { box-shadow:0 0 10px var(--gold), inset 0 0 5px var(--gold); }
       to   { box-shadow:0 0 25px var(--gold), inset 0 0 15px var(--gold); }
     }
-
-    .panel-card {
-      flex:1 1 350px; 
-      display:flex; flex-direction:column; align-items:center;
-      max-width:500px;
-    }
-
-    .toolbar { margin:12px 0; display:flex; justify-content:center; gap:20px; color:var(--muted); }
-
-    input, button {
-      padding:10px; border-radius:8px; border:none; margin:5px;
-    }
-    input { width:80%; background:#0c0813; color:var(--ink); border:1px solid #38204f; }
-    button { cursor:pointer; background:var(--gold); font-weight:bold; color:#000; }
-    .output {
-      margin-top:15px; min-height:80px; background:#0a0611; color:white;
-      padding:10px; border-radius:8px; text-align:left; width:100%;
-    }
-
     .coin-slot {
-      display:inline-flex; align-items:center; gap:10px; margin:10px 0;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .coin { width:60px; height:60px; cursor:pointer; transition: transform 0.2s; }
-    .coin:hover { transform: scale(1.1) rotate(-5deg); }
-    .slot { width:25px; height:60px; background: linear-gradient(180deg,#333,#111);
-      border:2px solid #555; border-radius:4px; position:relative; box-shadow:inset 0 0 6px #000; }
-    .slot::after { content:""; position:absolute; top:20%; left:50%; transform:translateX(-50%);
-      width:10px; height:30px; background:#000; border-radius:2px; }
-
-    .moving-coin { position:fixed; width:60px; height:60px; pointer-events:none;
-      transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out; z-index:9999; }
-
-    footer {
-      text-align:center; font-size:12px; color:var(--muted);
-      padding:10px; border-top:1px solid rgba(255,211,110,.2); background:#0a0611;
+    .coin {
+      width: 60px; height: 60px;
+      cursor: pointer;
     }
-    footer span { color:var(--gold); }
-
-    @media screen and (max-width: 900px) {
-      main { flex-direction:column; align-items:center; }
-      .machine, .panel-card { width:100%; max-width:100%; }
+    .slot {
+      width: 25px; height: 60px;
+      background: linear-gradient(180deg, #333, #111);
+      border: 2px solid #555;
+      border-radius: 4px;
+      box-shadow: inset 0 0 6px #000;
+      position: relative;
     }
-    @media screen and (min-width: 901px) {
-      main { flex-direction:row; align-items:flex-start; }
+    .slot::after {
+      content: "";
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px; height: 30px;
+      background: #000;
+      border-radius: 2px;
+    }
+    .moving-coin {
+      position: fixed;
+      width: 60px;
+      height: 60px;
+      pointer-events: none;
+      transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+      z-index: 9999;
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <h1>ZOLTAR</h1>
-    <p class="tagline">Fortuna pedagógica en cada respuesta</p>
+  <header class="marquee">
+    <div class="title">
+      <span class="crystal">🔮</span>
+      <h1>ZOLTAR</h1>
+    </div>
+    <p class="subtitle">Fortuna pedagógica en cada respuesta</p>
   </header>
 
-  <main>
-    <section class="machine thinking">
-      <img id="zoltarImg" src="img/Zoltar_1.png" alt="Zoltar" />
-    </section>
-
-    <section class="panel-card">
-      <div class="toolbar">
-        <label><input type="radio" name="mode" value="simple" checked> Modelo simple</label>
-        <label><input type="radio" name="mode" value="rag"> Modelo RAG</label>
-      </div>
-
-      <input id="question" type="text" placeholder="Haz tu consulta..." disabled />
+  <main class="panel row">
+    <!-- LEFT: Zoltar machine -->
+    <section class="zoltar-box" id="zoltarBox">
+      <img id="zoltarImg" src="/img/Zoltar_1.png" alt="Zoltar" />
       <div class="coin-slot">
-        <img id="coinBtn" src="img/coin.png" alt="Moneda Zoltar" class="coin" />
+        <img id="coinBtn" src="/img/coin.png" alt="Moneda" class="coin" />
         <div class="slot" id="slot"></div>
       </div>
-      <button id="askBtn" disabled>Consultar</button>
-      <div class="output" id="output">Aquí aparecerá la respuesta...</div>
+    </section>
+
+    <!-- RIGHT: Chat interface -->
+    <section class="chat visible">
+      <div class="options">
+        <div class="switch">
+          <label><input type="radio" name="mode" value="simple" checked> Simple</label>
+          <label><input type="radio" name="mode" value="rag"> RAG</label>
+        </div>
+        <div class="hint">💡 Inserta la moneda para comenzar</div>
+      </div>
+
+      <div class="conversation" id="conversation">
+        <div class="bubble">Aquí aparecerá la respuesta de Zoltar...</div>
+      </div>
+
+      <div class="composer">
+        <input id="question" type="text" placeholder="Haz tu consulta..." disabled />
+        <button id="askBtn" disabled>Preguntar</button>
+      </div>
     </section>
   </main>
 
-  <footer>
-    Animación de Zoltar creada por <span>Naomi Friedman</span>
+  <footer class="foot">
+    Animación y diseño por <span>Naomi Friedman</span>
   </footer>
 
-  <audio id="soundCoin" src="sounds/coin.mp3" preload="auto"></audio>
-  <audio id="soundThinking" src="sounds/thinking.mp3" preload="auto" loop></audio>
-  <audio id="soundReveal" src="sounds/reveal.mp3" preload="auto"></audio>
+  <!-- Sounds -->
+  <audio id="soundCoin" src="/sounds/coin.mp3" preload="auto"></audio>
+  <audio id="soundThinking" src="/sounds/thinking.mp3" preload="auto" loop></audio>
+  <audio id="soundReveal" src="/sounds/reveal.mp3" preload="auto"></audio>
 
-  <script src="app.js"></script>
+  <!-- App logic -->
+  <script src="/static/app.js"></script>
 </body>
 </html>
-
-
-
-
-
