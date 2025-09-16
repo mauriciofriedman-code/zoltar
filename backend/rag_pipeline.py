@@ -143,7 +143,17 @@ def chatbot_teacher(question: str, history: str = "") -> Dict:
     """
     Chat para docentes, usando prompt especial + history si aplica.
     """
-    system_prompt = build_teacher_prompt(history.strip() if history else "")
+    retriever = get_retriever(k=5)
+    contexts = retriever.invoke(question) or []
+
+    if not contexts:
+        return {"text": FALLBACK_NO_CONTEXT, "sources": []}
+
+    context_text, sources = _contexts_to_text_and_sources(contexts)
+
+    # ✅ Fix aplicado: pasamos context, question, history
+    system_prompt = build_teacher_prompt(context_text, question, history)
+
     return answer_with_rag(question=question, system_prompt=system_prompt)
 
 
