@@ -13,7 +13,7 @@ const soundThinking = document.querySelector("#soundThinking");
 
 const questionInput = document.getElementById("question");
 const askBtn = document.getElementById("askBtn");
-const output = document.getElementById("output");
+const conversation = document.getElementById("conversation");
 
 // ==============================
 // ANIMATION FRAMES
@@ -69,11 +69,16 @@ function stopAnimation(success = true) {
 // TEXT TYPING EFFECT
 // ==============================
 
-async function typeText(text, outputEl) {
-  outputEl.textContent = "";
+async function typeText(text) {
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  conversation.appendChild(bubble);
+  conversation.scrollTop = conversation.scrollHeight;
+
   for (let i = 0; i < text.length; i++) {
-    outputEl.textContent += text[i];
+    bubble.textContent += text[i];
     await new Promise(res => setTimeout(res, 20));
+    conversation.scrollTop = conversation.scrollHeight;
   }
 }
 
@@ -129,8 +134,8 @@ askBtn.addEventListener("click", async () => {
   const endpoint = mode === "rag" ? "/api/teacher" : "/api/generate";
 
   questionInput.value = "";
-  output.textContent = "Zoltar está pensando...";
   startAnimation();
+  await typeText("Zoltar está pensando...");
 
   try {
     const res = await fetch(`${baseUrl}${endpoint}`, {
@@ -141,13 +146,14 @@ askBtn.addEventListener("click", async () => {
 
     const data = await res.json();
     stopAnimation(res.ok);
-    await typeText(data.text || "⚠️ Respuesta inesperada", output);
+    await typeText(data.text || "⚠️ Respuesta inesperada");
   } catch (err) {
     stopAnimation(false);
-    output.textContent = "❌ No se pudo conectar con backend";
+    await typeText("❌ No se pudo conectar con backend");
     console.error(err);
   }
 });
+
 
 
 
