@@ -110,7 +110,32 @@ def answer_with_rag(
         "Eres un experto en tecnología educativa.\n"
         "Responde preguntas sobre el uso de la inteligencia artificial y la generación artificial (GenIA) en educación.\n"
         "Usa solamente la información proporcionada en el contexto.\n"
-        "No inv
+        "No inventes ni completes si no hay información suficiente en el contexto.\n"
+    )
+
+    messages = [
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": f"Contexto:\n{context_text}\n\nPregunta:\n{question}"},
+    ]
+
+    answer = safe_response(llm, messages)
+
+    return {
+        "text": answer.strip(),
+        "sources": sources
+    }
+
+
+def chatbot_simple(conversation: List[Dict], system_prompt: str = "") -> Dict:
+    """
+    Genera una respuesta de chat simple sin RAG.
+    """
+    llm = get_chat_llm()
+    messages = [{"role": "system", "content": system_prompt}] if system_prompt else []
+    messages += conversation
+    answer = safe_response(llm, messages)
+    return {"text": answer.strip()}
+
 
 
 
