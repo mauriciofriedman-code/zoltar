@@ -94,7 +94,7 @@
       border-radius: 2px;
     }
 
-    /* Moneda animada hacia la derecha */
+    /* Moneda animada hacia el slot */
     .moving-coin {
       position: fixed;
       width: 60px;
@@ -124,7 +124,7 @@
   <main>
     <section class="card">
       <div class="machine" id="machine">
-        <img id="zoltarImg" src="/img/Zoltar_1.png" alt="Zoltar" />
+        <img id="zoltarImg" src="img/Zoltar_1.png" alt="Zoltar" />
       </div>
 
       <div class="toolbar">
@@ -137,7 +137,7 @@
 
         <!-- Slot arcade con moneda -->
         <div class="coin-slot">
-          <img id="coinBtn" src="/img/coin.png" alt="Moneda Zoltar" class="coin" />
+          <img id="coinBtn" src="img/coin.png" alt="Moneda Zoltar" class="coin" />
           <div class="slot" id="slot"></div>
         </div>
 
@@ -152,11 +152,129 @@
   </footer>
 
   <!-- 🎵 Sonidos -->
-  <audio id="soundCoin" src="/sounds/coin.mp3" preload="auto"></audio>
-  <audio id="soundThinking" src="/sounds/thinking.mp3" preload="auto" loop></audio>
-  <audio id="soundReveal" src="/sounds/reveal.mp3" preload="auto"></audio>
+  <audio id="soundCoin" src="sounds/coin.mp3" preload="auto"></audio>
+  <audio id="soundThinking" src="sounds/thinking.mp3" preload="auto" loop></audio>
+  <audio id="soundReveal" src="sounds/reveal.mp3" preload="auto"></audio>
 
-  <!-- JS principal -->
-  <script src="app.js"></script>
+  <script>
+    const BACKEND_URL = window.location.hostname.includes("localhost")
+      ? "http://127.0.0.1:8000"
+      : "";
+
+    const zoltarImg = document.getElementById("zoltarImg");
+    const machineDiv = document.getElementById("machine");
+    const coinBtn = document.getElementById("coinBtn");
+    const askBtn = document.getElementById("askBtn");
+    const question = document.getElementById("question");
+    const output = document.getElementById("output");
+    const modeRadios = document.querySelectorAll("input[name='mode']");
+    const slot = document.getElementById("slot");
+
+    const coinSound = document.getElementById("soundCoin");
+    const thinkingSound = document.getElementById("soundThinking");
+    const revealSound = document.getElementById("soundReveal");
+
+    const frames = [
+      "img/Zoltar_1.png","img/Zoltar_2.png","img/Zoltar_3.png",
+      "img/Zoltar_4.png","img/Zoltar_5.png","img/Zoltar_4.png",
+      "img/Zoltar_3.png","img/Zoltar_2.png"
+    ];
+    let frameIndex = 0, animInterval=null;
+
+    function showFrame(i) {
+      frameIndex = (i+frames.length)%frames.length;
+      zoltarImg.src = frames[frameIndex];
+    }
+    function startAnim() {
+      frameIndex=0; clearInterval(animInterval);
+      animInterval=setInterval(()=>showFrame(frameIndex+1),150);
+      machineDiv.classList.add("thinking");
+      thinkingSound.currentTime=0;
+      thinkingSound.play().catch(()=>{});
+    }
+    function stopAnim() {
+      clearInterval(animInterval); animInterval=null;
+      zoltarImg.src=frames[0];
+      machineDiv.classList.remove("thinking");
+      thinkingSound.pause();
+    }
+
+    let hasCoin=false;
+    coinBtn.addEventListener("click",()=>{
+      const coinClone=document.createElement("img");
+      coinClone.src="img/coin.png";
+      coinClone.className="moving-coin";
+
+      const rectCoin=coinBtn.getBoundingClientRect();
+      const rectSlot=slot.getBoundingClientRect();
+
+      coinClone.style.left=rectCoin.left+"px";
+      coinClone.style.top=rectCoin.top+"px";
+
+      document.body.appendChild(coinClone);
+      void coinClone.offsetWidth;
+
+      const dx = rectSlot.left - rectCoin.left;
+      const dy = rectSlot.top - rectCoin.top;
+
+      coinClone.style.transform=`translate(${dx}px, ${dy}px) scale(0.6) rotate(360deg)`;
+      coinClone.style.opacity="0";
+
+      setTimeout(()=>coinClone.remove(),800);
+
+      hasCoin=true; 
+      question.disabled=false; 
+      askBtn.disabled=false;
+      output.textContent="Inserta tu pregunta...";
+      question.focus();
+      coinSound.currentTime=0; coinSound.play().catch(()=>{});
+    });
+
+    askBtn.addEventListener("click",async()=>{
+      if(!hasCoin) return;
+      const q = question.value.trim();
+      if(!q){ return; }
+
+      hasCoin=false; startAnim();
+      output.textContent="Zoltar está pensando...";
+      const mode=[...modeRadios].find(r=>r.checked).value;
+      const endpoint = mode==="rag" ? "/api/teacher" : "/api/generate";
+
+      try{
+        const body = mode==="rag"
+          ? { question: q }
+          : { question: q, mode: "engineered" };
+
+        const res=await fetch(BACKEND_URL+endpoint,{
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify(body)
+        });
+
+        if(!res.ok){
+          let msg = `Error del backend (${res.status})`;
+          try {
+            const err = await res.json();
+            if(err.detail) msg += `: ${err.detail}`;
+          } catch {}
+          output.textContent = msg;
+          console.error("Respuesta del servidor:", res);
+        } else {
+          const data=await res.json();
+          output.textContent=data.answer||data.text||"Respuesta vacía.";
+        }
+      } catch(e){
+        await new Promise(r=>setTimeout(r,800));
+        output.textContent="No fue posible conectar con el servicio.";
+        console.error(e);
+      } finally {
+        stopAnim();
+        revealSound.currentTime=0; revealSound.play().catch(()=>{});
+        question.value=""; question.disabled=true; askBtn.disabled=true;
+      }
+    });
+  </script>
 </body>
 </html>
+
+
+

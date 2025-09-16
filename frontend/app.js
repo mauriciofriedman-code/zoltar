@@ -46,7 +46,7 @@ formA.addEventListener("submit", async (e) => {
     const res = await fetch(`${baseUrl}/api/generate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: msg, mode }),
+      body: JSON.stringify({ question: msg, mode }),
     });
 
     stopAnimation(res.ok);   // 👈 detiene animación
@@ -96,7 +96,7 @@ formB.addEventListener("submit", async (e) => {
     const res = await fetch(`${baseUrl}/api/teacher`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: msg }),
+      body: JSON.stringify({ question: msg }),
     });
 
     stopAnimation(res.ok);   // 👈 detiene animación
@@ -161,14 +161,14 @@ const soundReveal = document.querySelector("#soundReveal");
 const soundThinking = document.querySelector("#soundThinking");
 
 const frames = [
-  "/img/Zoltar_1.png",
-  "/img/Zoltar_2.png",
-  "/img/Zoltar_3.png",
-  "/img/Zoltar_4.png",
-  "/img/Zoltar_5.png",
-  "/img/Zoltar_4.png",
-  "/img/Zoltar_3.png",
-  "/img/Zoltar_2.png",
+  "img/Zoltar_1.png",
+  "img/Zoltar_2.png",
+  "img/Zoltar_3.png",
+  "img/Zoltar_4.png",
+  "img/Zoltar_5.png",
+  "img/Zoltar_4.png",
+  "img/Zoltar_3.png",
+  "img/Zoltar_2.png",
 ];
 let frameIndex = 0;
 
@@ -186,7 +186,7 @@ function startAnimation() {
 
 function stopAnimation(success = true) {
   if (animInterval) clearInterval(animInterval);
-  zoltarImg.src = "/img/Zoltar_1.png";
+  zoltarImg.src = "img/Zoltar_1.png";
   soundThinking.pause();
   soundThinking.currentTime = 0;
 
@@ -196,15 +196,40 @@ function stopAnimation(success = true) {
   }
 }
 
-function insertCoin() {
+// =============================
+// Animación de la moneda
+// =============================
+const coinBtn = document.getElementById("coinBtn");
+const slot = document.getElementById("slot");
+let hasCoin = false;
+
+coinBtn.addEventListener("click", () => {
+  const coinClone = document.createElement("img");
+  coinClone.src = "img/coin.png";
+  coinClone.className = "moving-coin";
+
+  const rectCoin = coinBtn.getBoundingClientRect();
+  const rectSlot = slot.getBoundingClientRect();
+
+  coinClone.style.left = rectCoin.left + "px";
+  coinClone.style.top = rectCoin.top + "px";
+
+  document.body.appendChild(coinClone);
+  void coinClone.offsetWidth;
+
+  const dx = rectSlot.left - rectCoin.left;
+  const dy = rectSlot.top - rectCoin.top;
+
+  coinClone.style.transform = `translate(${dx}px, ${dy}px) scale(0.6) rotate(360deg)`;
+  coinClone.style.opacity = "0";
+
+  setTimeout(() => coinClone.remove(), 800);
+
+  hasCoin = true;
+  document.getElementById("question").disabled = false;
+  document.getElementById("askBtn").disabled = false;
   soundCoin.currentTime = 0;
   soundCoin.play();
-}
-
-
-
-
-
-
+});
 
 
