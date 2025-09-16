@@ -242,8 +242,8 @@
 
       try{
         const body = mode==="rag"
-          ? { question: q }
-          : { question: q, mode: "engineered" };
+          ? { text: q }                  // 🔥 corregido
+          : { text: q, mode: "engineered" }; // 🔥 corregido
 
         const res=await fetch(BACKEND_URL+endpoint,{
           method:"POST", headers:{"Content-Type":"application/json"},
@@ -275,6 +275,3 @@
   </script>
 </body>
 </html>
-
-
-

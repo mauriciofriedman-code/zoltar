@@ -46,7 +46,7 @@ formA.addEventListener("submit", async (e) => {
     const res = await fetch(`${baseUrl}/api/generate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: msg, mode }),
+      body: JSON.stringify({ text: msg, mode }), // 🔥 corregido: text en lugar de question
     });
 
     stopAnimation(res.ok);   // 👈 detiene animación
@@ -96,7 +96,7 @@ formB.addEventListener("submit", async (e) => {
     const res = await fetch(`${baseUrl}/api/teacher`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: msg }),
+      body: JSON.stringify({ text: msg }), // 🔥 corregido: text en lugar de question
     });
 
     stopAnimation(res.ok);   // 👈 detiene animación
@@ -231,4 +231,5 @@ coinBtn.addEventListener("click", () => {
   soundCoin.currentTime = 0;
   soundCoin.play();
 });
+
 
