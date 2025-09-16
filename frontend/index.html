@@ -87,9 +87,9 @@
   <main class="panel row">
     <!-- LEFT: Zoltar machine -->
     <section class="zoltar-box" id="zoltarBox">
-      <img id="zoltarImg" src="/img/Zoltar_1.png" alt="Zoltar" />
+      <img id="zoltarImg" src="/static/img/Zoltar_1.png" alt="Zoltar" />
       <div class="coin-slot">
-        <img id="coinBtn" src="/img/coin.png" alt="Moneda" class="coin" />
+        <img id="coinBtn" src="/static/img/coin.png" alt="Moneda" class="coin" />
         <div class="slot" id="slot"></div>
       </div>
     </section>
@@ -105,7 +105,7 @@
       </div>
 
       <div class="conversation" id="conversation">
-        <div class="bubble">Aquí aparecerá la respuesta de Zoltar...</div>
+        <div class="bubble" id="output">Aquí aparecerá la respuesta de Zoltar...</div>
       </div>
 
       <div class="composer">
@@ -120,11 +120,12 @@
   </footer>
 
   <!-- Sounds -->
-  <audio id="soundCoin" src="/sounds/coin.mp3" preload="auto"></audio>
-  <audio id="soundThinking" src="/sounds/thinking.mp3" preload="auto" loop></audio>
-  <audio id="soundReveal" src="/sounds/reveal.mp3" preload="auto"></audio>
+  <audio id="soundCoin" src="/static/sounds/coin.mp3" preload="auto"></audio>
+  <audio id="soundThinking" src="/static/sounds/thinking.mp3" preload="auto" loop></audio>
+  <audio id="soundReveal" src="/static/sounds/reveal.mp3" preload="auto"></audio>
 
   <!-- App logic -->
   <script src="/static/app.js"></script>
 </body>
 </html>
+
