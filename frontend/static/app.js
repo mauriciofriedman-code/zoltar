@@ -1,22 +1,37 @@
+// ==============================
+// CONFIG
+// ==============================
+
 const baseUrl = window.location.hostname.includes("localhost")
   ? "http://127.0.0.1:8000"
   : window.location.origin;
 
+// Zoltar DOM elements
 const zoltarImg = document.querySelector("#zoltarImg");
 const soundCoin = document.querySelector("#soundCoin");
 const soundReveal = document.querySelector("#soundReveal");
 const soundThinking = document.querySelector("#soundThinking");
 
+const questionInput = document.getElementById("question");
+const askBtn = document.getElementById("askBtn");
+const output = document.getElementById("output");
+
+// ==============================
+// ANIMATION FRAMES
+// ==============================
+
 const frames = [
-  "/img/Zoltar_1.png",
-  "/img/Zoltar_2.png",
-  "/img/Zoltar_3.png",
-  "/img/Zoltar_4.png",
-  "/img/Zoltar_5.png",
-  "/img/Zoltar_4.png",
-  "/img/Zoltar_3.png",
-  "/img/Zoltar_2.png",
+  "/static/img/Zoltar_1.png",
+  "/static/img/Zoltar_2.png",
+  "/static/img/Zoltar_3.png",
+  "/static/img/Zoltar_4.png",
+  "/static/img/Zoltar_5.png",
+  "/static/img/Zoltar_4.png",
+  "/static/img/Zoltar_3.png",
+  "/static/img/Zoltar_2.png",
 ];
+
+// Preload images
 const preloaded = [];
 frames.forEach(src => {
   const img = new Image();
@@ -24,7 +39,7 @@ frames.forEach(src => {
   preloaded.push(img);
 });
 
-let animInterval;
+let animInterval = null;
 let frameIndex = 0;
 
 function startAnimation() {
@@ -41,7 +56,7 @@ function startAnimation() {
 
 function stopAnimation(success = true) {
   clearInterval(animInterval);
-  zoltarImg.src = "/img/Zoltar_1.png";
+  zoltarImg.src = "/static/img/Zoltar_1.png";
   zoltarImg.parentElement.classList.remove("thinking");
   soundThinking.pause();
   soundThinking.currentTime = 0;
@@ -51,6 +66,10 @@ function stopAnimation(success = true) {
   }
 }
 
+// ==============================
+// TEXT TYPING EFFECT
+// ==============================
+
 async function typeText(text, outputEl) {
   outputEl.textContent = "";
   for (let i = 0; i < text.length; i++) {
@@ -59,6 +78,10 @@ async function typeText(text, outputEl) {
   }
 }
 
+// ==============================
+// COIN ANIMATION
+// ==============================
+
 const coinBtn = document.getElementById("coinBtn");
 const slot = document.getElementById("slot");
 let hasCoin = false;
@@ -66,48 +89,55 @@ let hasCoin = false;
 if (coinBtn && slot) {
   coinBtn.addEventListener("click", () => {
     const coinClone = document.createElement("img");
-    coinClone.src = "/img/coin.png";
+    coinClone.src = "/static/img/coin.png";
     coinClone.className = "moving-coin";
 
     const rectCoin = coinBtn.getBoundingClientRect();
     const rectSlot = slot.getBoundingClientRect();
+
     coinClone.style.left = rectCoin.left + "px";
     coinClone.style.top = rectCoin.top + "px";
+
     document.body.appendChild(coinClone);
     void coinClone.offsetWidth;
 
     const dx = rectSlot.left - rectCoin.left;
     const dy = rectSlot.top - rectCoin.top;
+
     coinClone.style.transform = `translate(${dx}px, ${dy}px) scale(0.6) rotate(360deg)`;
     coinClone.style.opacity = "0";
+
     setTimeout(() => coinClone.remove(), 800);
 
     hasCoin = true;
-    document.getElementById("question").disabled = false;
-    document.getElementById("askBtn").disabled = false;
+    questionInput.disabled = false;
+    askBtn.disabled = false;
+
     soundCoin.currentTime = 0;
     soundCoin.play().catch(() => {});
   });
 }
 
-document.getElementById("askBtn").addEventListener("click", async () => {
-  const input = document.getElementById("question");
-  const output = document.getElementById("output");
-  const mode = document.querySelector("input[name='mode']:checked").value;
-  const msg = input.value.trim();
-  if (!msg) return;
+// ==============================
+// MAIN ASK HANDLER
+// ==============================
 
-  input.value = "";
+askBtn.addEventListener("click", async () => {
+  const msg = questionInput.value.trim();
+  if (!msg || !hasCoin) return;
+
+  const mode = document.querySelector("input[name='mode']:checked").value;
+  const endpoint = mode === "rag" ? "/api/teacher" : "/api/generate";
+
+  questionInput.value = "";
   output.textContent = "Zoltar está pensando...";
   startAnimation();
-
-  const endpoint = mode === "rag" ? "/api/teacher" : "/api/generate";
 
   try {
     const res = await fetch(`${baseUrl}${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: msg, mode }),
+      body: JSON.stringify({ text: msg }),
     });
 
     const data = await res.json();
@@ -119,9 +149,6 @@ document.getElementById("askBtn").addEventListener("click", async () => {
     console.error(err);
   }
 });
-
-
-
 
 
 
