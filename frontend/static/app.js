@@ -13,10 +13,10 @@ const soundThinking = document.querySelector("#soundThinking");
 
 const questionInput = document.getElementById("question");
 const askBtn = document.getElementById("askBtn");
-const conversation = document.getElementById("conversation");
+const output = document.getElementById("output");
 
 // ==============================
-// ZOLTAR ANIMATION FRAMES
+// ANIMATION FRAMES
 // ==============================
 
 const frames = [
@@ -30,10 +30,12 @@ const frames = [
   "/static/img/Zoltar_2.png",
 ];
 
-// Preload Zoltar frames
+// Preload images
+const preloaded = [];
 frames.forEach(src => {
   const img = new Image();
   img.src = src;
+  preloaded.push(img);
 });
 
 let animInterval = null;
@@ -64,69 +66,59 @@ function stopAnimation(success = true) {
 }
 
 // ==============================
-// TEXT BUBBLE CREATION
+// TEXT TYPING EFFECT
 // ==============================
 
-function addBubble(text, isUser = false) {
-  const bubble = document.createElement("div");
-  bubble.className = "bubble" + (isUser ? " user" : "");
-  bubble.textContent = text;
-  conversation.appendChild(bubble);
-  conversation.scrollTop = conversation.scrollHeight;
-}
-
-async function typeBubble(text) {
-  const bubble = document.createElement("div");
-  bubble.className = "bubble";
-  conversation.appendChild(bubble);
-  conversation.scrollTop = conversation.scrollHeight;
-
+async function typeText(text, outputEl) {
+  outputEl.textContent = "";
   for (let i = 0; i < text.length; i++) {
-    bubble.textContent += text[i];
+    outputEl.textContent += text[i];
     await new Promise(res => setTimeout(res, 20));
   }
-
-  conversation.scrollTop = conversation.scrollHeight;
 }
 
 // ==============================
-// COIN ANIMATION LOGIC
+// COIN ANIMATION
 // ==============================
 
 const coinBtn = document.getElementById("coinBtn");
 const slot = document.getElementById("slot");
 let hasCoin = false;
 
-coinBtn.addEventListener("click", () => {
-  const coinClone = document.createElement("img");
-  coinClone.src = "/static/img/coin.png";
-  coinClone.className = "moving-coin";
+if (coinBtn && slot) {
+  coinBtn.addEventListener("click", () => {
+    const coinClone = document.createElement("img");
+    coinClone.src = "/static/img/coin.png";
+    coinClone.className = "moving-coin";
 
-  const rectCoin = coinBtn.getBoundingClientRect();
-  const rectSlot = slot.getBoundingClientRect();
+    const rectCoin = coinBtn.getBoundingClientRect();
+    const rectSlot = slot.getBoundingClientRect();
 
-  coinClone.style.left = rectCoin.left + "px";
-  coinClone.style.top = rectCoin.top + "px";
-  document.body.appendChild(coinClone);
-  void coinClone.offsetWidth;
+    coinClone.style.left = rectCoin.left + "px";
+    coinClone.style.top = rectCoin.top + "px";
 
-  const dx = rectSlot.left - rectCoin.left;
-  const dy = rectSlot.top - rectCoin.top;
-  coinClone.style.transform = `translate(${dx}px, ${dy}px) scale(0.6) rotate(360deg)`;
-  coinClone.style.opacity = "0";
+    document.body.appendChild(coinClone);
+    void coinClone.offsetWidth;
 
-  setTimeout(() => coinClone.remove(), 800);
+    const dx = rectSlot.left - rectCoin.left;
+    const dy = rectSlot.top - rectCoin.top;
 
-  hasCoin = true;
-  questionInput.disabled = false;
-  askBtn.disabled = false;
+    coinClone.style.transform = `translate(${dx}px, ${dy}px) scale(0.6) rotate(360deg)`;
+    coinClone.style.opacity = "0";
 
-  soundCoin.currentTime = 0;
-  soundCoin.play().catch(() => {});
-});
+    setTimeout(() => coinClone.remove(), 800);
+
+    hasCoin = true;
+    questionInput.disabled = false;
+    askBtn.disabled = false;
+
+    soundCoin.currentTime = 0;
+    soundCoin.play().catch(() => {});
+  });
+}
 
 // ==============================
-// ASK ZOLTAR
+// MAIN ASK HANDLER
 // ==============================
 
 askBtn.addEventListener("click", async () => {
@@ -136,17 +128,8 @@ askBtn.addEventListener("click", async () => {
   const mode = document.querySelector("input[name='mode']:checked").value;
   const endpoint = mode === "rag" ? "/api/teacher" : "/api/generate";
 
-  // Reset state
   questionInput.value = "";
-  questionInput.disabled = true;
-  askBtn.disabled = true;
-
-  // Show user question
-  addBubble(msg, true);
-
-  // Show thinking text
-  addBubble("Zoltar está pensando...");
-
+  output.textContent = "Zoltar está pensando...";
   startAnimation();
 
   try {
@@ -158,22 +141,14 @@ askBtn.addEventListener("click", async () => {
 
     const data = await res.json();
     stopAnimation(res.ok);
-
-    // Remove "thinking..." bubble
-    const lastBubble = conversation.querySelector(".bubble:last-child");
-    if (lastBubble) lastBubble.remove();
-
-    await typeBubble(data.text || "⚠️ Respuesta inesperada");
+    await typeText(data.text || "⚠️ Respuesta inesperada", output);
   } catch (err) {
     stopAnimation(false);
-
-    const lastBubble = conversation.querySelector(".bubble:last-child");
-    if (lastBubble) lastBubble.remove();
-
-    addBubble("❌ No se pudo conectar con el oráculo.");
+    output.textContent = "❌ No se pudo conectar con backend";
     console.error(err);
   }
 });
+
 
 
 
