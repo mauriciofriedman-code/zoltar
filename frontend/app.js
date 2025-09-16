@@ -46,7 +46,7 @@ formA.addEventListener("submit", async (e) => {
     const res = await fetch(`${baseUrl}/api/generate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: msg, mode }),
+      body: JSON.stringify({ text: msg, mode }),
     });
 
     stopAnimation(res.ok);   // 👈 detiene animación
@@ -66,8 +66,8 @@ formA.addEventListener("submit", async (e) => {
     }
 
     const data = await res.json();
-    if (data.ok && data.answer) {
-      appendMessage(logA, data.answer, "ai");
+    if (data.text) {
+      appendMessage(logA, data.text, "ai");
     } else {
       appendMessage(logA, "⚠️ Respuesta inesperada del backend", "ai");
       console.error("Respuesta inesperada:", data);
@@ -90,16 +90,13 @@ formB.addEventListener("submit", async (e) => {
   appendMessage(logB, msg, "me");
   document.getElementById("msgB").value = "";
 
-  const topic = document.getElementById("topicB").value.trim();
-  const level = document.getElementById("levelB").value.trim();
-
   try {
     startAnimation();   // 👈 inicia animación y sonido "thinking"
 
     const res = await fetch(`${baseUrl}/api/teacher`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: msg, topic, level }),
+      body: JSON.stringify({ text: msg }),
     });
 
     stopAnimation(res.ok);   // 👈 detiene animación
@@ -119,8 +116,8 @@ formB.addEventListener("submit", async (e) => {
     }
 
     const data = await res.json();
-    if (data.ok && data.answer) {
-      appendMessage(logB, data.answer, "ai");
+    if (data.text) {
+      appendMessage(logB, data.text, "ai");
     } else {
       appendMessage(logB, "⚠️ Respuesta inesperada del backend", "ai");
       console.error("Respuesta inesperada:", data);
@@ -163,16 +160,28 @@ const soundCoin = document.querySelector("#soundCoin");
 const soundReveal = document.querySelector("#soundReveal");
 const soundThinking = document.querySelector("#soundThinking");
 
+const frames = [
+  "/img/Zoltar_1.png",
+  "/img/Zoltar_2.png",
+  "/img/Zoltar_3.png",
+  "/img/Zoltar_4.png",
+  "/img/Zoltar_5.png",
+  "/img/Zoltar_4.png",
+  "/img/Zoltar_3.png",
+  "/img/Zoltar_2.png",
+];
+let frameIndex = 0;
+
 function startAnimation() {
-  let frame = 1;
   stopAnimation();
+  frameIndex = 0;
   soundThinking.currentTime = 0;
   soundThinking.play();
 
   animInterval = setInterval(() => {
-    zoltarImg.src = `/img/Zoltar_${frame}.png`;
-    frame = frame < 5 ? frame + 1 : 1;
-  }, 200);
+    zoltarImg.src = frames[frameIndex];
+    frameIndex = (frameIndex + 1) % frames.length;
+  }, 150);
 }
 
 function stopAnimation(success = true) {
@@ -191,6 +200,7 @@ function insertCoin() {
   soundCoin.currentTime = 0;
   soundCoin.play();
 }
+
 
 
 

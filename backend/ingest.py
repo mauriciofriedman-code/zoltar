@@ -6,6 +6,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFDirectoryLoader
+from PyPDF2 import PdfReader
 
 from backend.config import DOCS_DIR, CHROMA_DIR, EMBEDDINGS_MODEL
 
@@ -18,6 +19,42 @@ def clear_chroma_dir():
                 f.unlink()
             elif f.is_dir():
                 shutil.rmtree(f)
+
+
+def extract_authors_from_filename(filename: str) -> str | None:
+    """
+    Si el archivo está en formato Autor1_Autor2_Titulo.pdf,
+    extrae los autores antes del primer guion bajo.
+    """
+    stem = Path(filename).stem
+    parts = stem.split("_")
+    if len(parts) > 1:
+        # todo antes del último bloque lo tomamos como autores
+        return ", ".join(parts[:-1])
+    return None
+
+
+def extract_authors_from_pdf(path: str) -> str | None:
+    """
+    Intenta leer la primera página del PDF y detectar autores.
+    Regresa un string o None si no encuentra.
+    """
+    try:
+        reader = PdfReader(path)
+        if len(reader.pages) == 0:
+            return None
+        first_page = reader.pages[0].extract_text()
+        if not first_page:
+            return None
+
+        # Heurística simple: buscar línea con varios nombres capitalizados separados por comas
+        for line in first_page.split("\n"):
+            if line and line.count(",") >= 1 and any(ch.isupper() for ch in line):
+                if len(line.split()) <= 15:  # no demasiado larga
+                    return line.strip()
+        return None
+    except Exception:
+        return None
 
 
 def main(rebuild: bool = False):
@@ -35,16 +72,23 @@ def main(rebuild: bool = False):
         src = d.metadata.get("source", "desconocido")
         page = d.metadata.get("page", "N/A")
 
-        d.metadata["doc_id"] = str(src)          # puede ser ruta o hash
-        d.metadata["title"] = Path(src).stem     # nombre de archivo como título
-        d.metadata["authors"] = "Autor desconocido"  # si no tienes autores, queda genérico
+        title = Path(src).stem
+        authors = extract_authors_from_filename(src)
+        if not authors:
+            authors = extract_authors_from_pdf(src)
+        if not authors:
+            authors = "Autor desconocido"
+
+        d.metadata["doc_id"] = str(src)
+        d.metadata["title"] = title
+        d.metadata["authors"] = authors
         d.metadata["page"] = page
         d.metadata["source"] = str(src)
 
-    # Trocear documentos
+    # Trocear documentos (chunks más grandes)
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500,   # más grande que 350 para dar más contexto
-        chunk_overlap=80
+        chunk_size=700,   # 🔥 más grande para contexto educativo
+        chunk_overlap=100
     )
     splits = text_splitter.split_documents(docs)
     print(f"✂️ Total de chunks: {len(splits)}")
@@ -71,7 +115,6 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     main(rebuild=args.rebuild)
-
 
 
 

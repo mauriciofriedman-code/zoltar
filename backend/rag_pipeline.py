@@ -23,8 +23,8 @@ def safe_response(llm, messages):
 def _contexts_to_text(
     contexts: List[Any],
     enumerate_blocks: bool = True,
-    max_chars_total: int = 3500,
-    max_chars_per_block: int = 1000,
+    max_chars_total: int = 6000,   # 🔥 más grande para retener contexto
+    max_chars_per_block: int = 1200,
 ) -> str:
     """
     Convierte documentos recuperados en texto compacto y ordenado.
@@ -72,12 +72,12 @@ def _contexts_to_text(
 
 
 FALLBACK_NO_CONTEXT = (
-    "Soy tu tutor con RAG. No encontré fragmentos relevantes en los documentos para responder tu consulta.\n\n"
-    "Sugerencias para mejorar la búsqueda:\n"
-    "- Sé más específico con autores, títulos o temas.\n"
-    "- Indica el tipo de documento (artículo, reporte, guía).\n"
-    "- Divide tu pregunta en partes más concretas.\n\n"
-    "Importante: este modo responde únicamente con base en los documentos cargados."
+    "Soy tu tutor con RAG. No encontré fragmentos relevantes en los documentos.\n\n"
+    "👉 Intenta mejorar tu búsqueda:\n"
+    "- Sé más específico (ejemplo: en lugar de 'Pesaj', pregunta '¿qué simboliza el Seder de Pesaj?').\n"
+    "- Usa autores o títulos si los conoces.\n"
+    "- Divide tu consulta en pasos más concretos.\n\n"
+    "Importante: respondo únicamente en base a los documentos cargados."
 )
 
 
@@ -90,36 +90,28 @@ def answer_with_rag(question: str, system_prompt: str = "", k: int = 5, allow_fa
     except Exception:
         if not allow_fallback:
             return "No se pudo recuperar información desde el índice."
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"{FALLBACK_NO_CONTEXT}\n\nPregunta: {question}"},
-        ]
-        return safe_response(llm, messages)
+        return FALLBACK_NO_CONTEXT
 
     if not contexts:
         if not allow_fallback:
             return "No encontré información suficiente en los documentos."
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"{FALLBACK_NO_CONTEXT}\n\nPregunta: {question}"},
-        ]
-        return safe_response(llm, messages)
+        return FALLBACK_NO_CONTEXT
 
     context_text = _contexts_to_text(contexts, enumerate_blocks=True)
 
     # 🔑 Prompt pedagógico optimizado
     system_prompt = system_prompt or (
         "Eres un maestro experto en educación y judaísmo. "
-        "Tu tarea es responder de manera clara, pedagógica y aplicada al aula, "
-        "usando exclusivamente el contexto de los documentos. "
-        "No digas 'los documentos dicen', responde directamente como si enseñaras a un estudiante. "
-        "Incluye ejemplos educativos o prácticos cuando sea posible. "
-        "Si falta información, acláralo y sugiere cómo podría investigarse más."
+        "Responde de manera clara, pedagógica y aplicada al aula. "
+        "Usa exclusivamente el contexto proporcionado. "
+        "No digas 'los documentos dicen'; responde como docente. "
+        "Incluye ejemplos prácticos o educativos cuando sea posible. "
+        "Si falta información, acláralo y sugiere cómo investigar más."
     )
 
     messages = [
         {"role": "system", "content": system_prompt},
-        {"role": "user", "content": f"Pregunta: {question}\n\nContexto disponible:\n{context_text}"},
+        {"role": "user", "content": f"Pregunta: {question}\n\nContexto:\n{context_text}"},
     ]
 
     # Debug opcional
@@ -146,12 +138,22 @@ def chatbot_teacher(question: str, history: str = "", k: int = 6) -> str:
         return FALLBACK_NO_CONTEXT
 
     context_text = _contexts_to_text(contexts, enumerate_blocks=True)
+
+    # 🔑 Incluir system + prompt docente
+    teacher_system = (
+        "Eres un maestro experto en educación y judaísmo. "
+        "Debes responder con profundidad pedagógica y ejemplos prácticos."
+    )
     teacher_prompt = build_teacher_prompt(
         context=context_text,
         user_message=question,
         history=history,
     )
-    messages = [{"role": "user", "content": teacher_prompt}]
+
+    messages = [
+        {"role": "system", "content": teacher_system},
+        {"role": "user", "content": teacher_prompt},
+    ]
     return safe_response(llm, messages)
 
 
@@ -162,6 +164,7 @@ def chatbot_simple(question: str, system_prompt: str) -> str:
         {"role": "user", "content": question},
     ]
     return safe_response(llm, messages)
+
 
 
 
