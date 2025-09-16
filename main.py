@@ -45,11 +45,11 @@ app.mount("/img", StaticFiles(directory=static_dir / "img"), name="img")
 app.mount("/sounds", StaticFiles(directory=static_dir / "sounds"), name="sounds")
 
 # ========================================
-# Servir index.html
+# Servir index.html (desde carpeta raíz /frontend)
 # ========================================
 @app.get("/", response_class=HTMLResponse)
 async def serve_index():
-    index_path = static_dir / "index.html"
+    index_path = frontend_dir / "index.html"
     if index_path.exists():
         return index_path.read_text(encoding="utf-8")
     return HTMLResponse("<h1>Frontend no encontrado</h1>", status_code=404)
