@@ -40,13 +40,16 @@ formA.addEventListener("submit", async (e) => {
 
   const mode = document.querySelector("input[name='modeA']:checked").value;
 
+  const payload = { text: msg, mode };
+  console.log("Enviando a /api/generate:", payload);
+
   try {
     startAnimation();   // 👈 inicia animación y sonido "thinking"
 
     const res = await fetch(`${baseUrl}/api/generate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: msg, mode }),
+      body: JSON.stringify(payload),
     });
 
     stopAnimation(res.ok);   // 👈 detiene animación
@@ -90,13 +93,16 @@ formB.addEventListener("submit", async (e) => {
   appendMessage(logB, msg, "me");
   document.getElementById("msgB").value = "";
 
+  const payload = { text: msg };
+  console.log("Enviando a /api/teacher:", payload);
+
   try {
     startAnimation();   // 👈 inicia animación y sonido "thinking"
 
     const res = await fetch(`${baseUrl}/api/teacher`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: msg }),
+      body: JSON.stringify(payload),
     });
 
     stopAnimation(res.ok);   // 👈 detiene animación
@@ -231,5 +237,3 @@ coinBtn.addEventListener("click", () => {
   soundCoin.currentTime = 0;
   soundCoin.play();
 });
-
-
