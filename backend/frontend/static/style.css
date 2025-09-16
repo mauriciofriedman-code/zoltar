@@ -1,0 +1,276 @@
+:root {
+  --bg: #f5f5f5;
+  --text: #222;
+  --panel: #ffffff;
+  --gold: #d4af37;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --font-title: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+
+  --wood-bg: url("/static/img/wood_texture.jpg"); /* 📌 Usa tu imagen */
+  --mist-color: rgba(255, 255, 255, 0.05);
+  --mist-blur: blur(8px);
+}
+
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
+header.marquee {
+  background: var(--gold);
+  color: #000;
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+header .title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+header .title h1 {
+  font-family: var(--font-title);
+  font-size: 2.5em;
+  letter-spacing: 2px;
+}
+
+header .subtitle {
+  font-size: 1.1em;
+  margin-top: 6px;
+}
+
+/* Main layout */
+main.panel {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  padding: 20px;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Chat Section */
+.chat {
+  flex: 1 1 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Zoltar Cabinet */
+.zoltar-box {
+  position: relative;
+  flex: 1 1 350px;
+  max-width: 420px;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.4);
+  background: var(--wood-bg);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  transition: box-shadow 0.5s ease;
+}
+
+.zoltar-box.thinking {
+  box-shadow: 0 0 40px 10px gold, inset 0 0 20px gold;
+}
+
+/* Fog Animation */
+.zoltar-box::before,
+.zoltar-box::after {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, var(--mist-color) 0%, transparent 70%);
+  animation: mist 20s linear infinite;
+  z-index: 1;
+  pointer-events: none;
+  filter: var(--mist-blur);
+}
+
+.zoltar-box::after {
+  animation-delay: 10s;
+  transform: scaleX(-1);
+}
+
+@keyframes mist {
+  0% {
+    transform: translateX(-50%) translateY(-50%) scale(1);
+  }
+  100% {
+    transform: translateX(50%) translateY(50%) scale(1.5);
+  }
+}
+
+/* Zoltar Image */
+.zoltar-box img {
+  width: 100%;
+  border-radius: 12px;
+  z-index: 2;
+}
+
+/* Coin + Slot */
+.coin-slot {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 2;
+}
+
+.coin {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+}
+
+.slot {
+  width: 25px;
+  height: 60px;
+  background: linear-gradient(180deg, #333, #111);
+  border: 2px solid #555;
+  border-radius: 4px;
+  box-shadow: inset 0 0 6px #000;
+  position: relative;
+}
+
+.slot::after {
+  content: "";
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 30px;
+  background: #000;
+  border-radius: 2px;
+}
+
+.moving-coin {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  pointer-events: none;
+  transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+  z-index: 9999;
+}
+
+/* Chat bubbles & controls */
+.options {
+  background: var(--panel);
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.options .switch label {
+  margin-right: 15px;
+  font-weight: 600;
+}
+
+.options .hint {
+  font-size: 0.9em;
+  margin-top: 5px;
+  color: #666;
+}
+
+.conversation {
+  background: var(--panel);
+  flex: 1;
+  min-height: 200px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.bubble {
+  background: #e0e0e0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  max-width: 100%;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.composer {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.composer input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+}
+
+.composer button {
+  padding: 10px 20px;
+  background: var(--gold);
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.composer button:hover {
+  background: #c49b2c;
+}
+
+/* Footer */
+footer.foot {
+  background: #eee;
+  text-align: center;
+  padding: 15px;
+  font-size: 0.9em;
+  color: #333;
+  border-top: 1px solid #ccc;
+  margin-top: auto;
+}
+
+/* Referencias (RAG) */
+.refs {
+  background: #f9f9f9;
+  border-left: 3px solid #ccc;
+  padding: 8px 12px;
+  margin-top: 12px;
+  font-size: 0.9em;
+  color: #333;
+}
+
+.refs ul {
+  margin: 6px 0 0 16px;
+  padding: 0;
+}
+
+
+

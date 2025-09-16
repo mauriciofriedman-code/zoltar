@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ZOLTAR • Oráculo Educativo</title>
+
+  <!-- Fonts & Favicon -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/static/frontendfavicon.png" />
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/static/style.css" />
+
+  <!-- Extra Styles -->
+  <style>
+    .zoltar-box {
+      flex: 1 1 350px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--panel);
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      max-width: 400px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cabinet {
+      background: url("/static/img/wood_texture.jpg") center/cover no-repeat;
+      border: 8px solid #5e442f;
+      border-radius: 16px;
+      padding: 16px;
+      transition: box-shadow 0.4s ease;
+    }
+
+    .zoltar-box.illuminated .cabinet {
+      box-shadow: 0 0 45px 15px gold;
+    }
+
+    .zoltar-box img {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .coin-slot {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .coin {
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+    }
+
+    .slot {
+      width: 25px;
+      height: 60px;
+      background: linear-gradient(180deg, #333, #111);
+      border: 2px solid #555;
+      border-radius: 4px;
+      box-shadow: inset 0 0 6px #000;
+      position: relative;
+    }
+
+    .slot::after {
+      content: "";
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 30px;
+      background: #000;
+      border-radius: 2px;
+    }
+
+    .moving-coin {
+      position: fixed;
+      width: 60px;
+      height: 60px;
+      pointer-events: none;
+      transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+      z-index: 9999;
+    }
+
+    .fog-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('/static/img/fog.gif') center center / cover no-repeat;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 1;
+      mix-blend-mode: screen;
+    }
+
+    .zoltar-box.thinking img {
+      animation: glowBorder 1.5s infinite alternate;
+    }
+
+    @keyframes glowBorder {
+      from { box-shadow: 0 0 10px var(--gold), inset 0 0 5px var(--gold); }
+      to { box-shadow: 0 0 25px var(--gold), inset 0 0 15px var(--gold); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="fog-overlay"></div>
+
+  <header class="marquee">
+    <div class="title">
+      <span class="crystal">🔮</span>
+      <h1>ZOLTAR</h1>
+    </div>
+    <p class="subtitle">Fortuna pedagógica en cada respuesta</p>
+  </header>
+
+  <main class="panel row">
+    <!-- LEFT: Zoltar machine -->
+    <section class="zoltar-box" id="zoltarBox">
+      <div class="cabinet">
+        <img id="zoltarImg" src="/static/img/Zoltar_1.png" alt="Zoltar" />
+        <div class="coin-slot">
+          <img id="coinBtn" src="/static/img/coin.png" alt="Moneda" class="coin" />
+          <div class="slot" id="slot"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Chat interface -->
+    <section class="chat visible">
+      <div class="options">
+        <div class="switch">
+          <label><input type="radio" name="mode" value="simple" checked> Modelo simple</label>
+          <label><input type="radio" name="mode" value="rag"> Modelo RAG</label>
+        </div>
+        <div class="hint">💡 Inserta la moneda para comenzar</div>
+      </div>
+
+      <div class="conversation" id="conversation">
+        <div class="bubble" id="output">Aquí aparecerá la respuesta...</div>
+      </div>
+
+      <div class="composer">
+        <input id="question" type="text" placeholder="Haz tu consulta..." disabled />
+        <button id="askBtn" disabled>Consultar</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    Animación de Zoltar creada por <span>Naomi Friedman</span>
+  </footer>
+
+  <!-- Sounds -->
+  <audio id="soundCoin" src="/static/sounds/coin.mp3" preload="auto"></audio>
+  <audio id="soundThinking" src="/static/sounds/thinking.mp3" preload="auto" loop></audio>
+  <audio id="soundReveal" src="/static/sounds/reveal.mp3" preload="auto"></audio>
+
+  <!-- JS -->
+  <script src="/static/app.js"></script>
+</body>
+</html>
