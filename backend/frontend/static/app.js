@@ -49,6 +49,7 @@ function startAnimation() {
   stopAnimation();
   frameIndex = 0;
   zoltarBox.classList.add("thinking");
+  zoltarImg.classList.add("zoltar-glow"); // 🌟 Start glow
   soundThinking.currentTime = 0;
   soundThinking.play().catch(() => {});
   animInterval = setInterval(() => {
@@ -61,6 +62,7 @@ function stopAnimation(success = true) {
   clearInterval(animInterval);
   zoltarImg.src = "/static/img/Zoltar_1.png";
   zoltarBox.classList.remove("thinking");
+  zoltarImg.classList.remove("zoltar-glow"); // ❌ Stop glow
   soundThinking.pause();
   soundThinking.currentTime = 0;
   if (success) {
@@ -212,4 +214,3 @@ askBtn.addEventListener("click", async () => {
 // ==============================
 
 window.speechSynthesis.onvoiceschanged = () => {};
-
