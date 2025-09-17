@@ -15,10 +15,6 @@ body {
   color: var(--text);
   font-family: var(--font-body);
   background-image: radial-gradient(ellipse at center, rgba(255,255,255,0.03), transparent 70%);
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 
 header.marquee {
@@ -37,23 +33,17 @@ header h1 {
   color: #ccc;
 }
 
-/* =======================
-   🧩 MAIN PANEL LAYOUT FIX
-   ======================= */
-
 main.panel.row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
-  align-items: center;
-  padding: 20px;
-  gap: 40px;
-  max-width: 1200px;
+  align-items: flex-start;
+  gap: 60px;
+  padding: 40px 20px;
+  max-width: 1400px;
   margin: 0 auto;
-  flex: 1;
-  overflow: hidden;
+  min-height: 720px;
   z-index: 2;
-  min-height: 0;
 }
 
 .fog-overlay {
@@ -69,7 +59,7 @@ main.panel.row {
   z-index: 1;
 }
 
-/* ====== 🔮 ZOLTAR ====== */
+/* ====== ZOLTAR ====== */
 
 .zoltar-box {
   position: relative;
@@ -80,7 +70,6 @@ main.panel.row {
   justify-content: center;
   overflow: visible;
   z-index: 2;
-  flex-shrink: 0;
 }
 
 .zoltar-box::after {
@@ -104,7 +93,7 @@ main.panel.row {
 
 .gabinete-bg {
   position: absolute;
-  top: 0;
+  top: -55px;
   left: 0;
   width: 100%;
   height: 100%;
@@ -112,21 +101,19 @@ main.panel.row {
   z-index: 1;
 }
 
-/* ✅ Ajuste fino de posición de Zoltar */
 .zoltar-img {
   position: absolute;
-  top: 120px;
+  top: 180px;
   left: 50%;
   transform: translateX(-50%);
-  width: 180px;
+  width: 160px;
   z-index: 2;
   pointer-events: none;
 }
 
-/* ✅ Coin y slot centrados bajo gabinete */
 .coin-slot {
   position: absolute;
-  bottom: 20px;
+  bottom: 45px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -168,7 +155,7 @@ main.panel.row {
   border-radius: 2px;
 }
 
-/* ====== 💬 CHAT ====== */
+/* ====== CHAT ====== */
 
 .chat {
   flex: 1 1 400px;
@@ -176,7 +163,6 @@ main.panel.row {
   flex-direction: column;
   gap: 10px;
   max-width: 600px;
-  min-height: 500px;
 }
 
 .options {
@@ -198,12 +184,10 @@ main.panel.row {
   font-size: 0.95em;
 }
 
-/* ✅ Scroll interno para evitar empujar Zoltar */
 .conversation {
   background: var(--panel);
   flex: 1;
   min-height: 200px;
-  max-height: 400px;
   border-radius: 8px;
   padding: 15px;
   overflow-y: auto;
@@ -262,13 +246,14 @@ footer.foot {
   border-top: 1px solid #333;
 }
 
-/* ====== 📱 RESPONSIVE ====== */
+/* ====== RESPONSIVE ====== */
 
 @media (max-width: 768px) {
   main.panel.row {
     flex-direction: column;
     align-items: center;
-    padding: 10px;
+    gap: 30px;
+    padding: 20px 10px;
   }
 
   .zoltar-box {
@@ -279,26 +264,18 @@ footer.foot {
 
   .zoltar-img {
     width: 80%;
-    top: 100px;
+    top: 160px;
   }
 
   .coin-slot {
+    bottom: 30px;
     gap: 8px;
-  }
-
-  .coin {
-    width: 48px;
-    height: 48px;
   }
 
   .chat {
     width: 100%;
     max-width: 100%;
     padding: 0 10px;
-  }
-
-  .conversation {
-    max-height: 300px;
   }
 }
 
