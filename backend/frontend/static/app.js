@@ -132,6 +132,21 @@ async function typeText(text) {
 }
 
 // ==============================
+// LLAMADAS A BACKEND
+// ==============================
+
+async function callSimpleLLM(msg) {
+  const conversation = [{ role: "user", content: msg }];
+  const res = await fetch(`${baseUrl}/api/generate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ conversation }),
+  });
+  const data = await res.json();
+  return data.text;
+}
+
+// ==============================
 // MAIN ASK HANDLER
 // ==============================
 
@@ -140,24 +155,29 @@ askBtn.addEventListener("click", async () => {
   if (!msg || !hasCoin) return;
 
   const mode = document.querySelector("input[name='mode']:checked").value;
-  const endpoint = mode === "rag" ? "/api/teacher" : "/api/generate";
 
   questionInput.value = "";
   startAnimation();
   await typeText("Zoltar está pensando...");
 
-  try {
-    const res = await fetch(`${baseUrl}${endpoint}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: msg }),
-    });
+  let data = {};
 
-    const data = await res.json();
-    stopAnimation(res.ok);
+  try {
+    if (mode === "rag") {
+      const res = await fetch(`${baseUrl}/api/teacher`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: msg }),
+      });
+      data = await res.json();
+    } else {
+      const text = await callSimpleLLM(msg);
+      data.text = text;
+    }
+
+    stopAnimation(true);
     await typeText(data.text || "⚠️ Respuesta inesperada");
 
-    // Mostrar fuentes si modo RAG
     if (mode === "rag" && Array.isArray(data.sources) && data.sources.length > 0) {
       const refs = document.createElement("div");
       refs.className = "refs";
@@ -171,7 +191,6 @@ askBtn.addEventListener("click", async () => {
       conversation.scrollTop = conversation.scrollHeight;
     }
 
-    // Reiniciar estado
     hasCoin = false;
     questionInput.disabled = true;
     askBtn.disabled = true;
@@ -187,4 +206,4 @@ askBtn.addEventListener("click", async () => {
 // (opcional) Precargar voces TTS
 // ==============================
 
-window.speechSynthesis.onvoiceschanged = () => {}; // Si quieres voz en el futuro
+window.speechSynthesis.onvoiceschanged = () => {};

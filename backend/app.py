@@ -4,57 +4,59 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from pathlib import Path
 
-# Importar rutas desde backend
+# Rutas de API
 from backend.routes.generate import router as generate_router
 from backend.routes.teacher import router as teacher_router
-from backend.routes.answer import router as answer_router
+from backend.routes.answer import router as answer_router  # (opcional)
 
-# Crear instancia de la app
-app = FastAPI(title="ZOLTAR • Dos Chatbots", version="1.0.0")
+# Crear la app
+app = FastAPI(
+    title="ZOLTAR • Dos Chatbots",
+    version="1.0.0"
+)
 
 # ========================================
-# Configuración de CORS
+# Middleware CORS (permite llamadas del frontend)
 # ========================================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # En producción: reemplaza con el dominio real
+    allow_origins=["*"],  # ⚠️ En producción reemplaza con la URL real del frontend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # ========================================
-# Rutas de API
+# Incluir rutas de la API
 # ========================================
-app.include_router(generate_router, prefix="/api", tags=["generate"])
-app.include_router(teacher_router,  prefix="/api", tags=["teacher"])
-app.include_router(answer_router,   prefix="/api", tags=["answer"])
+app.include_router(generate_router, prefix="/api", tags=["generate"])  # Chat simple
+app.include_router(teacher_router,  prefix="/api", tags=["teacher"])   # Chat con RAG
+app.include_router(answer_router,   prefix="/api", tags=["answer"])    # Extra (si lo usas)
 
 # ========================================
-# Ruta de salud
+# Ruta de prueba para saber si está corriendo
 # ========================================
 @app.get("/health")
 def health():
     return {"status": "healthy"}
 
 # ========================================
-# Servir Archivos Estáticos y Frontend
+# Servir frontend y archivos estáticos
 # ========================================
-# 🔧 Ajustado para nueva ubicación: backend/frontend
+# Ruta absoluta al directorio frontend
 frontend_dir = Path(__file__).resolve().parent / "frontend"
 static_dir = frontend_dir / "static"
 
-# Servir carpetas de recursos estáticos
+# Montar recursos estáticos
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 app.mount("/img", StaticFiles(directory=static_dir / "img"), name="img")
 app.mount("/sounds", StaticFiles(directory=static_dir / "sounds"), name="sounds")
 
-# ========================================
-# Servir index.html en "/"
-# ========================================
+# Servir el index.html si accedes a "/"
 @app.get("/", response_class=HTMLResponse)
 async def serve_index():
     index_path = frontend_dir / "index.html"
     if index_path.exists():
         return HTMLResponse(content=index_path.read_text(encoding="utf-8"), status_code=200)
-    return HTMLResponse("<h1>Frontend not found</h1>", status_code=404)
+    return HTMLResponse("<h1>Frontend no encontrado</h1>", status_code=404)
+
