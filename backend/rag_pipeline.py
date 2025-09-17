@@ -139,36 +139,26 @@ def chatbot_simple(conversation: List[Dict], system_prompt: str = "") -> Dict:
     return {"text": answer.strip(), "sources": []}
 
 
-def chatbot_teacher(question: str, history: str = "") -> Dict:
+def chatbot_teacher(question: str, history: str = "", k: int = 5) -> Dict:
     """
     Chat para docentes, usando prompt especial + history si aplica.
     """
-    retriever = get_retriever(k=5)
+    retriever = get_retriever(k=k)
     contexts = retriever.invoke(question) or []
 
     if not contexts:
         return {"text": FALLBACK_NO_CONTEXT, "sources": []}
 
     context_text, sources = _contexts_to_text_and_sources(contexts)
-
-    # ✅ Fix aplicado: pasamos context, question, history
     system_prompt = build_teacher_prompt(context_text, question, history)
 
-    return answer_with_rag(question=question, system_prompt=system_prompt)
+    # ✅ Versión corregida: siempre devolvemos dict con text + sources
+    response = answer_with_rag(question=question, system_prompt=system_prompt, k=k)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return {
+        "text": response.get("text", "⚠️ Sin respuesta generada."),
+        "sources": response.get("sources", [])
+    }
 
 
 
