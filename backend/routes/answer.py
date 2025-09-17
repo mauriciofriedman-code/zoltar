@@ -51,8 +51,16 @@ def universal_answer(inp: AnswerIn):
 
     if inp.rag:
         try:
-            answer = chatbot_teacher(question=q, history=inp.history or "", k=(k or 6))
-            return AnswerOut(text=answer, rag=True, mode="teacher")
+            answer_dict = chatbot_teacher(
+                question=q,
+                history=inp.history or "",
+                k=(k or 6)
+            )
+            return AnswerOut(
+                text=answer_dict.get("text", "⚠️ Respuesta vacía"),
+                rag=True,
+                mode="teacher"
+            )
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error en RAG docente: {e}")
 
@@ -60,11 +68,20 @@ def universal_answer(inp: AnswerIn):
     try:
         mode = (inp.mode or "engineered").lower()
         system_prompt = BASELINE_SYSTEM_PROMPT if mode == "baseline" else ENGINEERED_SYSTEM_PROMPT
-        answer = answer_with_rag(q, system_prompt, k=(k or 5), allow_fallback=False)
-        return AnswerOut(text=answer, rag=False, mode="baseline" if mode == "baseline" else "engineered")
+
+        answer_dict = answer_with_rag(
+            question=q,
+            system_prompt=system_prompt,
+            k=(k or 5),
+            allow_fallback=False
+        )
+        return AnswerOut(
+            text=answer_dict.get("text", "⚠️ Respuesta vacía"),
+            rag=False,
+            mode="baseline" if mode == "baseline" else "engineered"
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error en modelo simple: {e}")
-
 
 
 

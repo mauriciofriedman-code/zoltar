@@ -13,7 +13,6 @@ except Exception:
 
 router = APIRouter(tags=["generate"])
 
-
 # ==== Esquemas ====
 class GenerateIn(BaseModel):
     text: str = Field(..., min_length=1, description="Consulta del usuario")
@@ -22,10 +21,8 @@ class GenerateIn(BaseModel):
         description='Modo del chatbot: "baseline" o "engineered"',
     )
 
-
 class GenerateOut(BaseModel):
     text: str
-
 
 # ==== Endpoint ====
 @router.post("/generate", response_model=GenerateOut)
@@ -45,9 +42,12 @@ def generate_endpoint(inp: GenerateIn):
     )
 
     try:
-        answer = chatbot_simple(q, system_prompt)
-        return GenerateOut(text=answer)
-    except Exception:
+        # ✅ Enviar mensaje como lista de mensajes
+        conversation = [{"role": "user", "content": q}]
+        answer_dict = chatbot_simple(conversation, system_prompt)
+        return GenerateOut(text=answer_dict.get("text", "⚠️ Respuesta vacía"))
+    except Exception as e:
+        print(f"[generate] Error interno: {e}")
         raise HTTPException(status_code=500, detail="Error en generación simple")
 
 
