@@ -8,8 +8,6 @@
   <!-- Tipografías -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="/static/img/coin.png" />
-
-  <!-- Estilos principales -->
   <link rel="stylesheet" href="/static/style.css" />
 
   <style>
@@ -39,24 +37,15 @@
       padding: 20px 10px 10px;
     }
 
-    .panel.row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 40px;
-      padding: 20px;
-    }
-
     .zoltar-box {
       position: relative;
-      width: 550px;
-      height: 800px;
+      width: 400px;
+      height: 720px;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: visible;
       z-index: 2;
-      flex-shrink: 0;
     }
 
     .zoltar-box::after {
@@ -70,7 +59,6 @@
       background: radial-gradient(circle, rgba(255, 191, 0, 0.25), transparent 70%);
       filter: blur(40px);
       z-index: 0;
-      pointer-events: none;
     }
 
     .zoltar-gabinete {
@@ -91,28 +79,28 @@
 
     .zoltar-img {
       position: absolute;
-      top: 20%;
+      top: 24%;
       left: 50%;
       transform: translateX(-50%);
-      width: 68%;
+      width: 65%;
       z-index: 2;
       pointer-events: none;
     }
 
     .coin-slot {
       position: absolute;
-      bottom: 10%;
+      bottom: 6%;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       z-index: 3;
     }
 
     .coin {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       cursor: pointer;
       transition: transform 0.2s;
     }
@@ -141,6 +129,14 @@
       height: 30px;
       background: #000;
       border-radius: 2px;
+    }
+
+    .panel.row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      padding: 20px;
     }
 
     .chat {
@@ -173,6 +169,12 @@
       padding: 10px 14px;
       margin-bottom: 10px;
       color: #eee;
+    }
+
+    .refs {
+      font-size: 0.85em;
+      margin-top: 10px;
+      color: #aaa;
     }
 
     .composer {
@@ -212,9 +214,7 @@
       border-top: 1px solid #333;
     }
 
-    /* ==========================
-       Responsive
-    =========================== */
+    /* ========================== Responsive =========================== */
     @media (max-width: 768px) {
       .panel.row {
         flex-direction: column;
@@ -229,8 +229,7 @@
       }
 
       .zoltar-img {
-        width: 75%;
-        top: 22%;
+        width: 80%;
       }
 
       .coin-slot {
@@ -261,14 +260,12 @@
   <div class="fog-overlay"></div>
 
   <header class="marquee">
-    <div class="title">
-      <h1 style="font-family: 'Playfair Display', serif; font-size: 2.8em; color: #d4af37;">🔮 ZOLTAR</h1>
-    </div>
+    <h1 style="font-family: 'Playfair Display', serif; font-size: 2.8em; color: #d4af37;">🔮 ZOLTAR</h1>
     <p class="subtitle" style="color: #ccc;">Fortuna pedagógica en cada respuesta</p>
   </header>
 
   <main class="panel row">
-    
+
     <!-- Gabinete de Zoltar -->
     <section class="zoltar-box" id="zoltarBox">
       <div class="zoltar-gabinete">
@@ -288,11 +285,11 @@
           <label><input type="radio" name="mode" value="simple" checked> Modelo simple</label>
           <label><input type="radio" name="mode" value="rag"> Modelo RAG</label>
         </div>
-        <div class="hint">💡 Inserta la moneda para comenzar</div>
+        <div class="hint">🔑 Inserta la moneda para comenzar</div>
       </div>
 
       <div class="conversation" id="conversation">
-        <div class="bubble" id="output">Aquí aparecerá la respuesta...</div>
+        <div class="bubble">Aquí aparecerá la respuesta...</div>
       </div>
 
       <div class="composer">
@@ -300,10 +297,11 @@
         <button id="askBtn" disabled>Consultar</button>
       </div>
     </section>
+
   </main>
 
   <footer class="foot">
-    Animación de Zoltar creada por <span>Naomi Friedman</span>
+    Animación de Zoltar creada por Naomi Friedman
   </footer>
 
   <!-- Sonidos -->
@@ -311,10 +309,11 @@
   <audio id="soundThinking" src="/static/sounds/thinking.mp3" preload="auto" loop></audio>
   <audio id="soundReveal" src="/static/sounds/reveal.mp3" preload="auto"></audio>
 
-  <!-- JS -->
+  <!-- JS principal -->
   <script src="/static/app.js"></script>
 </body>
 </html>
+
 
 
 
