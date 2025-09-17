@@ -39,15 +39,24 @@
       padding: 20px 10px 10px;
     }
 
+    .panel.row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      padding: 20px;
+    }
+
     .zoltar-box {
       position: relative;
-      width: 480px;
-      height: 720px;
+      width: 550px;
+      height: 800px;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: visible;
       z-index: 2;
+      flex-shrink: 0;
     }
 
     .zoltar-box::after {
@@ -82,10 +91,10 @@
 
     .zoltar-img {
       position: absolute;
-      top: 22%;
+      top: 20%;
       left: 50%;
       transform: translateX(-50%);
-      width: 70%;
+      width: 68%;
       z-index: 2;
       pointer-events: none;
     }
@@ -132,14 +141,6 @@
       height: 30px;
       background: #000;
       border-radius: 2px;
-    }
-
-    .panel.row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 40px;
-      padding: 20px;
     }
 
     .chat {
@@ -228,7 +229,8 @@
       }
 
       .zoltar-img {
-        width: 80%;
+        width: 75%;
+        top: 22%;
       }
 
       .coin-slot {
@@ -247,10 +249,7 @@
         padding: 0 10px;
       }
 
-      .composer input {
-        font-size: 0.95em;
-      }
-
+      .composer input,
       .composer button {
         font-size: 0.95em;
       }
@@ -316,6 +315,7 @@
   <script src="/static/app.js"></script>
 </body>
 </html>
+
 
 
 
