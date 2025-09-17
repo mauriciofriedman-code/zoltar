@@ -1,226 +1,307 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ZOLTAR • Oráculo Educativo</title>
+
+  <!-- Tipografías -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/static/img/coin.png" />
+  <link rel="stylesheet" href="/static/style.css" />
 
   <style>
-    :root {
-      --bg: #fdfcf9;
-      --text: #222;
-      --panel: #f4f1ea;
-      --gold: #d4af37;
-      --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      --font-title: 'Playfair Display', serif;
-      --font-body: 'Inter', sans-serif;
-    }
-
     body {
       margin: 0;
-      font-family: var(--font-body);
-      background-color: var(--bg);
-      color: var(--text);
+      background: #0b0b0b;
+      color: #f1f1f1;
+      font-family: 'Inter', sans-serif;
+      background-image: radial-gradient(ellipse at center, rgba(255,255,255,0.03), transparent 70%);
     }
 
-    header {
+    .fog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('/static/img/fog.gif') center center / cover no-repeat;
+      opacity: 0.4;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .marquee {
       text-align: center;
-      padding: 1rem;
-      background: white;
-      box-shadow: var(--shadow);
-    }
-
-    header h1 {
-      font-family: var(--font-title);
-      font-size: 2.5rem;
-      color: var(--gold);
-      margin: 0;
-    }
-
-    main {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      gap: 2rem;
-      padding: 2rem;
-      flex-wrap: wrap;
+      padding: 20px 10px 10px;
     }
 
     .zoltar-box {
       position: relative;
-      width: 300px;
-      height: 600px;
-    }
-
-    .zoltar-box img.bg {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .zoltar-animado {
-      position: absolute;
-      top: 13%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 230px;
+      width: 420px;
+      height: 720px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
       z-index: 2;
     }
 
-    .slot {
+    .zoltar-box::after {
+      content: "";
       position: absolute;
-      bottom: 14%;
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 28px;
-      z-index: 3;
+      width: 300px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(255, 191, 0, 0.25), transparent 70%);
+      filter: blur(40px);
+      z-index: 0;
     }
 
-    .coin {
-      position: absolute;
-      bottom: 7%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 40px;
-      cursor: pointer;
-      z-index: 3;
-    }
-
-    .interface-panel {
-      background-color: var(--panel);
-      border-radius: 12px;
-      padding: 1.5rem;
-      width: 360px;
-      box-shadow: var(--shadow);
-    }
-
-    .interface-panel h2 {
-      margin-top: 0;
-      font-family: var(--font-title);
-    }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 1rem;
-    }
-
-    select, textarea, button {
+    .zoltar-gabinete {
+      position: relative;
       width: 100%;
-      margin-top: 0.5rem;
-      padding: 0.5rem;
-      font-size: 1rem;
-      font-family: var(--font-body);
+      height: 100%;
     }
 
-    button {
-      margin-top: 1rem;
-      background-color: var(--gold);
+    .gabinete-bg {
+      position: absolute;
+      top: -55px;
+      left: -100px;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 1;
+    }
+
+    .zoltar-img {
+      position: absolute;
+      top: 220px;
+      left: 240px;
+      width: 35%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .coin-slot {
+      position: absolute;
+      bottom: 40px;
+      left: 410px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 3;
+    }
+
+    #coinBtn {
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    #coinBtn:hover {
+      transform: scale(1.1);
+    }
+
+    #slot {
+      width: 28px;
+      height: 60px;
+      background: linear-gradient(180deg, #333, #000);
+      border: 2px solid #888;
+      border-radius: 4px;
+      box-shadow: inset 0 0 10px #000;
+      position: relative;
+    }
+
+    #slot::after {
+      content: "";
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 30px;
+      background: #000;
+      border-radius: 2px;
+    }
+
+    .panel.row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      padding: 20px;
+    }
+
+    .chat {
+      flex: 1 1 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 600px;
+    }
+
+    .options {
+      background: #1a1a1a;
+      padding: 10px 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.05);
+    }
+
+    .conversation {
+      background: #1a1a1a;
+      flex: 1;
+      min-height: 200px;
+      border-radius: 8px;
+      padding: 15px;
+      overflow-y: auto;
+    }
+
+    .bubble {
+      background: #2c2c2c;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      color: #eee;
+    }
+
+    .refs {
+      font-size: 0.85em;
+      margin-top: 10px;
+      color: #aaa;
+    }
+
+    .composer {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .composer input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #555;
+      background: #111;
+      color: #fff;
+    }
+
+    .composer button {
+      padding: 10px 20px;
+      background: #d4af37;
       border: none;
-      color: white;
+      border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
-      border-radius: 6px;
     }
 
-    button:hover {
-      background-color: #c89c2f;
+    .composer button:hover {
+      background: #b18f2f;
     }
 
-    .respuesta {
-      margin-top: 1.5rem;
-      background: white;
-      border: 1px solid #ccc;
-      padding: 1rem;
-      border-radius: 8px;
-      min-height: 80px;
-    }
-
-    footer {
+    footer.foot {
+      background: #111;
       text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #666;
+      padding: 15px;
+      font-size: 0.9em;
+      color: #888;
+      border-top: 1px solid #333;
     }
 
     @media (max-width: 768px) {
-      main {
+      .panel.row {
         flex-direction: column;
-        padding: 1rem;
+        align-items: center;
+        padding: 10px;
       }
 
       .zoltar-box {
-        width: 260px;
-        height: 520px;
+        width: 100%;
+        max-width: 320px;
+        height: auto;
       }
 
-      .zoltar-animado {
-        width: 200px;
-        top: 14%;
+      .zoltar-img {
+        width: 80%;
       }
 
-      .slot {
-        width: 24px;
-        bottom: 14%;
+      .coin-slot {
+        gap: 8px;
       }
 
       .coin {
-        width: 36px;
-        bottom: 7%;
+        width: 48px;
+        height: 48px;
       }
 
-      .interface-panel {
+      .chat {
         width: 100%;
+        max-width: 100%;
+        padding: 0 10px;
       }
     }
   </style>
-
-  <script>
-    function insertCoin() {
-      document.querySelector('.respuesta').textContent = '🔮 Zoltar está pensando...';
-      setTimeout(() => {
-        document.querySelector('.respuesta').textContent = '✨ Aquí aparecerá tu respuesta educativa mágica...';
-      }, 1500);
-    }
-  </script>
 </head>
 
 <body>
-  <header>
-    <h1>🧿 ZOLTAR</h1>
-    <p>Fortuna pedagógica en cada respuesta</p>
+  <div class="fog-overlay"></div>
+
+  <header class="marquee">
+    <h1 style="font-family: 'Playfair Display', serif; font-size: 2.8em; color: #d4af37;">🔮 ZOLTAR</h1>
+    <p class="subtitle" style="color: #ccc;">Fortuna pedagógica en cada respuesta</p>
   </header>
 
-  <main>
-    <div class="zoltar-box">
-      <img src="images/cabinet.png" alt="Gabinete" class="bg">
-      <img src="images/zoltar-animado.gif" alt="Zoltar animado" class="zoltar-animado">
-      <img src="images/slot.png" alt="Slot" class="slot">
-      <img src="images/coin.png" alt="Moneda" class="coin" onclick="insertCoin()">
-    </div>
+  <main class="panel row">
 
-    <div class="interface-panel">
-      <h2>Consulta a Zoltar</h2>
-      <label>🔘 Modo:</label>
-      <select>
-        <option>Modelo simple</option>
-        <option>Modelo RAG</option>
-      </select>
+    <!-- Gabinete de Zoltar -->
+    <section class="zoltar-box" id="zoltarBox">
+      <div class="zoltar-gabinete">
+        <img class="gabinete-bg" src="/static/img/Gabinete_Zoltar.png" alt="Gabinete Zoltar" />
+        <img class="zoltar-img" id="zoltarImg" src="/static/img/Zoltar_1.png" alt="Zoltar" />
+        <div class="coin-slot" id="coinSlot">
+          <img id="coinBtn" src="/static/img/coin.png" alt="Moneda" />
+          <div class="slot" id="slot"></div>
+        </div>
+      </div>
+    </section>
 
-      <label>🔍 Inserta la moneda para comenzar</label>
-      <textarea rows="4" placeholder="Haz tu consulta..."></textarea>
+    <!-- Chat -->
+    <section class="chat">
+      <div class="options">
+        <div class="switch">
+          <label><input type="radio" name="mode" value="simple" checked> Modelo simple</label>
+          <label><input type="radio" name="mode" value="rag"> Modelo RAG</label>
+        </div>
+        <div class="hint">🔑 Inserta la moneda para comenzar</div>
+      </div>
 
-      <button onclick="insertCoin()">Consultar</button>
+      <div class="conversation" id="conversation">
+        <div class="bubble">Aquí aparecerá la respuesta...</div>
+      </div>
 
-      <div class="respuesta"></div>
-    </div>
+      <div class="composer">
+        <input id="question" type="text" placeholder="Haz tu consulta..." disabled />
+        <button id="askBtn" disabled>Consultar</button>
+      </div>
+    </section>
+
   </main>
 
-  <footer>
-    Animación de Zoltar creada por Nacho © 2025
+  <footer class="foot">
+    Animación de Zoltar creada por Naomi Friedman
   </footer>
+
+  <!-- Sonidos -->
+  <audio id="soundCoin" src="/static/sounds/coin.mp3" preload="auto"></audio>
+  <audio id="soundThinking" src="/static/sounds/thinking.mp3" preload="auto" loop></audio>
+  <audio id="soundReveal" src="/static/sounds/reveal.mp3" preload="auto"></audio>
+
+  <!-- JS principal -->
+  <script src="/static/app.js"></script>
 </body>
 </html>
-
