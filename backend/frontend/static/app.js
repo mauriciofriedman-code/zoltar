@@ -136,12 +136,17 @@ async function typeText(text) {
 // ==============================
 
 async function callSimpleLLM(msg) {
-  const conversation = [{ role: "user", content: msg }];
+  const mode = document.querySelector("input[name='mode']:checked").value;
+
   const res = await fetch(`${baseUrl}/api/generate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ conversation }),
+    body: JSON.stringify({
+      text: msg,
+      mode: mode === "baseline" ? "baseline" : "engineered"
+    }),
   });
+
   const data = await res.json();
   return data.text;
 }
@@ -167,7 +172,7 @@ askBtn.addEventListener("click", async () => {
       const res = await fetch(`${baseUrl}/api/teacher`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: msg }),
+        body: JSON.stringify({ text: msg }),
       });
       data = await res.json();
     } else {
@@ -207,3 +212,4 @@ askBtn.addEventListener("click", async () => {
 // ==============================
 
 window.speechSynthesis.onvoiceschanged = () => {};
+
