@@ -1,172 +1,282 @@
 :root {
-  --bg: #fdfcf9;
-  --text: #222;
-  --panel: #f4f1ea;
+  --bg: #0b0b0b;
+  --text: #f1f1f1;
+  --panel: #1a1a1a;
+  --bubble: #2c2c2c;
   --gold: #d4af37;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --gold-dark: #b18f2f;
   --font-title: 'Playfair Display', serif;
   --font-body: 'Inter', sans-serif;
 }
 
 body {
   margin: 0;
-  font-family: var(--font-body);
-  background-color: var(--bg);
+  background: var(--bg);
   color: var(--text);
+  font-family: var(--font-body);
+  background-image: radial-gradient(ellipse at center, rgba(255,255,255,0.03), transparent 70%);
 }
 
-header {
+header.marquee {
   text-align: center;
-  padding: 1rem;
-  background: white;
-  box-shadow: var(--shadow);
+  padding: 20px 10px 10px;
 }
 
 header h1 {
   font-family: var(--font-title);
-  font-size: 2.5rem;
+  font-size: 2.8em;
   color: var(--gold);
-  margin: 0;
+  margin-bottom: 0;
 }
 
-main {
+.subtitle {
+  color: #ccc;
+}
+
+main.panel.row {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  padding: 2rem;
   flex-wrap: wrap;
-}
-
-.zoltar-box {
-  position: relative;
-  width: 300px;
-  height: 600px;
-}
-
-.zoltar-box img.bg {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.zoltar-animado {
-  position: absolute;
-  top: 13%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 230px;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
   z-index: 2;
 }
 
-.slot {
-  position: absolute;
-  bottom: 14%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 28px;
-  z-index: 3;
-}
-
-.coin {
-  position: absolute;
-  bottom: 7%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  cursor: pointer;
-  z-index: 3;
-}
-
-.interface-panel {
-  background-color: var(--panel);
-  border-radius: 12px;
-  padding: 1.5rem;
-  width: 360px;
-  box-shadow: var(--shadow);
-}
-
-.interface-panel h2 {
-  margin-top: 0;
-  font-family: var(--font-title);
-}
-
-label {
-  font-weight: bold;
-  display: block;
-  margin-top: 1rem;
-}
-
-select,
-textarea,
-button {
+.fog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  font-size: 1rem;
-  font-family: var(--font-body);
+  height: 100%;
+  background: url('/static/img/fog.gif') center center / cover no-repeat;
+  opacity: 0.4;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 1;
 }
 
-button {
-  margin-top: 1rem;
-  background-color: var(--gold);
+/* ====== ZOLTAR ====== */
+
+.zoltar-box {
+  position: relative;
+  width: 420px;
+  height: 720px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  z-index: 2;
+}
+
+.zoltar-box::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(255, 191, 0, 0.25), transparent 70%);
+  filter: blur(40px);
+  z-index: 0;
+}
+
+.zoltar-gabinete {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.gabinete-bg {
+  position: absolute;
+  top: -55px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+}
+
+.zoltar-img {
+  position: absolute;
+  top: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.coin-slot {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 3;
+}
+
+#coinBtn {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+#coinBtn:hover {
+  transform: scale(1.1);
+}
+
+#slot {
+  width: 28px;
+  height: 60px;
+  background: linear-gradient(180deg, #333, #000);
+  border: 2px solid #888;
+  border-radius: 4px;
+  box-shadow: inset 0 0 10px #000;
+  position: relative;
+}
+
+#slot::after {
+  content: "";
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 30px;
+  background: #000;
+  border-radius: 2px;
+}
+
+/* ====== CHAT ====== */
+
+.chat {
+  flex: 1 1 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 600px;
+}
+
+.options {
+  background: var(--panel);
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.05);
+}
+
+.switch label {
+  display: inline-block;
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+.hint {
+  margin-top: 10px;
+  color: #ccc;
+  font-size: 0.95em;
+}
+
+.conversation {
+  background: var(--panel);
+  flex: 1;
+  min-height: 200px;
+  border-radius: 8px;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.bubble {
+  background: var(--bubble);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  color: #eee;
+}
+
+.refs {
+  font-size: 0.85em;
+  margin-top: 10px;
+  color: #aaa;
+}
+
+.composer {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.composer input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background: #111;
+  color: #fff;
+}
+
+.composer button {
+  padding: 10px 20px;
+  background: var(--gold);
   border: none;
-  color: white;
+  border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  border-radius: 6px;
 }
 
-button:hover {
-  background-color: #c89c2f;
+.composer button:hover {
+  background: var(--gold-dark);
 }
 
-.respuesta {
-  margin-top: 1.5rem;
-  background: white;
-  border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 8px;
-  min-height: 80px;
-}
+/* ====== FOOTER ====== */
 
-footer {
+footer.foot {
+  background: #111;
   text-align: center;
-  padding: 1rem;
-  font-size: 0.9rem;
-  color: #666;
+  padding: 15px;
+  font-size: 0.9em;
+  color: #888;
+  border-top: 1px solid #333;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ====== RESPONSIVE ====== */
+
 @media (max-width: 768px) {
-  main {
+  main.panel.row {
     flex-direction: column;
-    padding: 1rem;
+    align-items: center;
+    padding: 10px;
   }
 
   .zoltar-box {
-    width: 260px;
-    height: 520px;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
   }
 
-  .zoltar-animado {
-    width: 200px;
-    top: 14%;
+  .zoltar-img {
+    width: 80%;
   }
 
-  .slot {
-    width: 24px;
-    bottom: 14%;
+  .coin-slot {
+    gap: 8px;
   }
 
   .coin {
-    width: 36px;
-    bottom: 7%;
+    width: 48px;
+    height: 48px;
   }
 
-  .interface-panel {
+  .chat {
     width: 100%;
+    max-width: 100%;
+    padding: 0 10px;
   }
 }
 
