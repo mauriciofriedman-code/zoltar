@@ -1,15 +1,11 @@
 :root {
-  --bg: #f5f5f5;
-  --text: #222;
-  --panel: #ffffff;
+  --bg: #0b0b0b;
+  --text: #f1f1f1;
+  --panel: #1a1a1a;
   --gold: #d4af37;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   --font-title: 'Playfair Display', serif;
   --font-body: 'Inter', sans-serif;
-
-  --wood-bg: url("/static/img/wood_texture.jpg"); /* 📌 Usa tu imagen */
-  --mist-color: rgba(255, 255, 255, 0.05);
-  --mist-blur: blur(8px);
 }
 
 /* Reset */
@@ -23,138 +19,130 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-body);
-  line-height: 1.5;
+  background-image: radial-gradient(ellipse at center, rgba(255,255,255,0.03), transparent 70%);
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
-/* Header */
 header.marquee {
-  background: var(--gold);
-  color: #000;
+  background: #111;
+  color: var(--gold);
   padding: 20px;
   text-align: center;
   box-shadow: var(--shadow);
 }
 
-header .title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-
 header .title h1 {
   font-family: var(--font-title);
-  font-size: 2.5em;
-  letter-spacing: 2px;
+  font-size: 2.8em;
 }
 
 header .subtitle {
-  font-size: 1.1em;
-  margin-top: 6px;
+  color: #ccc;
+  font-size: 1em;
+  margin-top: 5px;
 }
 
-/* Main layout */
 main.panel {
   display: flex;
-  flex-direction: row;
-  flex: 1;
-  padding: 20px;
-  gap: 20px;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: flex-start;
+  gap: 40px;
+  padding: 20px;
+  flex: 1;
 }
 
-/* Chat Section */
-.chat {
-  flex: 1 1 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+footer.foot {
+  background: #111;
+  text-align: center;
+  padding: 15px;
+  font-size: 0.9em;
+  color: #888;
+  border-top: 1px solid #333;
 }
 
-/* Zoltar Cabinet */
+/* Gabinete Zoltar */
 .zoltar-box {
   position: relative;
-  flex: 1 1 350px;
-  max-width: 420px;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 0 30px rgba(0,0,0,0.4);
-  background: var(--wood-bg);
-  background-size: cover;
-  background-position: center;
+  width: 420px;
+  height: 600px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  overflow: hidden;
-  transition: box-shadow 0.5s ease;
+  justify-content: center;
+  overflow: visible;
+  z-index: 2;
 }
 
-.zoltar-box.thinking {
-  box-shadow: 0 0 40px 10px gold, inset 0 0 20px gold;
-}
-
-/* Fog Animation */
-.zoltar-box::before,
 .zoltar-box::after {
   content: "";
   position: absolute;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, var(--mist-color) 0%, transparent 70%);
-  animation: mist 20s linear infinite;
-  z-index: 1;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(255, 191, 0, 0.25), transparent 70%);
+  filter: blur(40px);
+  z-index: 0;
   pointer-events: none;
-  filter: var(--mist-blur);
 }
 
-.zoltar-box::after {
-  animation-delay: 10s;
-  transform: scaleX(-1);
-}
-
-@keyframes mist {
-  0% {
-    transform: translateX(-50%) translateY(-50%) scale(1);
-  }
-  100% {
-    transform: translateX(50%) translateY(50%) scale(1.5);
-  }
-}
-
-/* Zoltar Image */
-.zoltar-box img {
+.zoltar-gabinete {
+  position: relative;
   width: 100%;
-  border-radius: 12px;
-  z-index: 2;
+  height: 100%;
 }
 
-/* Coin + Slot */
+.gabinete-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+}
+
+.zoltar-img {
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  z-index: 2;
+  pointer-events: none;
+}
+
 .coin-slot {
-  margin-top: 10px;
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 10px;
-  z-index: 2;
+  gap: 12px;
+  z-index: 3;
 }
 
 .coin {
   width: 60px;
   height: 60px;
   cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.coin:hover {
+  transform: scale(1.1);
 }
 
 .slot {
-  width: 25px;
+  width: 28px;
   height: 60px;
-  background: linear-gradient(180deg, #333, #111);
-  border: 2px solid #555;
+  background: linear-gradient(180deg, #333, #000);
+  border: 2px solid #888;
   border-radius: 4px;
-  box-shadow: inset 0 0 6px #000;
+  box-shadow: inset 0 0 10px #000;
   position: relative;
 }
 
@@ -170,16 +158,14 @@ main.panel {
   border-radius: 2px;
 }
 
-.moving-coin {
-  position: fixed;
-  width: 60px;
-  height: 60px;
-  pointer-events: none;
-  transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
-  z-index: 9999;
+/* Chat */
+.chat {
+  flex: 1 1 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* Chat bubbles & controls */
 .options {
   background: var(--panel);
   padding: 10px 15px;
@@ -187,15 +173,9 @@ main.panel {
   box-shadow: var(--shadow);
 }
 
-.options .switch label {
-  margin-right: 15px;
-  font-weight: 600;
-}
-
 .options .hint {
   font-size: 0.9em;
-  margin-top: 5px;
-  color: #666;
+  color: #aaa;
 }
 
 .conversation {
@@ -203,19 +183,16 @@ main.panel {
   flex: 1;
   min-height: 200px;
   border-radius: 8px;
-  box-shadow: var(--shadow);
   padding: 15px;
   overflow-y: auto;
 }
 
 .bubble {
-  background: #e0e0e0;
+  background: #2c2c2c;
   border-radius: 12px;
   padding: 10px 14px;
   margin-bottom: 10px;
-  max-width: 100%;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  color: #eee;
 }
 
 .composer {
@@ -228,8 +205,9 @@ main.panel {
   flex: 1;
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1em;
+  border: 1px solid #555;
+  background: #111;
+  color: #fff;
 }
 
 .composer button {
@@ -239,37 +217,24 @@ main.panel {
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
 }
 
 .composer button:hover {
-  background: #c49b2c;
+  background: #b18f2f;
 }
 
-/* Footer */
-footer.foot {
-  background: #eee;
-  text-align: center;
-  padding: 15px;
-  font-size: 0.9em;
-  color: #333;
-  border-top: 1px solid #ccc;
-  margin-top: auto;
-}
-
-/* Referencias (RAG) */
-.refs {
-  background: #f9f9f9;
-  border-left: 3px solid #ccc;
-  padding: 8px 12px;
-  margin-top: 12px;
-  font-size: 0.9em;
-  color: #333;
-}
-
-.refs ul {
-  margin: 6px 0 0 16px;
-  padding: 0;
+/* Niebla */
+.fog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/static/img/fog.gif') center center / cover no-repeat;
+  opacity: 0.4;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 1;
 }
 
 

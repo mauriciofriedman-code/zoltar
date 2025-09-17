@@ -84,8 +84,14 @@ if (coinBtn && slot) {
     const rectCoin = coinBtn.getBoundingClientRect();
     const rectSlot = slot.getBoundingClientRect();
 
+    coinClone.style.position = "fixed";
     coinClone.style.left = `${rectCoin.left}px`;
     coinClone.style.top = `${rectCoin.top}px`;
+    coinClone.style.width = `60px`;
+    coinClone.style.height = `60px`;
+    coinClone.style.pointerEvents = "none";
+    coinClone.style.transition = "transform 0.8s ease-in-out, opacity 0.8s ease-in-out";
+    coinClone.style.zIndex = "9999";
 
     document.body.appendChild(coinClone);
     void coinClone.offsetWidth;
@@ -102,7 +108,7 @@ if (coinBtn && slot) {
     questionInput.disabled = false;
     askBtn.disabled = false;
 
-    zoltarBox.classList.add("thinking"); // ✨ Ilumina gabinete
+    zoltarBox.classList.add("thinking");
     soundCoin.currentTime = 0;
     soundCoin.play().catch(() => {});
   });
@@ -149,10 +155,9 @@ askBtn.addEventListener("click", async () => {
 
     const data = await res.json();
     stopAnimation(res.ok);
-
     await typeText(data.text || "⚠️ Respuesta inesperada");
 
-    // 🎓 Mostrar fuentes si estamos en modo RAG
+    // Mostrar fuentes si modo RAG
     if (mode === "rag" && Array.isArray(data.sources) && data.sources.length > 0) {
       const refs = document.createElement("div");
       refs.className = "refs";
@@ -166,7 +171,7 @@ askBtn.addEventListener("click", async () => {
       conversation.scrollTop = conversation.scrollHeight;
     }
 
-    // 🔁 Reinicio para siguiente uso
+    // Reiniciar estado
     hasCoin = false;
     questionInput.disabled = true;
     askBtn.disabled = true;
@@ -178,5 +183,8 @@ askBtn.addEventListener("click", async () => {
   }
 });
 
+// ==============================
+// (opcional) Precargar voces TTS
+// ==============================
 
-
+window.speechSynthesis.onvoiceschanged = () => {}; // Si quieres voz en el futuro
