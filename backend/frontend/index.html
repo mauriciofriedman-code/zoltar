@@ -39,7 +39,7 @@
 
     .zoltar-box {
       position: relative;
-      width: 400px;
+      width: 420px;
       height: 720px;
       display: flex;
       align-items: center;
@@ -69,8 +69,8 @@
 
     .gabinete-bg {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: -55px;
+      left: -100px;
       width: 100%;
       height: 100%;
       object-fit: contain;
@@ -79,37 +79,35 @@
 
     .zoltar-img {
       position: absolute;
-      top: 24%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 65%;
+      top: 220px;
+      left: 240px;
+      width: 35%;
       z-index: 2;
       pointer-events: none;
     }
 
     .coin-slot {
       position: absolute;
-      bottom: 6%;
-      left: 50%;
-      transform: translateX(-50%);
+      bottom: 40px;
+      left: 410px;
       display: flex;
       align-items: center;
       gap: 10px;
       z-index: 3;
     }
 
-    .coin {
-      width: 50px;
-      height: 50px;
+    #coinBtn {
+      width: 60px;
+      height: 60px;
       cursor: pointer;
       transition: transform 0.2s;
     }
 
-    .coin:hover {
+    #coinBtn:hover {
       transform: scale(1.1);
     }
 
-    .slot {
+    #slot {
       width: 28px;
       height: 60px;
       background: linear-gradient(180deg, #333, #000);
@@ -119,7 +117,7 @@
       position: relative;
     }
 
-    .slot::after {
+    #slot::after {
       content: "";
       position: absolute;
       top: 20%;
@@ -214,7 +212,6 @@
       border-top: 1px solid #333;
     }
 
-    /* ========================== Responsive =========================== */
     @media (max-width: 768px) {
       .panel.row {
         flex-direction: column;
@@ -233,7 +230,6 @@
       }
 
       .coin-slot {
-        bottom: 8%;
         gap: 8px;
       }
 
@@ -246,11 +242,6 @@
         width: 100%;
         max-width: 100%;
         padding: 0 10px;
-      }
-
-      .composer input,
-      .composer button {
-        font-size: 0.95em;
       }
     }
   </style>
@@ -272,7 +263,7 @@
         <img class="gabinete-bg" src="/static/img/Gabinete_Zoltar.png" alt="Gabinete Zoltar" />
         <img class="zoltar-img" id="zoltarImg" src="/static/img/Zoltar_1.png" alt="Zoltar" />
         <div class="coin-slot" id="coinSlot">
-          <img id="coinBtn" src="/static/img/coin.png" alt="Moneda" class="coin" />
+          <img id="coinBtn" src="/static/img/coin.png" alt="Moneda" />
           <div class="slot" id="slot"></div>
         </div>
       </div>
@@ -313,8 +304,3 @@
   <script src="/static/app.js"></script>
 </body>
 </html>
-
-
-
-
-
