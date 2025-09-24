@@ -7,6 +7,7 @@
   
   <!-- Enhanced Mystical Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="static/img/coin.png" />
   
   <style>
     :root {
@@ -42,71 +43,6 @@
       min-height: 100vh;
       overflow-x: hidden;
       position: relative;
-    }
-
-    /* Debug Mode Toggle - Hidden by default */
-    .debug-toggle {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      z-index: 1000;
-      opacity: 0.3;
-      transition: opacity 0.3s;
-    }
-
-    .debug-toggle:hover {
-      opacity: 1;
-    }
-
-    .debug-toggle button {
-      padding: 8px 12px;
-      background: var(--gold-dark);
-      border: none;
-      border-radius: 5px;
-      color: #fff;
-      cursor: pointer;
-      font-size: 0.8em;
-    }
-
-    /* Debug Panel - Hidden by default */
-    .debug-panel {
-      display: none;
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.95);
-      border: 2px solid var(--gold);
-      border-radius: 10px;
-      padding: 15px;
-      max-width: 300px;
-      z-index: 1000;
-      font-size: 0.85em;
-    }
-
-    .debug-panel.active {
-      display: block;
-    }
-
-    .debug-panel h3 {
-      margin: 0 0 10px 0;
-      color: var(--gold);
-    }
-
-    .debug-info {
-      display: flex;
-      justify-content: space-between;
-      margin: 5px 0;
-      padding: 5px 0;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-    }
-
-    .debug-label {
-      color: var(--gold);
-    }
-
-    .debug-value {
-      color: var(--text-primary);
-      font-weight: bold;
     }
 
     /* Animated Mystical Background */
@@ -326,10 +262,6 @@
       filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
       z-index: 2;
       display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
     }
 
     /* Enhanced Glow Effects */
@@ -396,11 +328,11 @@
     @keyframes supremeGlow {
       0%, 100% { 
         filter: drop-shadow(0 0 50px var(--mystical-purple)) drop-shadow(0 0 100px var(--gold)) brightness(1.4);
-        transform: translate(-50%, -50%) scale(1);
+        transform: scale(1);
       }
       50% { 
         filter: drop-shadow(0 0 80px var(--mystical-purple)) drop-shadow(0 0 150px var(--gold)) brightness(1.6);
-        transform: translate(-50%, -50%) scale(1.05);
+        transform: scale(1.05);
       }
     }
 
@@ -648,6 +580,21 @@
       box-shadow: none;
     }
 
+    /* Interaction Counter Display - Hidden but still tracking */
+    .interaction-counter {
+      display: none;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--gold);
+      border-radius: 50px;
+      padding: 8px 15px;
+      font-size: 0.9em;
+      color: var(--gold);
+      z-index: 5;
+    }
+
     /* Enhanced Footer */
     footer.credits {
       background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
@@ -756,32 +703,6 @@
 </head>
 
 <body>
-  <!-- Debug Toggle -->
-  <div class="debug-toggle">
-    <button onclick="toggleDebug()">🔍 Debug</button>
-  </div>
-
-  <!-- Debug Panel -->
-  <div class="debug-panel" id="debugPanel">
-    <h3>Debug Info</h3>
-    <div class="debug-info">
-      <span class="debug-label">Interaction Count:</span>
-      <span class="debug-value" id="debugInteraction">0</span>
-    </div>
-    <div class="debug-info">
-      <span class="debug-label">Video Mode Active:</span>
-      <span class="debug-value" id="debugVideoMode">No</span>
-    </div>
-    <div class="debug-info">
-      <span class="debug-label">Current Video:</span>
-      <span class="debug-value" id="debugCurrentVideo">None</span>
-    </div>
-    <div class="debug-info">
-      <span class="debug-label">API Mode:</span>
-      <span class="debug-value" id="debugApiMode">Simple</span>
-    </div>
-  </div>
-
   <!-- Animated Background -->
   <div class="mystical-bg"></div>
   
@@ -789,7 +710,7 @@
   <div class="particles" id="particles"></div>
 
   <header class="mystical-header">
-    <h1>ZOLTAR</h1>
+    <h1>🔮 ZOLTAR</h1>
     <p class="subtitle">Fortuna pedagógica en cada respuesta</p>
   </header>
 
@@ -797,32 +718,37 @@
     <!-- Enhanced Zoltar Display -->
     <section class="zoltar-shrine">
       <!-- Ornamental Symbols -->
-      <div class="shrine-ornament top-left">⟡</div>
-      <div class="shrine-ornament top-right">⟢</div>
-      <div class="shrine-ornament bottom-left">◊</div>
-      <div class="shrine-ornament bottom-right">◊</div>
+      <div class="shrine-ornament top-left">✧</div>
+      <div class="shrine-ornament top-right">✧</div>
+      <div class="shrine-ornament bottom-left">✧</div>
+      <div class="shrine-ornament bottom-right">✧</div>
+      
+      <!-- Interaction Counter -->
+      <div class="interaction-counter">
+        Consultas: <span id="interactionCount">0</span>
+      </div>
 
       <div class="zoltar-container">
         <!-- Static Image (for interactions 1-3) -->
-        <img class="zoltar-img" id="zoltarImg" src="https://raw.githubusercontent.com/yourusername/zoltar-oracle/main/static/img/Zoltar_1.png" alt="Zoltar" />
+        <img class="zoltar-img" id="zoltarImg" src="static/img/Zoltar_1.png" alt="Zoltar" />
         
         <!-- Video Elements (for interactions 4+) -->
         <video class="zoltar-video" id="zoltarVideoLightning" muted loop>
-          <source src="https://raw.githubusercontent.com/yourusername/zoltar-oracle/main/static/video/Zoltar_anim_one.mp4" type="video/mp4">
+          <source src="static/video/Zoltar_anim_one.mp4" type="video/mp4">
         </video>
         
         <video class="zoltar-video" id="zoltarVideoDiabolical" muted loop>
-          <source src="https://raw.githubusercontent.com/yourusername/zoltar-oracle/main/static/video/Zoltar_anim_two.mp4" type="video/mp4">
+          <source src="static/video/Zoltar_anim_two.mp4" type="video/mp4">
         </video>
         
         <video class="zoltar-video" id="zoltarVideoMystical" muted loop>
-          <source src="https://raw.githubusercontent.com/yourusername/zoltar-oracle/main/static/video/Zoltar_anim_three.mp4" type="video/mp4">
+          <source src="static/video/Zoltar_anim_three.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- Enhanced Coin Slot -->
       <div class="coin-ritual">
-        <img id="coinBtn" src="https://raw.githubusercontent.com/yourusername/zoltar-oracle/main/static/img/coin.png" alt="Moneda Mística" />
+        <img id="coinBtn" src="static/img/coin.png" alt="Moneda Mística" />
         <div class="slot" id="slot"></div>
       </div>
     </section>
@@ -866,6 +792,11 @@
     <p>Animación de Zoltar creada por Naomi Friedman • Experiencia forjada en las llamas del conocimiento</p>
   </footer>
 
+  <!-- Audio Elements -->
+  <audio id="soundCoin" src="static/sounds/coin.mp3" preload="auto"></audio>
+  <audio id="soundThinking" src="static/sounds/thinking.mp3" preload="auto" loop></audio>
+  <audio id="soundReveal" src="static/sounds/reveal.mp3" preload="auto"></audio>
+
   <!-- Enhanced JavaScript -->
   <script>
     // Core Elements
@@ -873,37 +804,35 @@
     const zoltarVideoLightning = document.getElementById("zoltarVideoLightning");
     const zoltarVideoDiabolical = document.getElementById("zoltarVideoDiabolical");
     const zoltarVideoMystical = document.getElementById("zoltarVideoMystical");
+    const zoltarContainer = document.querySelector(".zoltar-container");
+    
+    const soundCoin = document.getElementById("soundCoin");
+    const soundReveal = document.getElementById("soundReveal");
+    const soundThinking = document.getElementById("soundThinking");
     
     const questionInput = document.getElementById("question");
     const askBtn = document.getElementById("askBtn");
     const prophecyScroll = document.getElementById("prophecyScroll");
     const coinBtn = document.getElementById("coinBtn");
     const statusHint = document.getElementById("statusHint");
-
-    // Debug elements
-    const debugPanel = document.getElementById("debugPanel");
-    const debugInteraction = document.getElementById("debugInteraction");
-    const debugVideoMode = document.getElementById("debugVideoMode");
-    const debugCurrentVideo = document.getElementById("debugCurrentVideo");
-    const debugApiMode = document.getElementById("debugApiMode");
+    const interactionCountDisplay = document.getElementById("interactionCount");
 
     // State Management
     let hasCoin = false;
     let interactionCount = 0;
     let currentVideoMode = null;
     let isAnimating = false;
-    let debugMode = false;
 
-    // Animation Frames for Static Mode
+    // Animation Frames for Static Mode (interactions 1-3)
     const frames = [
-      "https://raw.githubusercontent.com/yourusername/zoltar-oracle/main/static/img/Zoltar_1.png",
-      "https://raw.githubusercontent.com/yourusername/zoltar-oracle/main/static/img/Zoltar_2.png",
-      "https://raw.githubusercontent.com/yourusername/zoltar-oracle/main/static/img/Zoltar_3.png",
-      "https://raw.githubusercontent.com/yourusername/zoltar-oracle/main/static/img/Zoltar_4.png",
-      "https://raw.githubusercontent.com/yourusername/zoltar-oracle/main/static/img/Zoltar_5.png",
-      "https://raw.githubusercontent.com/yourusername/zoltar-oracle/main/static/img/Zoltar_4.png",
-      "https://raw.githubusercontent.com/yourusername/zoltar-oracle/main/static/img/Zoltar_3.png",
-      "https://raw.githubusercontent.com/yourusername/zoltar-oracle/main/static/img/Zoltar_2.png",
+      "static/img/Zoltar_1.png",
+      "static/img/Zoltar_2.png",
+      "static/img/Zoltar_3.png",
+      "static/img/Zoltar_4.png",
+      "static/img/Zoltar_5.png",
+      "static/img/Zoltar_4.png",
+      "static/img/Zoltar_3.png",
+      "static/img/Zoltar_2.png",
     ];
 
     // Preload static frames
@@ -914,22 +843,6 @@
 
     let animInterval = null;
     let frameIndex = 0;
-
-    // Toggle Debug Mode
-    function toggleDebug() {
-      debugMode = !debugMode;
-      debugPanel.classList.toggle('active');
-    }
-
-    // Update Debug Info
-    function updateDebugInfo() {
-      if (!debugMode) return;
-      
-      debugInteraction.textContent = interactionCount;
-      debugVideoMode.textContent = interactionCount >= 4 ? "Yes" : "No";
-      debugCurrentVideo.textContent = currentVideoMode || "None";
-      debugApiMode.textContent = document.querySelector("input[name='mode']:checked").value === 'rag' ? 'RAG' : 'Simple';
-    }
 
     // Initialize Floating Particles
     function createParticles() {
@@ -949,9 +862,10 @@
     // Progressive Animation System
     function startAnimation(questionText = "") {
       interactionCount++;
-      updateDebugInfo();
+      interactionCountDisplay.textContent = interactionCount;
       
       console.log(`Starting animation for interaction #${interactionCount}`);
+      console.log(`Question: "${questionText}"`);
       
       if (interactionCount >= 4) {
         startVideoMode(questionText);
@@ -972,6 +886,10 @@
       // Add thinking glow
       zoltarImg.className = "zoltar-img zoltar-thinking";
       
+      // Play thinking sound
+      soundThinking.currentTime = 0;
+      soundThinking.play().catch(() => {});
+      
       // Start frame animation
       animInterval = setInterval(() => {
         zoltarImg.src = frames[frameIndex];
@@ -980,17 +898,21 @@
     }
 
     function startVideoMode(questionText) {
-      console.log("Starting video mode with question:", questionText);
+      console.log("Entering video mode");
       stopAllAnimations();
       isAnimating = true;
       
       // Hide static image
       zoltarImg.style.display = "none";
       
-      // Determine which video to use
+      // Determine which video to use based on question or random selection
       const videoType = selectVideoType(questionText);
-      console.log("Selected video type:", videoType);
+      console.log(`Selected video type: ${videoType}`);
       showVideo(videoType);
+      
+      // Play thinking sound
+      soundThinking.currentTime = 0;
+      soundThinking.play().catch(() => {});
     }
 
     function selectVideoType(questionText) {
@@ -998,16 +920,18 @@
       
       // Smart video selection based on question content
       if (text.includes("importante") || text.includes("crucial") || text.includes("decisión") || text.length > 100) {
-        return "diabolical";
+        console.log("Selecting diabolical - matched keywords or long question");
+        return "diabolical"; // Complex/important questions
       } else if (text.includes("futuro") || text.includes("destino") || text.includes("qué pasará") || interactionCount >= 7) {
-        return "mystical";
+        console.log("Selecting mystical - matched keywords or high interaction count");
+        return "mystical"; // Future/destiny questions or many interactions
       } else {
-        return "lightning";
+        console.log("Selecting lightning - default");
+        return "lightning"; // Standard questions
       }
     }
 
     function showVideo(type) {
-      console.log("Showing video:", type);
       hideAllVideos();
       currentVideoMode = type;
       
@@ -1028,24 +952,17 @@
           glowClass = "zoltar-mystical";
           break;
         default:
-          console.log("Unknown video type, defaulting to lightning");
           activeVideo = zoltarVideoLightning;
           glowClass = "zoltar-lightning";
       }
       
-      if (activeVideo) {
-        activeVideo.style.display = "block";
-        activeVideo.className = `zoltar-video ${glowClass}`;
-        activeVideo.currentTime = 0;
-        
-        // Try to play video
-        activeVideo.play().then(() => {
-          console.log(`${type} video playing successfully`);
-          updateDebugInfo();
-        }).catch(error => {
-          console.error(`Failed to play ${type} video:`, error);
-        });
-      }
+      console.log(`Attempting to play ${type} video`);
+      activeVideo.style.display = "block";
+      activeVideo.className = `zoltar-video ${glowClass}`;
+      activeVideo.currentTime = 0;
+      activeVideo.play().catch((error) => {
+        console.error(`Failed to play ${type} video:`, error);
+      });
     }
 
     function hideAllVideos() {
@@ -1060,17 +977,26 @@
       clearInterval(animInterval);
       isAnimating = false;
       
+      // Stop sounds
+      soundThinking.pause();
+      soundThinking.currentTime = 0;
+      
       if (currentVideoMode) {
-        // Keep video visible but remove glow effect
+        // Keep video visible but remove glow
         const activeVideo = getActiveVideo();
         if (activeVideo) {
           activeVideo.className = "zoltar-video";
-          // Don't hide the video, just stop the glow
         }
       } else {
         // Return to static frame 1
-        zoltarImg.src = frames[0];
+        zoltarImg.src = "static/img/Zoltar_1.png";
         zoltarImg.className = "zoltar-img";
+      }
+      
+      // Play reveal sound if successful
+      if (success) {
+        soundReveal.currentTime = 0;
+        soundReveal.play().catch(() => {});
       }
     }
 
@@ -1087,7 +1013,7 @@
 
       // Create animated coin
       const coinClone = document.createElement("img");
-      coinClone.src = coinBtn.src;
+      coinClone.src = "static/img/coin.png";
       coinClone.style.cssText = `
         position: fixed;
         width: 70px;
@@ -1106,7 +1032,7 @@
       coinClone.style.top = rectCoin.top + "px";
       
       document.body.appendChild(coinClone);
-      void coinClone.offsetWidth;
+      void coinClone.offsetWidth; // Force reflow
 
       // Animate to slot
       const dx = rectSlot.left - rectCoin.left;
@@ -1124,6 +1050,10 @@
       questionInput.disabled = false;
       askBtn.disabled = false;
       statusHint.innerHTML = "✨ El oráculo ha despertado. Formula tu consulta...";
+      
+      // Play coin sound
+      soundCoin.currentTime = 0;
+      soundCoin.play().catch(() => {});
       
       // Visual feedback
       document.getElementById("slot").style.boxShadow = "inset 0 0 30px #000, 0 0 25px var(--gold)";
@@ -1148,34 +1078,44 @@
       return message;
     }
 
-    // Mock API Call for GitHub Pages (Replace with your actual API)
+    // Enhanced API Call
     async function consultOracle(question) {
       const mode = document.querySelector("input[name='mode']:checked").value;
       
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Mock responses - replace with actual API call
-      const responses = {
-        simple: [
-          "Las estrellas alinean su sabiduría para revelar que el camino del conocimiento se abre ante ti...",
-          "El velo místico se levanta para mostrar que la respuesta yace en tu interior...",
-          "Los antiguos espíritus susurran que el destino favorece a los valientes..."
-        ],
-        rag: [
-          "Según los textos antiguos consultados, la respuesta a tu pregunta se encuentra en el equilibrio entre teoría y práctica...",
-          "Los manuscritos revelan que el conocimiento que buscas requiere paciencia y dedicación...",
-          "Las fuentes arcanas indican que tu búsqueda de sabiduría será recompensada con perseverancia..."
-        ]
-      };
-      
-      const responseList = mode === 'rag' ? responses.rag : responses.simple;
-      const randomResponse = responseList[Math.floor(Math.random() * responseList.length)];
-      
-      return {
-        text: randomResponse,
-        sources: mode === 'rag' ? ["Libro de las Sombras, Cap. 3", "Códice Místico, Verso 42"] : []
-      };
+      try {
+        let response;
+        let data;
+        
+        if (mode === "rag") {
+          // Use the teacher endpoint
+          response = await fetch("/api/teacher", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: question })
+          });
+        } else {
+          // Use the generate endpoint  
+          response = await fetch("/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              text: question,
+              mode: "engineered" // Always use engineered for simple mode
+            })
+          });
+        }
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        
+        data = await response.json();
+        return data;
+        
+      } catch (error) {
+        console.error("Oracle consultation failed:", error);
+        throw error;
+      }
     }
 
     // Main Consultation Handler
@@ -1259,23 +1199,18 @@
             "✨ Oráculo Simple activado. Las visiones fluyen libremente..." : 
             "🪙 Inserta la moneda para despertar al oráculo";
         }
-        updateDebugInfo();
       });
     });
 
-    // Check video loading on initialization
-    function checkVideoLoading() {
-      [
-        { video: zoltarVideoLightning, name: 'Lightning' },
-        { video: zoltarVideoDiabolical, name: 'Diabolical' },
-        { video: zoltarVideoMystical, name: 'Mystical' }
-      ].forEach(({ video, name }) => {
+    // Video load check
+    function checkVideoStatus() {
+      [zoltarVideoLightning, zoltarVideoDiabolical, zoltarVideoMystical].forEach((video, index) => {
+        const names = ['Lightning', 'Diabolical', 'Mystical'];
         video.addEventListener('loadeddata', () => {
-          console.log(`${name} video loaded successfully`);
+          console.log(`${names[index]} video loaded successfully`);
         });
-        
         video.addEventListener('error', (e) => {
-          console.error(`${name} video failed to load:`, e);
+          console.error(`${names[index]} video failed to load:`, e);
         });
       });
     }
@@ -1283,8 +1218,7 @@
     // Initialize
     document.addEventListener("DOMContentLoaded", () => {
       createParticles();
-      checkVideoLoading();
-      updateDebugInfo();
+      checkVideoStatus();
       
       // Preload videos
       [zoltarVideoLightning, zoltarVideoDiabolical, zoltarVideoMystical].forEach(video => {
