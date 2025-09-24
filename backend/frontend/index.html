@@ -4,79 +4,801 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ZOLTAR • Oráculo Educativo</title>
-
-  <!-- Tipografías -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- Enhanced Mystical Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="/static/img/coin.png" />
-  <link rel="stylesheet" href="/static/visuals.css" />
+  
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #151320;
+      --bg-panel: #1e1b2e;
+      --text-primary: #f4f1e8;
+      --text-secondary: #c9c5b8;
+      --text-dim: #8a8577;
+      --gold: #d4af37;
+      --gold-bright: #f4d03f;
+      --gold-dark: #b8860b;
+      --mystical-purple: #6b46c1;
+      --mystical-blue: #3b82f6;
+      --energy-cyan: #00d4ff;
+      --danger-red: #dc2626;
+      --font-mystical: 'Cinzel', serif;
+      --font-elegant: 'Cormorant Garamond', serif;
+      --font-modern: 'Inter', sans-serif;
+      --shadow-mystical: 0 0 30px rgba(212, 175, 55, 0.3);
+      --glow-intense: 0 0 50px var(--gold), 0 0 100px var(--gold);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at center top, var(--bg-secondary) 0%, var(--bg-primary) 60%);
+      color: var(--text-primary);
+      font-family: var(--font-modern);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated Mystical Background */
+    .mystical-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(107, 70, 193, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 1;
+      animation: mysticalShift 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes mysticalShift {
+      0% {
+        background: 
+          radial-gradient(circle at 20% 80%, rgba(107, 70, 193, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+      }
+      100% {
+        background: 
+          radial-gradient(circle at 80% 30%, rgba(107, 70, 193, 0.12) 0%, transparent 50%),
+          radial-gradient(circle at 30% 70%, rgba(0, 212, 255, 0.06) 0%, transparent 50%),
+          radial-gradient(circle at 60% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+      }
+    }
+
+    /* Floating Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: float 15s infinite ease-in-out;
+      opacity: 0.4;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+        transform: scale(1);
+      }
+      90% {
+        opacity: 0.6;
+        transform: scale(1);
+      }
+    }
+
+    /* Header Enhancement */
+    header.mystical-header {
+      text-align: center;
+      padding: 40px 20px 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-family: var(--font-mystical);
+      font-size: 3.5em;
+      font-weight: 700;
+      color: var(--gold);
+      margin: 0;
+      text-shadow: 
+        0 0 20px var(--gold),
+        0 0 40px var(--gold),
+        0 0 60px rgba(212, 175, 55, 0.5);
+      letter-spacing: 0.1em;
+      position: relative;
+    }
+
+    header h1::before {
+      content: "✧";
+      position: absolute;
+      left: -60px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.6em;
+      animation: sparkle 3s ease-in-out infinite;
+    }
+
+    header h1::after {
+      content: "✧";
+      position: absolute;
+      right: -60px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.6em;
+      animation: sparkle 3s ease-in-out infinite reverse;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0.4; transform: translateY(-50%) scale(1); }
+      50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
+    }
+
+    .subtitle {
+      font-family: var(--font-elegant);
+      font-size: 1.3em;
+      color: var(--text-secondary);
+      margin-top: 10px;
+      font-style: italic;
+      opacity: 0.9;
+    }
+
+    /* Main Layout */
+    main.oracle-chamber {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 60px;
+      padding: 40px 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+      min-height: 700px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Enhanced Zoltar Display */
+    .zoltar-shrine {
+      position: relative;
+      width: 400px;
+      height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, 
+        rgba(30, 27, 46, 0.8) 0%, 
+        rgba(21, 19, 32, 0.9) 50%,
+        rgba(10, 10, 15, 0.95) 100%);
+      border: 3px solid var(--gold-dark);
+      border-radius: 20px;
+      box-shadow: 
+        var(--shadow-mystical),
+        inset 0 0 50px rgba(212, 175, 55, 0.1);
+      overflow: hidden;
+    }
+
+    .zoltar-shrine::before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, var(--gold), var(--mystical-purple), var(--energy-cyan), var(--gold));
+      border-radius: 22px;
+      z-index: -1;
+      opacity: 0;
+      animation: borderGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 0.6; }
+    }
+
+    .shrine-ornament {
+      position: absolute;
+      font-size: 24px;
+      color: var(--gold);
+      opacity: 0.7;
+    }
+
+    .shrine-ornament.top-left { top: 20px; left: 20px; }
+    .shrine-ornament.top-right { top: 20px; right: 20px; }
+    .shrine-ornament.bottom-left { bottom: 80px; left: 20px; }
+    .shrine-ornament.bottom-right { bottom: 80px; right: 20px; }
+
+    .zoltar-container {
+      position: relative;
+      width: 250px;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .zoltar-img {
+      max-width: 200px;
+      height: auto;
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
+      z-index: 2;
+    }
+
+    .zoltar-video {
+      max-width: 200px;
+      height: auto;
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
+      z-index: 2;
+      display: none;
+    }
+
+    /* Enhanced Glow Effects */
+    .zoltar-thinking {
+      animation: intensePulse 1.5s ease-in-out infinite;
+    }
+
+    .zoltar-lightning {
+      filter: 
+        drop-shadow(0 0 30px var(--energy-cyan))
+        drop-shadow(0 0 60px var(--mystical-blue))
+        brightness(1.2)
+        contrast(1.1);
+      animation: lightningPulse 0.8s ease-in-out infinite;
+    }
+
+    .zoltar-diabolical {
+      filter: 
+        drop-shadow(0 0 40px var(--danger-red))
+        drop-shadow(0 0 80px rgba(220, 38, 38, 0.6))
+        brightness(1.3)
+        contrast(1.2);
+      animation: diabolicalGlow 1.2s ease-in-out infinite;
+    }
+
+    .zoltar-mystical {
+      filter: 
+        drop-shadow(0 0 50px var(--mystical-purple))
+        drop-shadow(0 0 100px var(--gold))
+        brightness(1.4)
+        contrast(1.3);
+      animation: supremeGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes intensePulse {
+      0%, 100% { 
+        filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
+        transform: scale(1);
+      }
+      50% { 
+        filter: drop-shadow(0 0 40px var(--gold));
+        transform: scale(1.02);
+      }
+    }
+
+    @keyframes lightningPulse {
+      0%, 100% { 
+        filter: drop-shadow(0 0 30px var(--energy-cyan)) brightness(1.2);
+      }
+      50% { 
+        filter: drop-shadow(0 0 60px var(--energy-cyan)) brightness(1.4);
+      }
+    }
+
+    @keyframes diabolicalGlow {
+      0%, 100% { 
+        filter: drop-shadow(0 0 40px var(--danger-red)) brightness(1.3);
+      }
+      50% { 
+        filter: drop-shadow(0 0 80px var(--danger-red)) brightness(1.5);
+      }
+    }
+
+    @keyframes supremeGlow {
+      0%, 100% { 
+        filter: drop-shadow(0 0 50px var(--mystical-purple)) drop-shadow(0 0 100px var(--gold)) brightness(1.4);
+        transform: scale(1);
+      }
+      50% { 
+        filter: drop-shadow(0 0 80px var(--mystical-purple)) drop-shadow(0 0 150px var(--gold)) brightness(1.6);
+        transform: scale(1.05);
+      }
+    }
+
+    /* Enhanced Coin Slot */
+    .coin-ritual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 15px;
+      border: 1px solid var(--gold-dark);
+    }
+
+    #coinBtn {
+      width: 70px;
+      height: 70px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 0 10px var(--gold));
+      animation: coinFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes coinFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    #coinBtn:hover {
+      transform: scale(1.1) rotate(10deg);
+      filter: drop-shadow(0 0 20px var(--gold-bright));
+    }
+
+    #slot {
+      width: 35px;
+      height: 70px;
+      background: linear-gradient(180deg, #444, #000);
+      border: 3px solid var(--gold-dark);
+      border-radius: 8px;
+      box-shadow: 
+        inset 0 0 20px #000,
+        0 0 15px rgba(212, 175, 55, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #slot::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, 
+        rgba(212, 175, 55, 0.1) 0%, 
+        transparent 30%, 
+        transparent 70%, 
+        rgba(212, 175, 55, 0.1) 100%);
+      animation: slotShimmer 2s ease-in-out infinite;
+    }
+
+    @keyframes slotShimmer {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.8; }
+    }
+
+    /* Enhanced Chat Interface */
+    .oracle-console {
+      flex: 1 1 400px;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: linear-gradient(135deg, 
+        rgba(30, 27, 46, 0.7) 0%, 
+        rgba(21, 19, 32, 0.8) 100%);
+      border: 2px solid var(--gold-dark);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: var(--shadow-mystical);
+    }
+
+    .console-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .console-title {
+      font-family: var(--font-mystical);
+      font-size: 1.5em;
+      color: var(--gold);
+      margin: 0 0 10px 0;
+      letter-spacing: 0.1em;
+    }
+
+    .options-panel {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid var(--gold-dark);
+      margin-bottom: 20px;
+    }
+
+    .mode-selector {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .mode-selector label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-family: var(--font-elegant);
+      font-size: 1.1em;
+      color: var(--text-secondary);
+      transition: color 0.3s ease;
+    }
+
+    .mode-selector label:hover {
+      color: var(--gold);
+    }
+
+    .mode-selector input[type="radio"] {
+      margin-right: 8px;
+      accent-color: var(--gold);
+    }
+
+    .status-hint {
+      color: var(--text-dim);
+      font-size: 0.95em;
+      font-style: italic;
+      text-align: center;
+      padding: 10px;
+      background: rgba(212, 175, 55, 0.1);
+      border-radius: 8px;
+      border-left: 4px solid var(--gold);
+    }
+
+    .prophecy-scroll {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--gold-dark);
+      border-radius: 15px;
+      padding: 20px;
+      min-height: 250px;
+      max-height: 400px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* Removed the floating diamonds */
+
+    .oracle-message {
+      background: linear-gradient(135deg, 
+        rgba(212, 175, 55, 0.1) 0%, 
+        rgba(107, 70, 193, 0.05) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 15px;
+      padding: 15px 20px;
+      margin-bottom: 15px;
+      color: var(--text-primary);
+      font-size: 1.05em;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    /* Removed the floating orb icon */
+
+    .sources-revealed {
+      background: rgba(107, 70, 193, 0.1);
+      border: 1px solid var(--mystical-purple);
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 15px;
+      font-size: 0.9em;
+    }
+
+    .sources-revealed strong {
+      color: var(--mystical-purple);
+      font-family: var(--font-elegant);
+    }
+
+    .sources-revealed ul {
+      margin: 10px 0 0 0;
+      padding-left: 20px;
+    }
+
+    .sources-revealed li {
+      margin-bottom: 5px;
+      color: var(--text-secondary);
+    }
+
+    .incantation-input {
+      display: flex;
+      gap: 15px;
+      align-items: stretch;
+    }
+
+    #question {
+      flex: 1;
+      padding: 15px 20px;
+      border: 2px solid var(--gold-dark);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.5);
+      color: var(--text-primary);
+      font-size: 1.05em;
+      font-family: var(--font-modern);
+      transition: all 0.3s ease;
+    }
+
+    #question:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    #question::placeholder {
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    #askBtn {
+      padding: 15px 30px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      border: none;
+      border-radius: 12px;
+      color: #000;
+      font-weight: 600;
+      font-size: 1.05em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    #askBtn:hover:not(:disabled) {
+      background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    }
+
+    #askBtn:disabled {
+      background: rgba(100, 100, 100, 0.3);
+      color: rgba(255, 255, 255, 0.4);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Interaction Counter Display - Hidden but still tracking */
+    .interaction-counter {
+      display: none; /* Hidden from user view */
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--gold);
+      border-radius: 50px;
+      padding: 8px 15px;
+      font-size: 0.9em;
+      color: var(--gold);
+      z-index: 5;
+    }
+
+    /* Enhanced Footer */
+    footer.credits {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      text-align: center;
+      padding: 25px;
+      font-size: 0.9em;
+      color: var(--text-dim);
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+      margin-top: 40px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      main.oracle-chamber {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+      }
+
+      .zoltar-shrine {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        min-height: 500px;
+      }
+
+      .oracle-console {
+        width: 100%;
+        max-width: 600px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2.5em;
+      }
+
+      header h1::before,
+      header h1::after {
+        display: none;
+      }
+
+      .zoltar-shrine {
+        max-width: 320px;
+        min-height: 400px;
+      }
+
+      .zoltar-img,
+      .zoltar-video {
+        max-width: 160px;
+      }
+
+      .incantation-input {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      #askBtn {
+        padding: 15px;
+      }
+    }
+
+    /* Loading States */
+    .loading-shimmer {
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(212, 175, 55, 0.1) 50%, 
+        transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+  </style>
 </head>
 
 <body>
-  <div class="fog-overlay"></div>
+  <!-- Animated Background -->
+  <div class="mystical-bg"></div>
+  
+  <!-- Floating Particles -->
+  <div class="particles" id="particles"></div>
 
-  <header class="marquee">
+      <header class="mystical-header">
     <h1>🔮 ZOLTAR</h1>
     <p class="subtitle">Fortuna pedagógica en cada respuesta</p>
   </header>
 
-  <main class="panel row">
-    <!-- Zoltar Arcade -->
-    <section class="zoltar-box" id="zoltarBox">
-      <div class="zoltar-frame">
+  <main class="oracle-chamber">
+    <!-- Enhanced Zoltar Display -->
+    <section class="zoltar-shrine">
+      <!-- Ornamental Symbols -->
+      <div class="shrine-ornament top-left">⟡</div>
+      <div class="shrine-ornament top-right">⟢</div>
+      <div class="shrine-ornament bottom-left">◊</div>
+      <div class="shrine-ornament bottom-right">◊</div>
+      
+      <!-- Interaction Counter -->
+      <div class="interaction-counter">
+        Consultas: <span id="interactionCount">0</span>
+      </div>
+
+      <div class="zoltar-container">
+        <!-- Static Image (for interactions 1-3) -->
         <img class="zoltar-img" id="zoltarImg" src="/static/img/Zoltar_1.png" alt="Zoltar" />
-        <div class="coin-slot" id="coinSlot">
-          <img id="coinBtn" src="/static/img/coin.png" alt="Moneda" />
-          <div class="slot" id="slot"></div>
-        </div>
+        
+        <!-- Video Elements (for interactions 4+) -->
+        <video class="zoltar-video" id="zoltarVideoLightning" muted loop>
+          <source src="/static/video/Zoltar_anim_one.mp4" type="video/mp4">
+        </video>
+        
+        <video class="zoltar-video" id="zoltarVideoDiabolical" muted loop>
+          <source src="/static/video/Zoltar_anim_two.mp4" type="video/mp4">
+        </video>
+        
+        <video class="zoltar-video" id="zoltarVideoMystical" muted loop>
+          <source src="/static/video/Zoltar_anim_three.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- Enhanced Coin Slot -->
+      <div class="coin-ritual">
+        <img id="coinBtn" src="/static/img/coin.png" alt="Moneda Mística" />
+        <div class="slot" id="slot"></div>
       </div>
     </section>
 
-    <!-- Chat -->
-    <section class="chat">
-      <div class="options">
-        <div class="switch">
-          <label><input type="radio" name="mode" value="simple" checked> Modelo simple</label>
-          <label><input type="radio" name="mode" value="rag"> Modelo RAG</label>
+    <!-- Enhanced Chat Interface -->
+    <section class="oracle-console">
+      <div class="console-header">
+        <h2 class="console-title">CONSOLA ORACULAR</h2>
+      </div>
+
+      <div class="options-panel">
+        <div class="mode-selector">
+          <label>
+            <input type="radio" name="mode" value="simple" checked>
+            Oráculo Simple
+          </label>
+          <label>
+            <input type="radio" name="mode" value="rag">
+            Maestro Docente
+          </label>
         </div>
-        <div class="hint">🔑 Inserta la moneda para comenzar</div>
+        <div class="status-hint" id="statusHint">
+          🪙 Inserta la moneda dorada para despertar al oráculo
+        </div>
       </div>
 
-      <div class="conversation" id="conversation">
-        <div class="bubble">Aquí aparecerá la respuesta...</div>
+      <div class="prophecy-scroll" id="prophecyScroll">
+        <div class="oracle-message">
+          <em>El oráculo aguarda en silencio... Las visiones aparecerán cuando la moneda sea ofrendada y la pregunta pronunciada...</em>
+        </div>
       </div>
 
-      <div class="composer">
-        <input id="question" type="text" placeholder="Haz tu consulta..." disabled />
-        <button id="askBtn" disabled>Consultar</button>
+      <div class="incantation-input">
+        <input id="question" type="text" placeholder="Susurra tu consulta al oráculo..." disabled />
+        <button id="askBtn" disabled>✨ Consultar</button>
       </div>
     </section>
   </main>
 
-  <footer class="foot">
-    Animación de Zoltar creada por Naomi Friedman
+  <footer class="credits">
+    <p>Animación de Zoltar creada por Naomi Friedman • Experiencia forjada en las llamas del conocimiento</p>
   </footer>
 
-  <!-- Sonidos -->
+  <!-- Audio Elements -->
   <audio id="soundCoin" src="/static/sounds/coin.mp3" preload="auto"></audio>
   <audio id="soundThinking" src="/static/sounds/thinking.mp3" preload="auto" loop></audio>
   <audio id="soundReveal" src="/static/sounds/reveal.mp3" preload="auto"></audio>
 
-  <!-- JS -->
+  <!-- Enhanced JavaScript -->
   <script>
+    // Core Elements
     const zoltarImg = document.getElementById("zoltarImg");
-    const zoltarBox = document.getElementById("zoltarBox");
+    const zoltarVideoLightning = document.getElementById("zoltarVideoLightning");
+    const zoltarVideoDiabolical = document.getElementById("zoltarVideoDiabolical");
+    const zoltarVideoMystical = document.getElementById("zoltarVideoMystical");
+    const zoltarContainer = document.querySelector(".zoltar-container");
+    
     const soundCoin = document.getElementById("soundCoin");
     const soundReveal = document.getElementById("soundReveal");
     const soundThinking = document.getElementById("soundThinking");
-
+    
     const questionInput = document.getElementById("question");
     const askBtn = document.getElementById("askBtn");
-    const conversation = document.getElementById("conversation");
+    const prophecyScroll = document.getElementById("prophecyScroll");
     const coinBtn = document.getElementById("coinBtn");
-    const slot = document.getElementById("slot");
+    const statusHint = document.getElementById("statusHint");
+    const interactionCountDisplay = document.getElementById("interactionCount");
 
+    // State Management
     let hasCoin = false;
+    let interactionCount = 0;
+    let currentVideoMode = null;
+    let isAnimating = false;
 
+    // Animation Frames for Static Mode (interactions 1-3)
     const frames = [
       "/static/img/Zoltar_1.png",
       "/static/img/Zoltar_2.png",
@@ -88,163 +810,370 @@
       "/static/img/Zoltar_2.png",
     ];
 
-    const preloaded = [];
+    // Preload static frames
     frames.forEach(src => {
       const img = new Image();
       img.src = src;
-      preloaded.push(img);
     });
 
     let animInterval = null;
     let frameIndex = 0;
 
-    function startAnimation() {
-      stopAnimation();
+    // Initialize Floating Particles
+    function createParticles() {
+      const particlesContainer = document.getElementById("particles");
+      for (let i = 0; i < 15; i++) {
+        setTimeout(() => {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+          particle.style.left = Math.random() * 100 + "%";
+          particle.style.animationDelay = Math.random() * 15 + "s";
+          particle.style.animationDuration = (15 + Math.random() * 10) + "s";
+          particlesContainer.appendChild(particle);
+        }, i * 1000);
+      }
+    }
+
+    // Progressive Animation System
+    function startAnimation(questionText = "") {
+      interactionCount++;
+      interactionCountDisplay.textContent = interactionCount;
+      
+      if (interactionCount >= 4) {
+        startVideoMode(questionText);
+      } else {
+        startStaticFrameAnimation();
+      }
+    }
+
+    function startStaticFrameAnimation() {
+      stopAllAnimations();
       frameIndex = 0;
-      zoltarBox.classList.add("thinking");
-      zoltarImg.classList.add("zoltar-glow"); // 🌟 Start glow
+      isAnimating = true;
+      
+      // Show static image, hide videos
+      zoltarImg.style.display = "block";
+      hideAllVideos();
+      
+      // Add thinking glow
+      zoltarImg.className = "zoltar-img zoltar-thinking";
+      
+      // Play thinking sound
       soundThinking.currentTime = 0;
       soundThinking.play().catch(() => {});
+      
+      // Start frame animation
       animInterval = setInterval(() => {
         zoltarImg.src = frames[frameIndex];
         frameIndex = (frameIndex + 1) % frames.length;
       }, 150);
     }
 
-    function stopAnimation(success = true) {
+    function startVideoMode(questionText) {
+      stopAllAnimations();
+      isAnimating = true;
+      
+      // Hide static image
+      zoltarImg.style.display = "none";
+      
+      // Determine which video to use based on question or random selection
+      const videoType = selectVideoType(questionText);
+      showVideo(videoType);
+      
+      // Play thinking sound
+      soundThinking.currentTime = 0;
+      soundThinking.play().catch(() => {});
+    }
+
+    function selectVideoType(questionText) {
+      const text = questionText.toLowerCase();
+      
+      // Smart video selection based on question content
+      if (text.includes("importante") || text.includes("crucial") || text.includes("decisión") || text.length > 100) {
+        return "diabolical"; // Complex/important questions
+      } else if (text.includes("futuro") || text.includes("destino") || text.includes("qué pasará") || interactionCount >= 7) {
+        return "mystical"; // Future/destiny questions or many interactions
+      } else {
+        return "lightning"; // Standard questions
+      }
+    }
+
+    function showVideo(type) {
+      hideAllVideos();
+      currentVideoMode = type;
+      
+      let activeVideo;
+      let glowClass;
+      
+      switch (type) {
+        case "lightning":
+          activeVideo = zoltarVideoLightning;
+          glowClass = "zoltar-lightning";
+          break;
+        case "diabolical":
+          activeVideo = zoltarVideoDiabolical;
+          glowClass = "zoltar-diabolical";
+          break;
+        case "mystical":
+          activeVideo = zoltarVideoMystical;
+          glowClass = "zoltar-mystical";
+          break;
+        default:
+          activeVideo = zoltarVideoLightning;
+          glowClass = "zoltar-lightning";
+      }
+      
+      activeVideo.style.display = "block";
+      activeVideo.className = `zoltar-video ${glowClass}`;
+      activeVideo.currentTime = 0;
+      activeVideo.play().catch(() => {});
+    }
+
+    function hideAllVideos() {
+      [zoltarVideoLightning, zoltarVideoDiabolical, zoltarVideoMystical].forEach(video => {
+        video.style.display = "none";
+        video.pause();
+        video.className = "zoltar-video";
+      });
+    }
+
+    function stopAllAnimations(success = true) {
       clearInterval(animInterval);
-      zoltarImg.src = "/static/img/Zoltar_1.png";
-      zoltarBox.classList.remove("thinking");
-      zoltarImg.classList.remove("zoltar-glow"); // ✋ Stop glow
+      isAnimating = false;
+      
+      // Stop sounds
       soundThinking.pause();
       soundThinking.currentTime = 0;
+      
+      if (currentVideoMode) {
+        // Keep video visible but remove glow
+        const activeVideo = getActiveVideo();
+        if (activeVideo) {
+          activeVideo.className = "zoltar-video";
+        }
+      } else {
+        // Return to static frame 1
+        zoltarImg.src = "/static/img/Zoltar_1.png";
+        zoltarImg.className = "zoltar-img";
+      }
+      
+      // Play reveal sound if successful
       if (success) {
         soundReveal.currentTime = 0;
         soundReveal.play().catch(() => {});
       }
     }
 
-    // Coin animation
-    if (coinBtn && slot) {
-      coinBtn.addEventListener("click", () => {
-        if (hasCoin) return;
-
-        const coinClone = document.createElement("img");
-        coinClone.src = "/static/img/coin.png";
-        coinClone.className = "moving-coin";
-
-        const rectCoin = coinBtn.getBoundingClientRect();
-        const rectSlot = slot.getBoundingClientRect();
-
-        coinClone.style.position = "fixed";
-        coinClone.style.left = `${rectCoin.left}px`;
-        coinClone.style.top = `${rectCoin.top}px`;
-        coinClone.style.width = `60px`;
-        coinClone.style.height = `60px`;
-        coinClone.style.pointerEvents = "none";
-        coinClone.style.transition = "transform 0.8s ease-in-out, opacity 0.8s ease-in-out";
-        coinClone.style.zIndex = "9999";
-
-        document.body.appendChild(coinClone);
-        void coinClone.offsetWidth;
-
-        const dx = rectSlot.left - rectCoin.left;
-        const dy = rectSlot.top - rectCoin.top;
-
-        coinClone.style.transform = `translate(${dx}px, ${dy}px) scale(0.6) rotate(360deg)`;
-        coinClone.style.opacity = "0";
-
-        setTimeout(() => coinClone.remove(), 800);
-
-        hasCoin = true;
-        questionInput.disabled = false;
-        askBtn.disabled = false;
-
-        zoltarBox.classList.add("thinking");
-        soundCoin.currentTime = 0;
-        soundCoin.play().catch(() => {});
-      });
+    function getActiveVideo() {
+      if (currentVideoMode === "lightning") return zoltarVideoLightning;
+      if (currentVideoMode === "diabolical") return zoltarVideoDiabolical;
+      if (currentVideoMode === "mystical") return zoltarVideoMystical;
+      return null;
     }
 
-    async function typeText(text) {
-      const bubble = document.createElement("div");
-      bubble.className = "bubble";
-      conversation.appendChild(bubble);
-      conversation.scrollTop = conversation.scrollHeight;
+    // Enhanced Coin Animation
+    coinBtn.addEventListener("click", () => {
+      if (hasCoin || isAnimating) return;
 
+      // Create animated coin
+      const coinClone = document.createElement("img");
+      coinClone.src = "/static/img/coin.png";
+      coinClone.style.cssText = `
+        position: fixed;
+        width: 70px;
+        height: 70px;
+        pointer-events: none;
+        transition: all 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+        z-index: 9999;
+        filter: drop-shadow(0 0 20px var(--gold));
+      `;
+
+      // Position coin at button location
+      const rectCoin = coinBtn.getBoundingClientRect();
+      const rectSlot = document.getElementById("slot").getBoundingClientRect();
+      
+      coinClone.style.left = rectCoin.left + "px";
+      coinClone.style.top = rectCoin.top + "px";
+      
+      document.body.appendChild(coinClone);
+      void coinClone.offsetWidth; // Force reflow
+
+      // Animate to slot
+      const dx = rectSlot.left - rectCoin.left;
+      const dy = rectSlot.top - rectCoin.top;
+      
+      setTimeout(() => {
+        coinClone.style.transform = `translate(${dx}px, ${dy}px) scale(0.5) rotate(720deg)`;
+        coinClone.style.opacity = "0";
+      }, 10);
+
+      setTimeout(() => coinClone.remove(), 800);
+
+      // Update state
+      hasCoin = true;
+      questionInput.disabled = false;
+      askBtn.disabled = false;
+      statusHint.innerHTML = "✨ El oráculo ha despertado. Formula tu consulta...";
+      
+      // Play coin sound
+      soundCoin.currentTime = 0;
+      soundCoin.play().catch(() => {});
+      
+      // Visual feedback
+      document.getElementById("slot").style.boxShadow = "inset 0 0 30px #000, 0 0 25px var(--gold)";
+    });
+
+    // Enhanced Typewriter Effect
+    async function typeText(text, isOracle = true) {
+      const message = document.createElement("div");
+      message.className = isOracle ? "oracle-message" : "oracle-message loading-shimmer";
+      prophecyScroll.appendChild(message);
+      prophecyScroll.scrollTop = prophecyScroll.scrollHeight;
+
+      let displayText = "";
       for (let i = 0; i < text.length; i++) {
-        bubble.textContent += text[i];
-        await new Promise(res => setTimeout(res, 20));
-        conversation.scrollTop = conversation.scrollHeight;
+        displayText += text[i];
+        message.innerHTML = displayText + (i < text.length - 1 ? "<span style='opacity:0.5'>|</span>" : "");
+        await new Promise(res => setTimeout(res, isOracle ? 30 : 20));
+        prophecyScroll.scrollTop = prophecyScroll.scrollHeight;
+      }
+      
+      message.classList.remove("loading-shimmer");
+      return message;
+    }
+
+    // Enhanced API Call
+    async function consultOracle(question) {
+      const mode = document.querySelector("input[name='mode']:checked").value;
+      
+      try {
+        let response;
+        let data;
+        
+        if (mode === "rag") {
+          // Use the teacher endpoint
+          response = await fetch("/api/teacher", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: question })
+          });
+        } else {
+          // Use the generate endpoint  
+          response = await fetch("/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              text: question,
+              mode: "engineered" // Always use engineered for simple mode
+            })
+          });
+        }
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        
+        data = await response.json();
+        return data;
+        
+      } catch (error) {
+        console.error("Oracle consultation failed:", error);
+        throw error;
       }
     }
 
-    async function callSimpleLLM(msg) {
-      const mode = document.querySelector("input[name='mode']:checked").value;
-
-      const res = await fetch(`/api/generate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: msg,
-          mode: mode === "baseline" ? "baseline" : "engineered"
-        }),
-      });
-
-      const data = await res.json();
-      return data.text;
-    }
-
+    // Main Consultation Handler
     askBtn.addEventListener("click", async () => {
-      const msg = questionInput.value.trim();
-      if (!msg || !hasCoin) return;
+      const question = questionInput.value.trim();
+      if (!question || !hasCoin || isAnimating) return;
 
       const mode = document.querySelector("input[name='mode']:checked").value;
-
+      
+      // Clear input and disable controls
       questionInput.value = "";
-      startAnimation();
-      await typeText("Zoltar está pensando...");
-
-      let data = {};
-
+      questionInput.disabled = true;
+      askBtn.disabled = true;
+      
+      // Start appropriate animation
+      startAnimation(question);
+      
+      // Show thinking message
+      const thinkingMsg = await typeText("El oráculo contempla las corrientes del destino...", true);
+      
       try {
-        if (mode === "rag") {
-          const res = await fetch(`/api/teacher`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: msg }),
-          });
-          data = await res.json();
-        } else {
-          const text = await callSimpleLLM(msg);
-          data.text = text;
-        }
-
-        stopAnimation(true);
-        await typeText(data.text || "⚠️ Respuesta inesperada");
-
-        if (mode === "rag" && Array.isArray(data.sources) && data.sources.length > 0) {
-          const refs = document.createElement("div");
-          refs.className = "refs";
-          refs.innerHTML = `
-            <strong>📚 Fuentes consultadas:</strong>
+        // Consult the oracle
+        const oracleResponse = await consultOracle(question);
+        
+        // Stop animation
+        stopAllAnimations(true);
+        
+        // Remove thinking message
+        thinkingMsg.remove();
+        
+        // Display response
+        await typeText(oracleResponse.text || "⚠️ Los vientos místicos han turbado la visión...", true);
+        
+        // Show sources if available (RAG mode)
+        if (mode === "rag" && oracleResponse.sources && oracleResponse.sources.length > 0) {
+          const sourcesDiv = document.createElement("div");
+          sourcesDiv.className = "sources-revealed";
+          sourcesDiv.innerHTML = `
+            <strong>📚 Fuentes de sabiduría consultadas:</strong>
             <ul>
-              ${data.sources.map(s => `<li>${s}</li>`).join("")}
+              ${oracleResponse.sources.map(source => `<li>${source}</li>`).join("")}
             </ul>
           `;
-          conversation.appendChild(refs);
-          conversation.scrollTop = conversation.scrollHeight;
+          prophecyScroll.appendChild(sourcesDiv);
+          prophecyScroll.scrollTop = prophecyScroll.scrollHeight;
         }
-
+        
+      } catch (error) {
+        stopAllAnimations(false);
+        thinkingMsg.remove();
+        await typeText("❌ Las fuerzas místicas han fallado. El oráculo no puede acceder a los planos superiores.", false);
+      }
+      
+      // Reset state for next consultation
+      setTimeout(() => {
         hasCoin = false;
         questionInput.disabled = true;
         askBtn.disabled = true;
+        statusHint.innerHTML = "🪙 Inserta otra moneda para una nueva consulta";
+        document.getElementById("slot").style.boxShadow = "inset 0 0 20px #000, 0 0 15px rgba(212, 175, 55, 0.3)";
+      }, 2000);
+    });
 
-      } catch (err) {
-        stopAnimation(false);
-        await typeText("❌ No se pudo conectar con backend");
-        console.error(err);
+    // Enhanced Enter Key Support
+    questionInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter" && !askBtn.disabled) {
+        askBtn.click();
       }
+    });
+
+    // Mode Change Handler
+    document.querySelectorAll("input[name='mode']").forEach(radio => {
+      radio.addEventListener("change", (e) => {
+        const mode = e.target.value;
+        if (mode === "rag") {
+          statusHint.innerHTML = hasCoin ? 
+            "🧙‍♂️ Maestro Docente activado. Sabiduría fundamentada te aguarda..." : 
+            "🪙 Inserta la moneda para despertar al Maestro Docente";
+        } else {
+          statusHint.innerHTML = hasCoin ? 
+            "✨ Oráculo Simple activado. Las visiones fluyen libremente..." : 
+            "🪙 Inserta la moneda para despertar al oráculo";
+        }
+      });
+    });
+
+    // Initialize
+    document.addEventListener("DOMContentLoaded", () => {
+      createParticles();
+      
+      // Preload videos
+      [zoltarVideoLightning, zoltarVideoDiabolical, zoltarVideoMystical].forEach(video => {
+        video.load();
+      });
     });
   </script>
 </body>
