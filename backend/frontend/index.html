@@ -868,8 +868,10 @@
       console.log(`Question: "${questionText}"`);
       
       if (interactionCount >= 4) {
+        // After 3rd interaction, use random video selection
         startVideoMode(questionText);
       } else {
+        // First 3 interactions use frame animation loop
         startStaticFrameAnimation();
       }
     }
