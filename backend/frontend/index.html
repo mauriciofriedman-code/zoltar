@@ -916,19 +916,13 @@
     }
 
     function selectVideoType(questionText) {
-      const text = questionText.toLowerCase();
+      // After 4th interaction, randomly select a video
+      const videoTypes = ["lightning", "diabolical", "mystical"];
+      const randomIndex = Math.floor(Math.random() * videoTypes.length);
+      const selectedVideo = videoTypes[randomIndex];
       
-      // Smart video selection based on question content
-      if (text.includes("importante") || text.includes("crucial") || text.includes("decisión") || text.length > 100) {
-        console.log("Selecting diabolical - matched keywords or long question");
-        return "diabolical"; // Complex/important questions
-      } else if (text.includes("futuro") || text.includes("destino") || text.includes("qué pasará") || interactionCount >= 7) {
-        console.log("Selecting mystical - matched keywords or high interaction count");
-        return "mystical"; // Future/destiny questions or many interactions
-      } else {
-        console.log("Selecting lightning - default");
-        return "lightning"; // Standard questions
-      }
+      console.log(`Randomly selected video: ${selectedVideo} (interaction #${interactionCount})`);
+      return selectedVideo;
     }
 
     function showVideo(type) {
