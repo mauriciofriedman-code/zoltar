@@ -824,21 +824,25 @@
     let isAnimating = false;
 
     // Animation Frames for Static Mode (interactions 1-3)
+    // These are your exact file names from the folder
     const frames = [
       "static/img/Zoltar_1.png",
       "static/img/Zoltar_2.png",
       "static/img/Zoltar_3.png",
       "static/img/Zoltar_4.png",
       "static/img/Zoltar_5.png",
-      "static/img/Zoltar_4.png",
+      "static/img/Zoltar_4.png",  // Going back for smooth loop
       "static/img/Zoltar_3.png",
-      "static/img/Zoltar_2.png",
+      "static/img/Zoltar_2.png"
     ];
 
     // Preload static frames
-    frames.forEach(src => {
+    console.log("Preloading frames...");
+    frames.forEach((src, index) => {
       const img = new Image();
       img.src = src;
+      img.onload = () => console.log(`Frame ${index + 1} loaded: ${src}`);
+      img.onerror = () => console.error(`Failed to load frame ${index + 1}: ${src}`);
     });
 
     let animInterval = null;
@@ -877,6 +881,7 @@
     }
 
     function startStaticFrameAnimation() {
+      console.log("Starting static frame animation");
       stopAllAnimations();
       frameIndex = 0;
       isAnimating = true;
@@ -890,13 +895,16 @@
       
       // Play thinking sound
       soundThinking.currentTime = 0;
-      soundThinking.play().catch(() => {});
+      soundThinking.play().catch((e) => console.log("Sound play failed:", e));
       
-      // Start frame animation
+      // Start frame animation - cycling through the 5 images
+      console.log("Starting frame loop animation");
       animInterval = setInterval(() => {
-        zoltarImg.src = frames[frameIndex];
+        const currentFrame = frames[frameIndex];
+        console.log(`Displaying frame ${frameIndex}: ${currentFrame}`);
+        zoltarImg.src = currentFrame;
         frameIndex = (frameIndex + 1) % frames.length;
-      }, 150);
+      }, 150); // Change frame every 150ms for smooth animation
     }
 
     function startVideoMode(questionText) {
@@ -907,14 +915,14 @@
       // Hide static image
       zoltarImg.style.display = "none";
       
-      // Determine which video to use based on question or random selection
+      // Randomly select which video to play
       const videoType = selectVideoType(questionText);
       console.log(`Selected video type: ${videoType}`);
       showVideo(videoType);
       
       // Play thinking sound
       soundThinking.currentTime = 0;
-      soundThinking.play().catch(() => {});
+      soundThinking.play().catch((e) => console.log("Sound play failed:", e));
     }
 
     function selectVideoType(questionText) {
@@ -992,7 +1000,7 @@
       // Play reveal sound if successful
       if (success) {
         soundReveal.currentTime = 0;
-        soundReveal.play().catch(() => {});
+        soundReveal.play().catch((e) => console.log("Sound play failed:", e));
       }
     }
 
@@ -1049,7 +1057,7 @@
       
       // Play coin sound
       soundCoin.currentTime = 0;
-      soundCoin.play().catch(() => {});
+      soundCoin.play().catch((e) => console.log("Sound play failed:", e));
       
       // Visual feedback
       document.getElementById("slot").style.boxShadow = "inset 0 0 30px #000, 0 0 25px var(--gold)";
@@ -1200,6 +1208,7 @@
 
     // Video load check
     function checkVideoStatus() {
+      console.log("Checking video loading status...");
       [zoltarVideoLightning, zoltarVideoDiabolical, zoltarVideoMystical].forEach((video, index) => {
         const names = ['Lightning', 'Diabolical', 'Mystical'];
         video.addEventListener('loadeddata', () => {
@@ -1213,6 +1222,7 @@
 
     // Initialize
     document.addEventListener("DOMContentLoaded", () => {
+      console.log("Initializing Zoltar Oracle...");
       createParticles();
       checkVideoStatus();
       
@@ -1220,6 +1230,8 @@
       [zoltarVideoLightning, zoltarVideoDiabolical, zoltarVideoMystical].forEach(video => {
         video.load();
       });
+      
+      console.log("Initialization complete");
     });
   </script>
 </body>
