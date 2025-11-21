@@ -355,6 +355,10 @@
       transition: all 0.3s ease;
       filter: drop-shadow(0 0 10px var(--gold));
       animation: coinFloat 3s ease-in-out infinite;
+      position: relative;
+      z-index: 10;
+      pointer-events: auto;
+      user-select: none;
     }
 
     @keyframes coinFloat {
@@ -713,50 +717,6 @@
       100% { background-position: 200% 0; }
     }
 
-    /* Awakening Progress Indicator */
-    .awakening-progress {
-      position: absolute;
-      bottom: 120px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80%;
-      max-width: 300px;
-      z-index: 5;
-      opacity: 0;
-      transition: opacity 0.5s ease-in;
-    }
-
-    .awakening-progress.visible {
-      opacity: 1;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 6px;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--gold-dark);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 8px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-bright));
-      width: 0%;
-      transition: width 0.8s ease-out;
-      box-shadow: 0 0 10px var(--gold);
-    }
-
-    .progress-text {
-      display: block;
-      text-align: center;
-      font-size: 0.85em;
-      color: var(--gold);
-      font-family: var(--font-elegant);
-      text-shadow: 0 0 10px var(--gold);
-    }
-
     /* Progressive Glow Effects */
     .zoltar-stage-1 {
       filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.3));
@@ -875,14 +835,6 @@
         Consultas: <span id="interactionCount">0</span>
       </div>
 
-      <!-- Awakening Progress Indicator -->
-      <div class="awakening-progress" id="awakeningProgress">
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-        <span class="progress-text" id="progressText">Zoltar está dormido...</span>
-      </div>
-
       <div class="zoltar-container">
         <!-- Static Image (for interactions 1-3) -->
         <img class="zoltar-img" id="zoltarImg" src="static/img/Zoltar_1.png" alt="Zoltar" />
@@ -997,9 +949,6 @@
     const coinBtn = document.getElementById("coinBtn");
     const statusHint = document.getElementById("statusHint");
     const interactionCountDisplay = document.getElementById("interactionCount");
-    const awakeningProgress = document.getElementById("awakeningProgress");
-    const progressFill = document.getElementById("progressFill");
-    const progressText = document.getElementById("progressText");
 
     // State Management
     let hasCoin = false;
@@ -1065,9 +1014,6 @@
       
       console.log(`Starting animation for interaction #${interactionCount}`);
       console.log(`Question: "${questionText}"`);
-      
-      // Actualizar indicador de progresión
-      updateProgressIndicator();
       
       // Guardar estado
       saveZoltarState();
@@ -1190,9 +1136,13 @@
       const activeVideo = getVideoElement(videoType);
       const glowClass = getGlowClass(videoType);
       
-      // Preparar video
+      // Preparar video con el mismo posicionamiento que la imagen
       activeVideo.style.opacity = "0";
       activeVideo.style.display = "block";
+      activeVideo.style.transform = "scale(1)";
+      activeVideo.style.position = "relative";
+      activeVideo.style.maxWidth = "260px";
+      activeVideo.style.height = "auto";
       activeVideo.style.transition = "opacity 1s ease-in";
       activeVideo.className = `zoltar-video ${glowClass} zoltar-stage-4`;
       activeVideo.currentTime = 0;
@@ -1320,8 +1270,14 @@
       
       // Videos ya están pre-cargados, solo mostrarlos y reproducirlos
       console.log(`Zoltar cobra vida completa - modo ${type} (interacción #${interactionCount})`);
+      
+      // Asegurar que el video tenga el mismo posicionamiento que la imagen
       activeVideo.style.display = "block";
       activeVideo.style.opacity = "1";
+      activeVideo.style.transform = "scale(1)";
+      activeVideo.style.position = "relative";
+      activeVideo.style.maxWidth = "260px";
+      activeVideo.style.height = "auto";
       activeVideo.className = `zoltar-video ${glowClass} zoltar-stage-4`;
       activeVideo.currentTime = 0;
       
@@ -1348,27 +1304,6 @@
         video.className = "zoltar-video";
         video.style.opacity = "0";
       });
-    }
-
-    // Actualizar indicador de progresión
-    function updateProgressIndicator() {
-      const progress = Math.min((interactionCount / 4) * 100, 100);
-      progressFill.style.width = `${progress}%`;
-      
-      const texts = [
-        "Zoltar está dormido...",
-        "Zoltar se despierta...",
-        "Zoltar cobra vida...",
-        "Zoltar está casi vivo...",
-        "¡Zoltar está completamente vivo!"
-      ];
-      
-      progressText.textContent = texts[Math.min(interactionCount, 4)];
-      
-      // Mostrar indicador después de la primera interacción
-      if (interactionCount >= 1) {
-        awakeningProgress.classList.add("visible");
-      }
     }
 
     // Mostrar mensaje narrativo por etapa
@@ -1849,7 +1784,6 @@
         
         // Actualizar UI
         interactionCountDisplay.textContent = interactionCount;
-        updateProgressIndicator();
         
         // Si Zoltar ya está vivo, preparar para mostrar video
         if (interactionCount >= 4 && savedVideo) {
