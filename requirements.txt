@@ -35,6 +35,13 @@ requests==2.32.3
 numpy==1.26.4
 
 # ===========================
+# Optimizaciones
+# ===========================
+slowapi==0.1.9  # Rate limiting
+loguru==0.7.2  # Logging estructurado
+bleach==6.1.0  # Sanitización HTML/XSS
+
+# ===========================
 # Compatibilidad Pydantic
 # ===========================
 pydantic==2.8.2

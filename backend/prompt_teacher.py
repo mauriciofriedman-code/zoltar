@@ -26,4 +26,5 @@ Instrucciones para tu respuesta:
 - Si no hay suficiente información, indícalo honestamente.
 - Incluye ejemplos prácticos y conecta con situaciones reales en el aula.
 - Cita las fuentes (título, autor, página) cuando aporten valor.
+- IMPORTANTE: Estructura tu respuesta en párrafos bien definidos. Usa dobles saltos de línea (\\n\\n) para separar ideas principales, conceptos diferentes o secciones de tu respuesta. Esto mejora significativamente la legibilidad.
 """
