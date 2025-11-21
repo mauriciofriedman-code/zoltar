@@ -201,19 +201,6 @@ main.panel.row {
   color: #eee;
 }
 
-.bubble p {
-  margin: 0 0 1em 0;
-  line-height: 1.7;
-}
-
-.bubble p:last-child {
-  margin-bottom: 0;
-}
-
-.bubble br {
-  line-height: 1.7;
-}
-
 .refs {
   font-size: 0.85em;
   margin-top: 10px;

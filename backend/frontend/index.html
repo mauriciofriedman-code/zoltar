@@ -355,10 +355,6 @@
       transition: all 0.3s ease;
       filter: drop-shadow(0 0 10px var(--gold));
       animation: coinFloat 3s ease-in-out infinite;
-      position: relative;
-      z-index: 10;
-      pointer-events: auto;
-      user-select: none;
     }
 
     @keyframes coinFloat {
@@ -501,19 +497,6 @@
       font-size: 1.05em;
       line-height: 1.6;
       position: relative;
-    }
-
-    .oracle-message p {
-      margin: 0 0 1em 0;
-      line-height: 1.7;
-    }
-
-    .oracle-message p:last-child {
-      margin-bottom: 0;
-    }
-
-    .oracle-message br {
-      line-height: 1.7;
     }
 
     .sources-revealed {
@@ -716,96 +699,6 @@
       0% { background-position: -200% 0; }
       100% { background-position: 200% 0; }
     }
-
-    /* Progressive Glow Effects */
-    .zoltar-stage-1 {
-      filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.3));
-      transition: filter 1s ease-in-out;
-    }
-
-    .zoltar-stage-2 {
-      filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.5));
-      animation: gentlePulse 2s ease-in-out infinite;
-    }
-
-    .zoltar-stage-3 {
-      filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.7));
-      animation: mediumPulse 1.5s ease-in-out infinite;
-    }
-
-    .zoltar-stage-4 {
-      filter: drop-shadow(0 0 40px var(--gold));
-      animation: intensePulse 1s ease-in-out infinite;
-    }
-
-    @keyframes gentlePulse {
-      0%, 100% { 
-        filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.5));
-      }
-      50% { 
-        filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.7));
-      }
-    }
-
-    @keyframes mediumPulse {
-      0%, 100% { 
-        filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.7));
-      }
-      50% { 
-        filter: drop-shadow(0 0 35px rgba(212, 175, 55, 0.9));
-      }
-    }
-
-    @keyframes intensePulse {
-      0%, 100% { 
-        filter: drop-shadow(0 0 40px var(--gold));
-      }
-      50% { 
-        filter: drop-shadow(0 0 60px var(--gold-bright));
-      }
-    }
-
-    /* Transition Effects */
-    .zoltar-transitioning {
-      transition: all 1s ease-in-out;
-    }
-
-    .zoltar-awakening {
-      animation: awakeningGlow 2s ease-in-out;
-    }
-
-    @keyframes awakeningGlow {
-      0% {
-        filter: brightness(0.5) drop-shadow(0 0 5px rgba(212, 175, 55, 0.3));
-        transform: scale(0.95);
-      }
-      50% {
-        filter: brightness(1.5) drop-shadow(0 0 30px var(--gold));
-        transform: scale(1.02);
-      }
-      100% {
-        filter: brightness(1) drop-shadow(0 0 15px rgba(212, 175, 55, 0.5));
-        transform: scale(1);
-      }
-    }
-
-    .zoltar-full-power {
-      animation: fullPowerGlow 2s ease-in-out;
-    }
-
-    @keyframes fullPowerGlow {
-      0% {
-        filter: brightness(1) drop-shadow(0 0 25px rgba(212, 175, 55, 0.7));
-      }
-      50% {
-        filter: brightness(1.8) drop-shadow(0 0 80px var(--gold-bright));
-        transform: scale(1.05);
-      }
-      100% {
-        filter: brightness(1.2) drop-shadow(0 0 40px var(--gold));
-        transform: scale(1);
-      }
-    }
   </style>
 </head>
 
@@ -839,30 +732,23 @@
         <!-- Static Image (for interactions 1-3) -->
         <img class="zoltar-img" id="zoltarImg" src="static/img/Zoltar_1.png" alt="Zoltar" />
         
-        <!-- Video Elements (for interactions 4+) - Pre-loaded for smooth progression -->
-        <video class="zoltar-video" id="zoltarVideoLightning" muted loop preload="auto">
+        <!-- Video Elements (for interactions 4+) -->
+        <video class="zoltar-video" id="zoltarVideoLightning" muted loop>
           <source src="static/video/Zoltar_anim_one.mp4" type="video/mp4">
         </video>
         
-        <video class="zoltar-video" id="zoltarVideoDiabolical" muted loop preload="auto">
+        <video class="zoltar-video" id="zoltarVideoDiabolical" muted loop>
           <source src="static/video/Zoltar_anim_two.mp4" type="video/mp4">
         </video>
         
-        <video class="zoltar-video" id="zoltarVideoMystical" muted loop preload="auto">
+        <video class="zoltar-video" id="zoltarVideoMystical" muted loop>
           <source src="static/video/Zoltar_anim_three.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- Enhanced Coin Slot -->
       <div class="coin-ritual">
-        <img 
-          id="coinBtn" 
-          src="static/img/coin.png" 
-          alt="Moneda Mística" 
-          role="button"
-          tabindex="0"
-          aria-label="Insertar moneda para activar el oráculo"
-        />
+        <img id="coinBtn" src="static/img/coin.png" alt="Moneda Mística" />
         <div class="slot" id="slot"></div>
       </div>
     </section>
@@ -889,32 +775,15 @@
         </div>
       </div>
 
-      <div 
-        class="prophecy-scroll" 
-        id="prophecyScroll"
-        role="log"
-        aria-live="polite"
-        aria-label="Respuestas del oráculo"
-      >
+      <div class="prophecy-scroll" id="prophecyScroll">
         <div class="oracle-message">
           <em>El oráculo aguarda en silencio... Las visiones aparecerán cuando la moneda sea ofrendada y la pregunta pronunciada...</em>
         </div>
       </div>
 
       <div class="incantation-input">
-        <input 
-          id="question" 
-          type="text" 
-          placeholder="Susurra tu consulta al oráculo..." 
-          disabled 
-          aria-label="Campo de entrada para pregunta al oráculo"
-          aria-describedby="statusHint"
-        />
-        <button 
-          id="askBtn" 
-          disabled
-          aria-label="Consultar al oráculo"
-        >✨ Consultar</button>
+        <input id="question" type="text" placeholder="Susurra tu consulta al oráculo..." disabled />
+        <button id="askBtn" disabled>✨ Consultar</button>
       </div>
     </section>
   </main>
@@ -927,8 +796,6 @@
   <audio id="soundCoin" src="static/sounds/coin.mp3" preload="auto"></audio>
   <audio id="soundThinking" src="static/sounds/thinking.mp3" preload="auto" loop></audio>
   <audio id="soundReveal" src="static/sounds/reveal.mp3" preload="auto"></audio>
-  
-  <!-- Dynamic Audio for Stages (created in JS) -->
 
   <!-- Enhanced JavaScript -->
   <script>
@@ -955,7 +822,6 @@
     let interactionCount = 0;
     let currentVideoMode = null;
     let isAnimating = false;
-    let currentStage = 0; // 0=dormido, 1=estático, 2=despertando, 3=cobrando vida, 4=vivo
 
     // Animation Frames for Static Mode (interactions 1-3)
     // These are your exact file names from the folder
@@ -970,31 +836,22 @@
       "static/img/Zoltar_2.png"
     ];
 
-    // Preload static frames (optimized)
-    const preloadedFrames = [];
+    // Preload static frames
     console.log("Preloading frames...");
     frames.forEach((src, index) => {
       const img = new Image();
       img.src = src;
-      img.onload = () => {
-        preloadedFrames[index] = img;
-        if (index === 0) console.log(`Frame ${index + 1} loaded: ${src}`);
-      };
+      img.onload = () => console.log(`Frame ${index + 1} loaded: ${src}`);
       img.onerror = () => console.error(`Failed to load frame ${index + 1}: ${src}`);
     });
 
     let animInterval = null;
     let frameIndex = 0;
 
-    // Initialize Floating Particles (optimized - reduced count for performance)
+    // Initialize Floating Particles
     function createParticles() {
       const particlesContainer = document.getElementById("particles");
-      if (!particlesContainer) return;
-      
-      // Reduced particle count for better performance
-      const particleCount = window.innerWidth < 768 ? 8 : 12;
-      
-      for (let i = 0; i < particleCount; i++) {
+      for (let i = 0; i < 15; i++) {
         setTimeout(() => {
           const particle = document.createElement("div");
           particle.className = "particle";
@@ -1002,236 +859,56 @@
           particle.style.animationDelay = Math.random() * 15 + "s";
           particle.style.animationDuration = (15 + Math.random() * 10) + "s";
           particlesContainer.appendChild(particle);
-        }, i * 200); // Reduced delay for faster initialization
+        }, i * 1000);
       }
     }
 
-    // Progressive Animation System - Zoltar "cobra vida" gradualmente
+    // Progressive Animation System
     function startAnimation(questionText = "") {
-      const previousCount = interactionCount;
       interactionCount++;
       interactionCountDisplay.textContent = interactionCount;
       
       console.log(`Starting animation for interaction #${interactionCount}`);
       console.log(`Question: "${questionText}"`);
       
-      // Guardar estado
-      saveZoltarState();
-      
-      // Progresión narrativa: Zoltar cobra vida
-      // Interacción 1: Estático (imagen fija) - Ritual especial
-      // Interacciones 2-3: Despertando (animación con frames)
-      // Interacción 4+: Totalmente vivo (videos completos)
-      
-      if (interactionCount === 1) {
-        // Primera interacción: Ritual especial de despertar
-        firstInteractionRitual();
-      } else if (interactionCount === 2) {
-        // Segunda interacción: Transición a animación
-        transitionToAnimated();
-      } else if (interactionCount === 3) {
-        // Tercera interacción: Continuar animación (más intensa)
-        startStaticFrameAnimation();
-      } else if (interactionCount === 4) {
-        // Cuarta interacción: Transición a video (celebración)
-        celebrateFullAwakening(questionText);
-      } else {
-        // Interacción 5+: Zoltar está completamente vivo (videos)
+      if (interactionCount >= 4) {
+        // After 3rd interaction, use random video selection
         startVideoMode(questionText);
-      }
-    }
-
-    // Ritual especial para la primera interacción
-    function firstInteractionRitual() {
-      console.log("🔮 Ritual de primera interacción - Zoltar despierta");
-      
-      // 1. Fade in lento de Zoltar
-      zoltarImg.style.opacity = "0";
-      zoltarImg.style.transition = "opacity 2s ease-in";
-      zoltarImg.style.display = "block";
-      hideAllVideos();
-      
-      setTimeout(() => {
-        zoltarImg.style.opacity = "1";
-        zoltarImg.src = "static/img/Zoltar_1.png";
-        zoltarImg.className = "zoltar-img zoltar-stage-1 zoltar-awakening";
-      }, 100);
-      
-      // 2. Sonido especial de despertar (usar reveal con volumen bajo)
-      const awakeningSound = new Audio("static/sounds/reveal.mp3");
-      awakeningSound.volume = 0.3;
-      awakeningSound.play().catch(() => {});
-      
-      // 3. Mostrar mensaje especial
-      showStageMessage("🔮 Por primera vez en siglos, Zoltar despierta...");
-      
-      // 4. Sonido de pensamiento suave
-      setTimeout(() => {
-        soundThinking.volume = 0.4;
-        soundThinking.currentTime = 0;
-        soundThinking.play().catch(() => {});
-      }, 2000);
-      
-      isAnimating = true;
-      currentStage = 1;
-    }
-
-    // Transición de estático a animado (interacción 1 → 2)
-    function transitionToAnimated() {
-      console.log("✨ Zoltar comienza a moverse - transición a animación");
-      
-      // Efecto de resplandor antes de la transición
-      zoltarImg.style.transition = "all 0.8s ease-in-out";
-      zoltarImg.style.filter = "brightness(1.5) drop-shadow(0 0 30px var(--gold))";
-      zoltarImg.className = "zoltar-img zoltar-stage-2 zoltar-transitioning";
-      
-      // Sonido de transición
-      const transitionSound = new Audio("static/sounds/coin.mp3");
-      transitionSound.volume = 0.2;
-      transitionSound.play().catch(() => {});
-      
-      setTimeout(() => {
-        zoltarImg.style.filter = "";
+      } else {
+        // First 3 interactions use frame animation loop
         startStaticFrameAnimation();
-        showStageMessage("🌟 Zoltar cobra vida... Sus ojos comienzan a brillar...");
-      }, 800);
-      
-      currentStage = 2;
-    }
-
-    // Transición de frames a video (interacción 3 → 4)
-    function celebrateFullAwakening(questionText) {
-      console.log("🌟 ¡ZOLTAR ESTÁ COMPLETAMENTE VIVO!");
-      
-      // 1. Efecto de brillo intenso en el último frame
-      zoltarImg.style.transition = "all 1s ease-in-out";
-      zoltarImg.style.filter = "brightness(2) drop-shadow(0 0 50px var(--gold))";
-      zoltarImg.className = "zoltar-img zoltar-stage-3 zoltar-full-power";
-      
-      // 2. Sonido de celebración
-      const celebrationSound = new Audio("static/sounds/reveal.mp3");
-      celebrationSound.volume = 0.6;
-      celebrationSound.play().catch(() => {});
-      
-      // 3. Mensaje especial
-      showStageMessage("🌟 ¡ZOLTAR ESTÁ COMPLETAMENTE VIVO! Sus poderes están al máximo.");
-      
-      // 4. Fade out del frame
-      setTimeout(() => {
-        zoltarImg.style.opacity = "0";
-        zoltarImg.style.transform = "scale(1.1)";
-      }, 1000);
-      
-      // 5. Fade in del video con efecto especial
-      setTimeout(() => {
-        transitionToVideoMode(questionText);
-      }, 1500);
-      
-      currentStage = 4;
-    }
-
-    // Transición suave de frames a video
-    function transitionToVideoMode(questionText) {
-      const videoType = selectVideoType(questionText);
-      const activeVideo = getVideoElement(videoType);
-      const glowClass = getGlowClass(videoType);
-      
-      // Preparar video con el mismo posicionamiento que la imagen
-      activeVideo.style.opacity = "0";
-      activeVideo.style.display = "block";
-      activeVideo.style.transform = "scale(1)";
-      activeVideo.style.position = "relative";
-      activeVideo.style.maxWidth = "260px";
-      activeVideo.style.height = "auto";
-      activeVideo.style.transition = "opacity 1s ease-in";
-      activeVideo.className = `zoltar-video ${glowClass} zoltar-stage-4`;
-      activeVideo.currentTime = 0;
-      
-      // Fade in del video
-      setTimeout(() => {
-        activeVideo.style.opacity = "1";
-        
-        // Reproducir video
-        if (activeVideo.readyState >= 2) {
-          activeVideo.play().catch((error) => {
-            console.error(`Failed to play ${videoType} video:`, error);
-          });
-        } else {
-          activeVideo.addEventListener('canplay', () => {
-            activeVideo.play().catch((error) => {
-              console.error(`Failed to play ${videoType} video:`, error);
-            });
-          }, { once: true });
-          activeVideo.load();
-        }
-      }, 100);
-      
-      currentVideoMode = videoType;
-      hideAllVideos();
-      activeVideo.style.display = "block";
-    }
-
-    function getVideoElement(type) {
-      switch (type) {
-        case "lightning": return zoltarVideoLightning;
-        case "diabolical": return zoltarVideoDiabolical;
-        case "mystical": return zoltarVideoMystical;
-        default: return zoltarVideoLightning;
       }
     }
-
-    function getGlowClass(type) {
-      switch (type) {
-        case "lightning": return "zoltar-lightning";
-        case "diabolical": return "zoltar-diabolical";
-        case "mystical": return "zoltar-mystical";
-        default: return "zoltar-lightning";
-      }
-    }
-
-    // Función removida - ahora se usa firstInteractionRitual()
 
     function startStaticFrameAnimation() {
-      // Interacciones 2-3: Zoltar se anima, cobrando vida
-      const stage = interactionCount === 2 ? "despertando" : "cobrando vida";
-      console.log(`Zoltar ${stage} - animación con frames (interacción #${interactionCount})`);
-      
+      console.log("Starting static frame animation");
       stopAllAnimations();
       frameIndex = 0;
       isAnimating = true;
       
       // Show static image, hide videos
       zoltarImg.style.display = "block";
-      zoltarImg.style.opacity = "1";
-      zoltarImg.style.transform = "scale(1)";
       hideAllVideos();
       
-      // Add progressive glow based on stage
-      if (interactionCount === 2) {
-        zoltarImg.className = "zoltar-img zoltar-stage-2";
-        soundThinking.volume = 0.5;
-      } else if (interactionCount === 3) {
-        zoltarImg.className = "zoltar-img zoltar-stage-3";
-        soundThinking.volume = 0.7;
-        showStageMessage("⚡ El poder de Zoltar crece... Casi está completamente despierto...");
-      }
+      // Add thinking glow
+      zoltarImg.className = "zoltar-img zoltar-thinking";
       
-      // Play thinking sound with appropriate volume
+      // Play thinking sound
       soundThinking.currentTime = 0;
       soundThinking.play().catch((e) => console.log("Sound play failed:", e));
       
       // Start frame animation - cycling through the 5 images
+      console.log("Starting frame loop animation");
       animInterval = setInterval(() => {
         const currentFrame = frames[frameIndex];
+        console.log(`Displaying frame ${frameIndex}: ${currentFrame}`);
         zoltarImg.src = currentFrame;
         frameIndex = (frameIndex + 1) % frames.length;
       }, 150); // Change frame every 150ms for smooth animation
-      
-      currentStage = interactionCount === 2 ? 2 : 3;
     }
 
     function startVideoMode(questionText) {
-      console.log("Zoltar está completamente vivo - modo video");
+      console.log("Entering video mode");
       stopAllAnimations();
       isAnimating = true;
       
@@ -1243,12 +920,9 @@
       console.log(`Selected video type: ${videoType}`);
       showVideo(videoType);
       
-      // Play thinking sound at full volume (Zoltar está vivo)
-      soundThinking.volume = 1.0;
+      // Play thinking sound
       soundThinking.currentTime = 0;
       soundThinking.play().catch((e) => console.log("Sound play failed:", e));
-      
-      currentStage = 4;
     }
 
     function selectVideoType(questionText) {
@@ -1265,36 +939,34 @@
       hideAllVideos();
       currentVideoMode = type;
       
-      const activeVideo = getVideoElement(type);
-      const glowClass = getGlowClass(type);
+      let activeVideo;
+      let glowClass;
       
-      // Videos ya están pre-cargados, solo mostrarlos y reproducirlos
-      console.log(`Zoltar cobra vida completa - modo ${type} (interacción #${interactionCount})`);
-      
-      // Asegurar que el video tenga el mismo posicionamiento que la imagen
-      activeVideo.style.display = "block";
-      activeVideo.style.opacity = "1";
-      activeVideo.style.transform = "scale(1)";
-      activeVideo.style.position = "relative";
-      activeVideo.style.maxWidth = "260px";
-      activeVideo.style.height = "auto";
-      activeVideo.className = `zoltar-video ${glowClass} zoltar-stage-4`;
-      activeVideo.currentTime = 0;
-      
-      // Asegurar que el video esté listo antes de reproducir
-      if (activeVideo.readyState >= 2) { // HAVE_CURRENT_DATA
-        activeVideo.play().catch((error) => {
-          console.error(`Failed to play ${type} video:`, error);
-        });
-      } else {
-        // Si aún no está listo, esperar a que cargue
-        activeVideo.addEventListener('canplay', () => {
-          activeVideo.play().catch((error) => {
-            console.error(`Failed to play ${type} video:`, error);
-          });
-        }, { once: true });
-        activeVideo.load();
+      switch (type) {
+        case "lightning":
+          activeVideo = zoltarVideoLightning;
+          glowClass = "zoltar-lightning";
+          break;
+        case "diabolical":
+          activeVideo = zoltarVideoDiabolical;
+          glowClass = "zoltar-diabolical";
+          break;
+        case "mystical":
+          activeVideo = zoltarVideoMystical;
+          glowClass = "zoltar-mystical";
+          break;
+        default:
+          activeVideo = zoltarVideoLightning;
+          glowClass = "zoltar-lightning";
       }
+      
+      console.log(`Attempting to play ${type} video`);
+      activeVideo.style.display = "block";
+      activeVideo.className = `zoltar-video ${glowClass}`;
+      activeVideo.currentTime = 0;
+      activeVideo.play().catch((error) => {
+        console.error(`Failed to play ${type} video:`, error);
+      });
     }
 
     function hideAllVideos() {
@@ -1302,29 +974,7 @@
         video.style.display = "none";
         video.pause();
         video.className = "zoltar-video";
-        video.style.opacity = "0";
       });
-    }
-
-    // Mostrar mensaje narrativo por etapa
-    function showStageMessage(message) {
-      // Crear mensaje temporal en el área de respuestas
-      const messageDiv = document.createElement("div");
-      messageDiv.className = "oracle-message stage-message";
-      messageDiv.innerHTML = `<p><em>${message}</em></p>`;
-      messageDiv.style.opacity = "0.8";
-      messageDiv.style.fontStyle = "italic";
-      messageDiv.style.borderColor = "var(--gold)";
-      
-      prophecyScroll.appendChild(messageDiv);
-      prophecyScroll.scrollTop = prophecyScroll.scrollHeight;
-      
-      // Remover mensaje después de 5 segundos
-      setTimeout(() => {
-        messageDiv.style.transition = "opacity 1s ease-out";
-        messageDiv.style.opacity = "0";
-        setTimeout(() => messageDiv.remove(), 1000);
-      }, 5000);
     }
 
     function stopAllAnimations(success = true) {
@@ -1336,30 +986,19 @@
       soundThinking.currentTime = 0;
       
       if (currentVideoMode) {
-        // Keep video visible but maintain stage glow
+        // Keep video visible but remove glow
         const activeVideo = getActiveVideo();
         if (activeVideo) {
-          // Mantener el glow apropiado para la etapa
-          const glowClass = getGlowClass(currentVideoMode);
-          activeVideo.className = `zoltar-video ${glowClass} zoltar-stage-4`;
+          activeVideo.className = "zoltar-video";
         }
       } else {
-        // Return to appropriate static state based on stage
-        if (currentStage >= 3) {
-          zoltarImg.src = "static/img/Zoltar_1.png";
-          zoltarImg.className = `zoltar-img zoltar-stage-${currentStage}`;
-        } else if (currentStage >= 2) {
-          zoltarImg.src = "static/img/Zoltar_1.png";
-          zoltarImg.className = `zoltar-img zoltar-stage-${currentStage}`;
-        } else {
-          zoltarImg.src = "static/img/Zoltar_1.png";
-          zoltarImg.className = "zoltar-img zoltar-stage-1";
-        }
+        // Return to static frame 1
+        zoltarImg.src = "static/img/Zoltar_1.png";
+        zoltarImg.className = "zoltar-img";
       }
       
-      // Play reveal sound if successful (volumen según etapa)
+      // Play reveal sound if successful
       if (success) {
-        soundReveal.volume = currentStage >= 4 ? 1.0 : (currentStage >= 2 ? 0.7 : 0.5);
         soundReveal.currentTime = 0;
         soundReveal.play().catch((e) => console.log("Sound play failed:", e));
       }
@@ -1424,76 +1063,28 @@
       document.getElementById("slot").style.boxShadow = "inset 0 0 30px #000, 0 0 25px var(--gold)";
     });
 
-    // Enhanced Typewriter Effect with Paragraph Support
+    // Enhanced Typewriter Effect
     async function typeText(text, isOracle = true) {
       const message = document.createElement("div");
       message.className = isOracle ? "oracle-message" : "oracle-message loading-shimmer";
       prophecyScroll.appendChild(message);
       prophecyScroll.scrollTop = prophecyScroll.scrollHeight;
 
-      // Process text to handle paragraphs: split by double newlines
-      const paragraphs = text.split(/\n\n+/).filter(p => p.trim().length > 0);
-      
-      let currentParagraphIndex = 0;
-      let currentCharIndex = 0;
       let displayText = "";
-
-      while (currentParagraphIndex < paragraphs.length) {
-        const currentParagraph = paragraphs[currentParagraphIndex];
-        
-        // Process current paragraph character by character
-        while (currentCharIndex < currentParagraph.length) {
-          const char = currentParagraph[currentCharIndex];
-          
-          // Handle single newlines within paragraph (convert to <br>)
-          if (char === '\n') {
-            displayText += '<br>';
-          } else {
-            displayText += escapeHtml(char);
-          }
-          
-          // Render current state with cursor
-          const renderedParagraphs = paragraphs.slice(0, currentParagraphIndex)
-            .map(p => `<p>${escapeHtml(p.replace(/\n/g, '<br>'))}</p>`)
-            .join('');
-          
-          const currentParagraphHTML = `<p>${displayText}${currentCharIndex < currentParagraph.length - 1 ? "<span style='opacity:0.5'>|</span>" : ""}</p>`;
-          
-          message.innerHTML = renderedParagraphs + currentParagraphHTML;
-          await new Promise(res => setTimeout(res, isOracle ? 30 : 20));
-          prophecyScroll.scrollTop = prophecyScroll.scrollHeight;
-          
-          currentCharIndex++;
-        }
-        
-        // Move to next paragraph
-        currentParagraphIndex++;
-        currentCharIndex = 0;
-        displayText = "";
+      for (let i = 0; i < text.length; i++) {
+        displayText += text[i];
+        message.innerHTML = displayText + (i < text.length - 1 ? "<span style='opacity:0.5'>|</span>" : "");
+        await new Promise(res => setTimeout(res, isOracle ? 30 : 20));
+        prophecyScroll.scrollTop = prophecyScroll.scrollHeight;
       }
       
-      // Final render without cursor
-      const finalHTML = paragraphs.map(p => `<p>${escapeHtml(p.replace(/\n/g, '<br>'))}</p>`).join('');
-      message.innerHTML = finalHTML;
       message.classList.remove("loading-shimmer");
       return message;
     }
 
-    // Helper function to escape HTML
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    // Enhanced API Call with better error handling and streaming support
-    async function consultOracle(question, useStreaming = false) {
+    // Enhanced API Call
+    async function consultOracle(question) {
       const mode = document.querySelector("input[name='mode']:checked").value;
-      
-      // Si streaming está habilitado, usar endpoint de streaming
-      if (useStreaming) {
-        return await consultOracleStream(question, mode);
-      }
       
       try {
         let response;
@@ -1519,20 +1110,10 @@
         }
         
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          const error = new Error(`HTTP ${response.status}`);
-          error.status = response.status;
-          error.detail = errorData.detail || errorData.message || "Error desconocido";
-          throw error;
+          throw new Error(`HTTP ${response.status}`);
         }
         
         data = await response.json();
-        
-        // Validar respuesta
-        if (!data || !data.text) {
-          throw new Error("Respuesta inválida del servidor");
-        }
-        
         return data;
         
       } catch (error) {
@@ -1541,94 +1122,10 @@
       }
     }
 
-    // Streaming de respuestas usando fetch con streaming
-    async function consultOracleStream(question, mode) {
-      const response = await fetch("/api/stream", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: question,
-          mode: mode,
-          history: ""
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let fullText = "";
-      let sources = [];
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n');
-
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            try {
-              const data = JSON.parse(line.slice(6));
-              
-              if (data.type === "chunk") {
-                fullText += data.content;
-              } else if (data.type === "sources") {
-                sources = data.content;
-              } else if (data.type === "done") {
-                return { text: fullText, sources: sources };
-              } else if (data.type === "error") {
-                throw new Error(data.content);
-              }
-            } catch (e) {
-              console.error("Error parsing SSE data:", e);
-            }
-          }
-        }
-      }
-
-      return { text: fullText, sources: sources };
-    }
-
     // Main Consultation Handler
     askBtn.addEventListener("click", async () => {
       const question = questionInput.value.trim();
-      
-      // Validación mejorada
-      if (!hasCoin || isAnimating) return;
-      
-      if (!question) {
-        statusHint.innerHTML = "⚠️ Por favor, escribe una pregunta antes de consultar";
-        setTimeout(() => {
-          statusHint.innerHTML = hasCoin ? 
-            "✨ El oráculo está listo. Formula tu consulta..." : 
-            "🪙 Inserta la moneda para despertar al oráculo";
-        }, 3000);
-        return;
-      }
-      
-      if (question.length < 3) {
-        statusHint.innerHTML = "⚠️ La pregunta es demasiado corta (mín. 3 caracteres)";
-        setTimeout(() => {
-          statusHint.innerHTML = hasCoin ? 
-            "✨ El oráculo está listo. Formula tu consulta..." : 
-            "🪙 Inserta la moneda para despertar al oráculo";
-        }, 3000);
-        return;
-      }
-      
-      if (question.length > 2000) {
-        statusHint.innerHTML = "⚠️ La pregunta es demasiado larga (máx. 2000 caracteres)";
-        setTimeout(() => {
-          statusHint.innerHTML = hasCoin ? 
-            "✨ El oráculo está listo. Formula tu consulta..." : 
-            "🪙 Inserta la moneda para despertar al oráculo";
-        }, 3000);
-        return;
-      }
+      if (!question || !hasCoin || isAnimating) return;
 
       const mode = document.querySelector("input[name='mode']:checked").value;
       
@@ -1663,7 +1160,7 @@
           sourcesDiv.innerHTML = `
             <strong>📚 Fuentes de sabiduría consultadas:</strong>
             <ul>
-              ${oracleResponse.sources.map(source => `<li>${escapeHtml(source)}</li>`).join("")}
+              ${oracleResponse.sources.map(source => `<li>${source}</li>`).join("")}
             </ul>
           `;
           prophecyScroll.appendChild(sourcesDiv);
@@ -1673,20 +1170,7 @@
       } catch (error) {
         stopAllAnimations(false);
         thinkingMsg.remove();
-        
-        // Manejo de errores más específico
-        let errorMessage = "❌ Las fuerzas místicas han fallado. El oráculo no puede acceder a los planos superiores.";
-        
-        if (error.message && error.message.includes("400")) {
-          errorMessage = "⚠️ La consulta no es válida. Por favor, verifica tu pregunta.";
-        } else if (error.message && error.message.includes("500")) {
-          errorMessage = "❌ Error en el servidor. Por favor, intenta nuevamente en unos momentos.";
-        } else if (error.message && error.message.includes("fetch")) {
-          errorMessage = "❌ No se pudo conectar con el oráculo. Verifica tu conexión a internet.";
-        }
-        
-        await typeText(errorMessage, false);
-        console.error("Error en consulta:", error);
+        await typeText("❌ Las fuerzas místicas han fallado. El oráculo no puede acceder a los planos superiores.", false);
       }
       
       // Reset state for next consultation
@@ -1694,20 +1178,8 @@
         hasCoin = false;
         questionInput.disabled = true;
         askBtn.disabled = true;
-        
-        // Mensaje según la etapa de Zoltar
-        let hintMessage = "🪙 Inserta otra moneda para una nueva consulta";
-        if (currentStage >= 4) {
-          hintMessage = "🌟 Zoltar está completamente vivo. Inserta otra moneda para consultar sus poderes.";
-        } else if (currentStage >= 2) {
-          hintMessage = "✨ Zoltar cobra vida. Inserta otra moneda para continuar despertándolo.";
-        }
-        
-        statusHint.innerHTML = hintMessage;
+        statusHint.innerHTML = "🪙 Inserta otra moneda para una nueva consulta";
         document.getElementById("slot").style.boxShadow = "inset 0 0 20px #000, 0 0 15px rgba(212, 175, 55, 0.3)";
-        
-        // Guardar estado
-        saveZoltarState();
       }, 2000);
     });
 
@@ -1717,16 +1189,6 @@
         askBtn.click();
       }
     });
-
-    // Accesibilidad: Soporte de teclado para botón de moneda
-    if (coinBtn) {
-      coinBtn.addEventListener("keypress", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          coinBtn.click();
-        }
-      });
-    }
 
     // Mode Change Handler
     document.querySelectorAll("input[name='mode']").forEach(radio => {
@@ -1744,81 +1206,32 @@
       });
     });
 
-    // Video pre-loading and status check
-    function preloadVideos() {
-      console.log("Pre-cargando videos para la progresión de Zoltar...");
-      const videos = [
-        { element: zoltarVideoLightning, name: 'Lightning' },
-        { element: zoltarVideoDiabolical, name: 'Diabolical' },
-        { element: zoltarVideoMystical, name: 'Mystical' }
-      ];
-      
-      let loadedCount = 0;
-      videos.forEach(({ element, name }) => {
-        element.addEventListener('loadeddata', () => {
-          loadedCount++;
-          console.log(`✓ Video ${name} pre-cargado (${loadedCount}/3)`);
-          if (loadedCount === 3) {
-            console.log("🎬 Todos los videos están listos. Zoltar puede cobrar vida completa.");
-          }
-        }, { once: true });
-        
-        element.addEventListener('error', (e) => {
-          console.error(`✗ Error cargando video ${name}:`, e);
-        }, { once: true });
-        
-        // Forzar carga de metadata
-        element.load();
+    // Video load check
+    function checkVideoStatus() {
+      console.log("Checking video loading status...");
+      [zoltarVideoLightning, zoltarVideoDiabolical, zoltarVideoMystical].forEach((video, index) => {
+        const names = ['Lightning', 'Diabolical', 'Mystical'];
+        video.addEventListener('loadeddata', () => {
+          console.log(`${names[index]} video loaded successfully`);
+        });
+        video.addEventListener('error', (e) => {
+          console.error(`${names[index]} video failed to load:`, e);
+        });
       });
-    }
-
-    // Cargar estado guardado (persistencia)
-    function loadZoltarState() {
-      const savedCount = localStorage.getItem('zoltar_interaction_count');
-      const savedStage = localStorage.getItem('zoltar_stage');
-      const savedVideo = localStorage.getItem('zoltar_last_video');
-      
-      if (savedCount) {
-        interactionCount = parseInt(savedCount);
-        currentStage = savedStage ? parseInt(savedStage) : Math.min(interactionCount, 4);
-        
-        // Actualizar UI
-        interactionCountDisplay.textContent = interactionCount;
-        
-        // Si Zoltar ya está vivo, preparar para mostrar video
-        if (interactionCount >= 4 && savedVideo) {
-          currentVideoMode = savedVideo;
-          console.log(`Estado restaurado: Zoltar está vivo (modo ${savedVideo})`);
-        } else if (interactionCount >= 1) {
-          console.log(`Estado restaurado: Interacción #${interactionCount}, Etapa ${currentStage}`);
-        }
-      }
-    }
-
-    // Guardar estado
-    function saveZoltarState() {
-      localStorage.setItem('zoltar_interaction_count', interactionCount);
-      localStorage.setItem('zoltar_stage', currentStage);
-      if (currentVideoMode) {
-        localStorage.setItem('zoltar_last_video', currentVideoMode);
-      }
     }
 
     // Initialize
     document.addEventListener("DOMContentLoaded", () => {
-      console.log("🔮 Inicializando Oráculo Zoltar...");
-      console.log("📖 Progresión: Estático → Animado → Totalmente Vivo");
-      
-      // Cargar estado guardado
-      loadZoltarState();
-      
+      console.log("Initializing Zoltar Oracle...");
       createParticles();
-      preloadVideos();
+      checkVideoStatus();
       
-      // Guardar estado periódicamente
-      setInterval(saveZoltarState, 5000);
+      // Preload videos
+      [zoltarVideoLightning, zoltarVideoDiabolical, zoltarVideoMystical].forEach(video => {
+        video.load();
+      });
       
-      console.log("✨ Inicialización completa. Zoltar está listo para despertar.");
+      console.log("Initialization complete");
     });
   </script>
 </body>

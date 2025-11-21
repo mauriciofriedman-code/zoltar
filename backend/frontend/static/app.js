@@ -117,15 +117,8 @@ if (coinBtn && slot) {
 }
 
 // ==============================
-// TEXT TYPING EFFECT WITH PARAGRAPH SUPPORT
+// TEXT TYPING EFFECT
 // ==============================
-
-// Helper function to escape HTML
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
 
 async function typeText(text) {
   const bubble = document.createElement("div");
@@ -133,50 +126,11 @@ async function typeText(text) {
   conversation.appendChild(bubble);
   conversation.scrollTop = conversation.scrollHeight;
 
-  // Process text to handle paragraphs: split by double newlines
-  const paragraphs = text.split(/\n\n+/).filter(p => p.trim().length > 0);
-  
-  let currentParagraphIndex = 0;
-  let currentCharIndex = 0;
-  let displayText = "";
-
-  while (currentParagraphIndex < paragraphs.length) {
-    const currentParagraph = paragraphs[currentParagraphIndex];
-    
-    // Process current paragraph character by character
-    while (currentCharIndex < currentParagraph.length) {
-      const char = currentParagraph[currentCharIndex];
-      
-      // Handle single newlines within paragraph (convert to <br>)
-      if (char === '\n') {
-        displayText += '<br>';
-      } else {
-        displayText += escapeHtml(char);
-      }
-      
-      // Render current state with cursor
-      const renderedParagraphs = paragraphs.slice(0, currentParagraphIndex)
-        .map(p => `<p>${escapeHtml(p.replace(/\n/g, '<br>'))}</p>`)
-        .join('');
-      
-      const currentParagraphHTML = `<p>${displayText}${currentCharIndex < currentParagraph.length - 1 ? "<span style='opacity:0.5'>|</span>" : ""}</p>`;
-      
-      bubble.innerHTML = renderedParagraphs + currentParagraphHTML;
-      await new Promise(res => setTimeout(res, 20));
-      conversation.scrollTop = conversation.scrollHeight;
-      
-      currentCharIndex++;
-    }
-    
-    // Move to next paragraph
-    currentParagraphIndex++;
-    currentCharIndex = 0;
-    displayText = "";
+  for (let i = 0; i < text.length; i++) {
+    bubble.textContent += text[i];
+    await new Promise(res => setTimeout(res, 20));
+    conversation.scrollTop = conversation.scrollHeight;
   }
-  
-  // Final render without cursor
-  const finalHTML = paragraphs.map(p => `<p>${escapeHtml(p.replace(/\n/g, '<br>'))}</p>`).join('');
-  bubble.innerHTML = finalHTML;
 }
 
 // ==============================
